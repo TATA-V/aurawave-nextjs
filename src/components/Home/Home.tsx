@@ -1,14 +1,17 @@
 'use client';
 import React from 'react';
-import BottomTab from '../BottomTab/BottomTab';
-import HomeHead from './HomeMaterial/HomeHead';
 import userState from '../../atom/userState';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import useAuthentication from '../../hook/useAuthentication';
+
+import HomeHead from './HomeMaterial/HomeHead';
+import BottomTab from '../BottomTab/BottomTab';
 import Landscape from '../Landscape/Landscape';
 
 function Home() {
   const { username, isLoggedIn } = useRecoilValue(userState);
+  useAuthentication();
 
   return (
     <>
