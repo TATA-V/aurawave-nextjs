@@ -1,3 +1,4 @@
+'use client';
 import styled from 'styled-components';
 import Link from 'next/link';
 
@@ -76,6 +77,10 @@ export const StyledLink = styled(Link)`
   font-weight: 500;
   padding-top: 25px;
   text-decoration: none;
+`;
+
+export const GoogleBox = styled.div`
+  margin-top: 97px;
 `;
 
 export const GrayLineTxtBox = styled.div`

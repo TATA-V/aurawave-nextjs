@@ -1,6 +1,5 @@
 'use client';
 import React, { useRef, useState } from 'react';
-import GoBackHead from '../GoBackHead/GoBackHead';
 import { useRouter } from 'next/navigation';
 import { useSetRecoilState } from 'recoil';
 import userState from '../../atom/userState';
@@ -10,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import * as S from '../../styled/AuthStyled';
 
+import GoBackHead from '../GoBackHead/GoBackHead';
 import GoogleAuth from '../GoogleAuth/GoogleAuth';
 
 function Login() {
@@ -51,11 +51,10 @@ function Login() {
 
   return (
     <>
+      {/* 뒤로가기 => GoBackHead 컴포넌트 */}
       <GoBackHead />
-      <S.AuthBlock>
-        {/* 뒤로가기 => GoBackHead 컴포넌트 */}
-        {/* Assuming you have a GoBackHead component */}
 
+      <S.AuthBlock>
         <S.AuthTextBox>
           <h1 className="auth-text">Login</h1>
           <p className="hi-text">안녕하세요, AuraWave입니다 :)</p>
@@ -69,9 +68,7 @@ function Login() {
         </S.InputBox>
 
         <S.SubmitBtn>로그인</S.SubmitBtn>
-        <S.StyledLink href={'/signup'}>
-          <p>회원가입</p>
-        </S.StyledLink>
+        <S.StyledLink href={'/signup'}>회원가입</S.StyledLink>
 
         {/* 구글 계정으로 로그인 */}
         <SnsLoginBox>
