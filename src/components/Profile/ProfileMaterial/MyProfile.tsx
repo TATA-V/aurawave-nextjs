@@ -15,6 +15,7 @@ function MyProfile() {
   const [changeUsername, setChangeUsername] = useState('');
   const [userInfo, setUserInfo] = useRecoilState(userState); // 리코일
   const textInputRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const { username, photoURL, isLoggedIn } = userInfo;
@@ -33,11 +34,14 @@ function MyProfile() {
       return router.push('/login');
     }
     // 로그인이 되어있을 경우엔 닉네임 변경
-    // setOpenTextInput(!openTextInput);
+    setOpenTextInput(!openTextInput);
   };
 
   // 닉네임 변경
-  const handleSubmit = async () => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
     setOpenTextInput(false);
     let isValidUsername = changeUsername.length !== 0 && changeUsername.length < 21;
     // firebase 닉네임 변경해주기
@@ -53,58 +57,64 @@ function MyProfile() {
   };
 
   /* 프로필 이미지 수정 */
-  // const handleUploadImage = () => {
-  //     let uploadTask = uploadBytesResumable(
-  //       ref(storage, `user_image/${user.uid}`), // 저장 경로
-  //       blob, // 이미지 파일
-  //       metadata // 파일 타입
-  //     );
+  const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (user && files && files.length > 0) {
+      const file = files[0];
+      const metadata = { contentType: file.type };
+      console.log('file', file);
+      console.log('metadata', metadata);
+      let uploadTask = uploadBytesResumable(
+        ref(storage, `user_image/${user.uid}`), // 저장 경로
+        file, // 이미지 파일
+        metadata // 파일 타입
+      );
 
-  //     uploadTask.on(
-  //       'state_changed',
-  //       (snapshot) => {
-  //         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //         console.log('Upload is ' + progress + '% done');
-  //         switch (snapshot.state) {
-  //           case 'paused':
-  //             console.log('Upload is paused');
-  //             break;
-  //           case 'running':
-  //             console.log('Upload is running');
-  //             break;
-  //           default:
-  //             break;
-  //         }
-  //       },
-  //       (error) => {
-  //         switch (error.code) {
-  //           case 'storage/unauthorized':
-  //             break;
-  //           case 'storage/canceled':
-  //             break;
-  //           case 'storage/unknown':
-  //             break;
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+            default:
+              break;
+          }
+        },
+        (error) => {
+          switch (error.code) {
+            case 'storage/unauthorized':
+              break;
+            case 'storage/canceled':
+              break;
+            case 'storage/unknown':
+              break;
 
-  //           default:
-  //             break;
-  //         }
-  //       },
-  //       () => {
-  //         // 업로드가 성공적으로 완료
-  //         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-  //           // 프로필 이미지 수정
-  //           updateProfile(user, {
-  //             photoURL: downloadURL,
-  //           });
-  //           // 리코일에 저장
-  //           setUserInfo((data) => ({ ...data, photoURL: downloadURL }));
+            default:
+              break;
+          }
+        },
+        () => {
+          // 업로드가 성공적으로 완료
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            // 프로필 이미지 수정
+            updateProfile(user, {
+              photoURL: downloadURL,
+            });
+            // 리코일에 저장
+            setUserInfo((data) => ({ ...data, photoURL: downloadURL }));
 
-  //           // 파이어스토어 유저 이미지 수정하기
-  //         });
-  //       }
-  //     );
-  //   }
-  // };
+            // 파이어스토어 유저 이미지 수정하기
+          });
+        }
+      );
+    }
+  };
 
   return (
     <MyProfileBlock>
@@ -114,7 +124,7 @@ function MyProfile() {
           {isLoggedIn ? '닉네임 변경' : '로그인'}
         </button>
         {openTextInput && (
-          <div className="input-box">
+          <form className="input-form" onSubmit={handleSubmit}>
             <ChangeNameInput
               className="changename-input"
               defaultValue={changeUsername}
@@ -122,13 +132,12 @@ function MyProfile() {
               ref={textInputRef}
               onBlur={() => setOpenTextInput(false)}
               onChange={(e) => setChangeUsername(e.target.value)}
-              onSubmit={handleSubmit}
-              placeholder="2자 이상 20자 이하로 입력"
+              placeholder="2~20자 이하로 입력 후 Enter"
             />
-            <button className="submit-btn" onClick={handleSubmit}>
+            <button onClick={handleSubmit} className="submit-btn">
               <i className="i-submit" />
             </button>
-          </div>
+          </form>
         )}
       </LeftBox>
 
@@ -138,13 +147,22 @@ function MyProfile() {
           height={86}
           src={isLoggedIn && photoURL !== null ? photoURL : defaultProfileJpg}
           alt="user profile"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAACAAIDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAZEAADAQEBAAAAAAAAAAAAAAAAAQIDMUH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AptLtaUlVdfoAA//Z"
           className="profile-img"
         />
-        {/* onClick={handleUploadImage} */}
+
         {isLoggedIn && (
-          <button className="pen-icon-box">
-            <i className="i-pen-icon" />
-          </button>
+          <div className="file-box">
+            <input
+              onChange={handleUploadImage}
+              accept="image/jpeg, image/png"
+              ref={fileRef}
+              type="file"
+              className="file-input"
+            />
+            <i onClick={() => fileRef.current?.click()} className="i-pen-icon" />
+          </div>
         )}
       </RightBox>
     </MyProfileBlock>
@@ -183,7 +201,7 @@ const LeftBox = styled.div`
     align-items: center;
   }
 
-  .input-box {
+  .input-form {
     width: 177px;
     position: relative;
   }
@@ -222,21 +240,33 @@ const ChangeNameInput = styled.input`
 const RightBox = styled.div`
   position: relative;
 
-  .pen-icon-box {
+  .file-input {
+    display: none;
+  }
+
+  .file-box {
+    position: relative;
     width: 23px;
     height: 23px;
-    border: 1px solid var(--gray-100);
-    border-radius: 50%;
-    background-color: var(--white-100);
-    position: absolute;
-    right: 0;
-    bottom: 10px;
-    box-shadow: 0 2px 5px rgba(16, 29, 33, 0.05);
+    left: 60px;
+    bottom: 25px;
   }
 
   .i-pen-icon {
+    width: 23px;
+    height: 23px;
+    background-color: #fff;
+    border: 1px solid var(--gray-100);
+    border-radius: 50%;
     color: var(--dark-blue-800);
     font-size: 9px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
   .profile-img {

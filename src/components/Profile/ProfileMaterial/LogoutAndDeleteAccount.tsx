@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import userState from '../../../atom/userState';
 import Image from 'next/image';
 import crayonPng from '../../../assets/png-file/crayon-line.png';
@@ -12,14 +12,12 @@ import styled from 'styled-components';
 function LogoutAndDeleteAccount() {
   const [toggleModal, setToggleModal] = useState(false);
   const router = useRouter();
-  const [userInfo, setUserInfo] = useRecoilState(userState);
-  const { isLoggedIn } = userInfo;
+  const { isLoggedIn } = useRecoilValue(userState); // 리코일
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      setUserInfo((data) => ({ ...data, username: '', photoURL: '', isLoggedIn: false }));
-      router.push('/login');
+      router.replace('/login');
     } catch (error) {
       console.log('로그아웃 실패:', error);
       alert('로그아웃 도중에 문제가 발생했습니다.');

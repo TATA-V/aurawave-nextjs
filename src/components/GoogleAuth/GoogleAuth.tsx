@@ -16,12 +16,18 @@ function GoogleAuth() {
 
 export default GoogleAuth;
 
+const GoogleAuthBlock = styled.div`
+  padding-top: 22.5px;
+  display: flex;
+  justify-content: center;
+`;
+
 const GoogleBtn = styled.button`
   width: 170px;
   height: 43px;
+  padding: 0 15px 0 15px;
   border: 1px solid var(--gray-100);
   border-radius: 5px;
-  padding: 0 15px 0 15px;
 
   display: flex;
   justify-content: space-between;
@@ -32,10 +38,4 @@ const GoogleBtn = styled.button`
     font-size: 0.75rem;
     font-weight: 400;
   }
-`;
-
-const GoogleAuthBlock = styled.div`
-  padding-top: 22.5px;
-  display: flex;
-  justify-content: center;
 `;
