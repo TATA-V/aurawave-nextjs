@@ -18,8 +18,11 @@ function GoBackHead() {
 export default GoBackHead;
 
 const GoBackHeadBlok = styled.header`
+  width: 390px;
   height: 61px;
-  background-color: pink; // 나중에 삭제할 예정
+  background-color: var(--white-100);
+  position: fixed;
+  top: 0;
 
   display: flex;
   align-items: center;

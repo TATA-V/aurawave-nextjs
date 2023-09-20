@@ -1,6 +1,6 @@
 'use client';
 import userState from '../../../atom/userState';
-import { auth, storage } from '../../firebase/config';
+import { auth, storage } from '../../../firebase/config';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/navigation';
@@ -29,11 +29,11 @@ function MyProfile() {
 
   const handleBlueBtnClick = () => {
     // 로그인 안 되어있을 땐 로그인 페이지로 이동
-    // if (!isLoggedIn) {
-    //   return router.push('/login');
-    // }
+    if (!isLoggedIn) {
+      return router.push('/login');
+    }
     // 로그인이 되어있을 경우엔 닉네임 변경
-    setOpenTextInput(!openTextInput);
+    // setOpenTextInput(!openTextInput);
   };
 
   // 닉네임 변경

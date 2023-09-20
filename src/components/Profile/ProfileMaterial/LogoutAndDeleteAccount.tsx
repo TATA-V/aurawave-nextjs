@@ -5,7 +5,7 @@ import { useRecoilState } from 'recoil';
 import userState from '../../../atom/userState';
 import Image from 'next/image';
 import crayonPng from '../../../assets/png-file/crayon-line.png';
-import { auth } from '../../firebase/config';
+import { auth } from '../../../firebase/config';
 import { signOut } from 'firebase/auth';
 import styled from 'styled-components';
 
@@ -28,19 +28,19 @@ function LogoutAndDeleteAccount() {
 
   return (
     <LogoutAndDeleteAccountBlock>
-      {/* {isLoggedIn && ( */}
-      <button onClick={handleLogout} className="logout-box">
-        <i className="i-logout-circle" />
-        <p className="logout-txt">로그아웃</p>
-      </button>
-      {/* )} */}
+      {isLoggedIn && (
+        <button onClick={handleLogout} className="logout-box">
+          <i className="i-logout-circle" />
+          <p className="logout-txt">로그아웃</p>
+        </button>
+      )}
       <Image className="crayon-img" src={crayonPng} alt="crayon line" />
 
-      {/* {isLoggedIn && ( */}
-      <button onClick={() => setToggleModal(true)} className="delete-box">
-        <span className="delete-txt">탈퇴하기</span>
-      </button>
-      {/* )} */}
+      {isLoggedIn && (
+        <button onClick={() => setToggleModal(true)} className="delete-box">
+          <span className="delete-txt">탈퇴하기</span>
+        </button>
+      )}
 
       {/* 모달 */}
       {/* {toggleModal && <CustomModal setToggleModal={setToggleModal} type="탈퇴" />} */}
