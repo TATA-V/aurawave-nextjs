@@ -1,12 +1,12 @@
 'use client';
-import userState from '@/atom/userState';
-import React from 'react';
 import { useRecoilValue } from 'recoil';
-import LogoMoonSvg from '../../../../public/LogoMoonSvg.svg';
+import React from 'react';
 import Image from 'next/image';
-import defaultProfileJpg from '../../../assets/jpg-file/default-profile.jpg';
+import userState from '@/atom/userState';
+import LogoMoonSvg from '@/../public/LogoMoonSvg.svg';
+import defaultProfileJpg from '@/assets/jpg-file/default-profile.jpg';
 import styled from 'styled-components';
-import { bubblegum } from '../../../app/layout';
+import { bubblegum } from '@/fonts/fonts';
 import Link from 'next/link';
 
 function HomeHead() {

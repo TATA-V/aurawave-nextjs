@@ -2,10 +2,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useRouter } from 'next/navigation';
-import { useSetRecoilState } from 'recoil';
 import { EmailAuthProvider, deleteUser, reauthenticateWithCredential } from 'firebase/auth';
-import userState from '@/atom/userState';
 import { auth } from '@/firebase/config';
+import { deleteUserDoc } from '@/firebase/user';
 
 interface Props {
   toggleModal: boolean;
@@ -18,7 +17,6 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
   const [deleteTxt, setDeleteTxt] = useState('');
   const [message, setMessage] = useState('');
   const [password, setPassword] = useState('');
-  const setUserInfo = useSetRecoilState(userState); // 리코일
   const pwdRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -66,6 +64,7 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
           const credential = EmailAuthProvider.credential(email, password);
           await reauthenticateWithCredential(user, credential);
           await deleteUser(user);
+          await deleteUserDoc({ userUID: user.uid });
         }
         router.push('/login');
         setToggleModal(false);

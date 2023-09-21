@@ -1,7 +1,7 @@
 'use client';
-import { useRouter, usePathname } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import { useRouter, usePathname } from 'next/navigation';
 
 function GoBackHead() {
   const router = useRouter();

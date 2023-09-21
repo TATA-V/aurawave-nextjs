@@ -2,16 +2,9 @@
 import './globals.css';
 import './reset.css';
 import './iconfonts.css';
-import Layout from '../components/Layout/Layout';
-import StyledComponentsRegistry from '../lib/registry';
-import { Noto_Sans } from 'next/font/google';
-import { Bubblegum_Sans } from 'next/font/google';
-
-export const notoSans = Noto_Sans({
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-  subsets: ['latin'],
-});
-export const bubblegum = Bubblegum_Sans({ weight: '400', subsets: ['latin'] });
+import Layout from '@/components/Layout/Layout';
+import StyledComponentsRegistry from '@/lib/registry';
+import { notoSans } from '@/fonts/fonts';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

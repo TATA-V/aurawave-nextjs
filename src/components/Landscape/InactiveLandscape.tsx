@@ -1,8 +1,8 @@
 'use client';
-import { bubblegum } from '../../app/layout';
+import { bubblegum } from '@/fonts/fonts';
 import React from 'react';
 import styled from 'styled-components';
-import defaultProfileJpg from '../../assets/jpg-file/landscape.jpg';
+import defaultProfileJpg from '@/assets/jpg-file/landscape.jpg';
 import Image from 'next/image';
 
 function InactiveLandscape() {

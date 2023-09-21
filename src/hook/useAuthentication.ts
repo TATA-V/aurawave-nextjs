@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase/config';
-import userState from '../atom/userState';
+import { auth } from '@/firebase/config';
+import userState from '@/atom/userState';
 
 const useAuthentication = () => {
   const setUserInfo = useSetRecoilState(userState);

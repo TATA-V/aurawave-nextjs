@@ -2,10 +2,10 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRecoilValue } from 'recoil';
-import userState from '../../../atom/userState';
+import userState from '@/atom/userState';
 import Image from 'next/image';
-import crayonPng from '../../../assets/png-file/crayon-line.png';
-import { auth } from '../../../firebase/config';
+import crayonPng from '@/assets/png-file/crayon-line.png';
+import { auth } from '@/firebase/config';
 import { signOut } from 'firebase/auth';
 import styled from 'styled-components';
 
