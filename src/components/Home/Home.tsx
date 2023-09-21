@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
-import userState from '../../atom/userState';
+import userState from '@/atom/userState';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import useAuthentication from '../../hook/useAuthentication';
+import useAuthentication from '@/hook/useAuthentication';
 
 import HomeHead from './HomeMaterial/HomeHead';
 import BottomTab from '../BottomTab/BottomTab';

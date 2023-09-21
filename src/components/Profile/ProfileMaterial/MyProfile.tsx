@@ -1,14 +1,15 @@
 'use client';
-import userState from '../../../atom/userState';
-import { auth, storage } from '../../../firebase/config';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import styled from 'styled-components';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { useRouter } from 'next/navigation';
 import { updateProfile } from 'firebase/auth';
 import Image from 'next/image';
-import defaultProfileJpg from '../../../assets/jpg-file/default-profile.jpg';
-import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
-import styled from 'styled-components';
+import userState from '@/atom/userState';
+import { auth, storage } from '@/firebase/config';
+import defaultProfileJpg from '@/assets/jpg-file/default-profile.jpg';
+import { updateUserName, updateUserPhotoURL } from '@/firebase/user';
 
 function MyProfile() {
   const [openTextInput, setOpenTextInput] = useState(false);
@@ -48,6 +49,7 @@ function MyProfile() {
     try {
       if (user && isValidUsername) {
         await updateProfile(user, { displayName: changeUsername });
+        await updateUserName({ userUID: user.uid, username: changeUsername });
         setUserInfo((data) => ({ ...data, username: changeUsername }));
         setChangeUsername('');
       }
@@ -110,6 +112,9 @@ function MyProfile() {
             setUserInfo((data) => ({ ...data, photoURL: downloadURL }));
 
             // 파이어스토어 유저 이미지 수정하기
+            if (photoURL !== null) {
+              updateUserPhotoURL({ userUID: user.uid, photoURL });
+            }
           });
         }
       );
@@ -271,5 +276,6 @@ const RightBox = styled.div`
 
   .profile-img {
     border-radius: 50%;
+    object-fit: cover;
   }
 `;

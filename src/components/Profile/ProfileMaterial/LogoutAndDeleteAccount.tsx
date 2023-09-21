@@ -2,12 +2,14 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRecoilValue } from 'recoil';
-import userState from '../../../atom/userState';
+import userState from '@/atom/userState';
 import Image from 'next/image';
-import crayonPng from '../../../assets/png-file/crayon-line.png';
-import { auth } from '../../../firebase/config';
+import crayonPng from '@/assets/png-file/crayon-line.png';
+import { auth } from '@/firebase/config';
 import { signOut } from 'firebase/auth';
 import styled from 'styled-components';
+
+import CustomModal from '@/components/CustomModal/CustomModal';
 
 function LogoutAndDeleteAccount() {
   const [toggleModal, setToggleModal] = useState(false);
@@ -40,8 +42,10 @@ function LogoutAndDeleteAccount() {
         </button>
       )}
 
-      {/* 모달 */}
-      {/* {toggleModal && <CustomModal setToggleModal={setToggleModal} type="탈퇴" />} */}
+      {/* 탈퇴하기 모달 => CustomModal 컴포넌트 */}
+      {toggleModal && (
+        <CustomModal toggleModal={toggleModal} setToggleModal={setToggleModal} type="탈퇴" />
+      )}
     </LogoutAndDeleteAccountBlock>
   );
 }

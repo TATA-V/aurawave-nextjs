@@ -1,21 +1,22 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
-import userState from '../../atom/userState';
-import { auth } from '../../firebase/config';
 import {
   signInWithEmailAndPassword,
   setPersistence,
   browserSessionPersistence,
   onAuthStateChanged,
 } from 'firebase/auth';
-import { Controller, useForm } from 'react-hook-form';
-import styled from 'styled-components';
-import * as S from '../../styled/AuthStyled';
+import userState from '@/atom/userState';
+import { auth } from '@/firebase/config';
+import * as S from '@/styled/AuthStyled';
 
 import GoBackHead from '../GoBackHead/GoBackHead';
 import GoogleAuth from '../GoogleAuth/GoogleAuth';
+import { setUserDoc } from '@/firebase/user';
 
 function Login() {
   const pwdRef = useRef<HTMLInputElement>(null);
@@ -31,12 +32,11 @@ function Login() {
   const setUserState = useSetRecoilState(userState); // 리코일
 
   useEffect(() => {
-    // 로그인이 되어 있는 상태에서 로그인 페이지에 있다면 메인페이지로 이동
+    // 로그인 되어있지 않다면 리코일 상태 리셋
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.replace('/');
+      if (!user) {
+        setUserInfo((data) => ({ ...data, username: '', photoURL: '', isLoggedIn: false }));
       }
-      setUserInfo((data) => ({ ...data, username: '', photoURL: '', isLoggedIn: false }));
     });
   }, [setUserInfo, router]);
 
@@ -50,14 +50,23 @@ function Login() {
 
       // 리코일에 유저정보 저장
       if (auth.currentUser) {
-        const { displayName, photoURL } = auth.currentUser;
+        const { uid, displayName, photoURL } = auth.currentUser;
         setUserState((data) => ({
           ...data,
           username: displayName,
           photoURL: photoURL,
           isLoggedIn: true,
         }));
+
+        // if (uid !== null && displayName !== null) {
+        //   const userData = {
+        //     uid: uid,
+        //     username: displayName,
+        //   };
+        //   setUserDoc({ userUID: uid, userData });
+        // }
       }
+      router.replace('/');
       setLoading(false);
     } catch (error) {
       console.log('로그인 실패:', error);

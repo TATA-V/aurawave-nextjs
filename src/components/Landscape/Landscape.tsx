@@ -1,9 +1,9 @@
 'use client';
-import { bubblegum } from '../../app/layout';
 import React from 'react';
-import styled from 'styled-components';
-import defaultProfileJpg from '../../assets/jpg-file/landscape.jpg';
 import Image from 'next/image';
+import styled from 'styled-components';
+import { bubblegum } from '@/fonts/fonts';
+import defaultProfileJpg from '@/assets/jpg-file/landscape.jpg';
 
 function Landscape() {
   return (

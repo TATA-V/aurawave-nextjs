@@ -2,12 +2,13 @@
 import React, { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import * as S from '../../styled/AuthStyled';
 import { auth } from '../../firebase/config';
 
 import GoBackHead from '../GoBackHead/GoBackHead';
 import GoogleAuth from '../GoogleAuth/GoogleAuth';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { setUserDoc } from '@/firebase/user';
 
 function Signup() {
   const [loading, setLoading] = useState(false);
@@ -37,6 +38,17 @@ function Signup() {
         const user = auth.currentUser;
         if (user) {
           await updateProfile(user, { displayName: username });
+
+          // firestore에 유저 정보 저장
+          const { uid, displayName, email } = user;
+          if (uid !== null && displayName !== null && email !== null) {
+            const userData = {
+              uid: uid,
+              email: email,
+              username: displayName,
+            };
+            setUserDoc({ userUID: uid, userData });
+          }
         }
 
         // 로그인 페이지 이동

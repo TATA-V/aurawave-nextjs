@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import styled from 'styled-components';
-import GoogleSvg from '../../../public/GoogleSvg.svg';
+import GoogleSvg from '@/../public/GoogleSvg.svg';
 
 function GoogleAuth() {
   return (

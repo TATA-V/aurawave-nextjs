@@ -1,14 +1,25 @@
 'use client';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 import styled from 'styled-components';
+import { useRouter, usePathname } from 'next/navigation';
 
 function GoBackHead() {
   const router = useRouter();
+  const pathname = usePathname();
+
+  const handleGoBack = () => {
+    if (pathname === '/login') {
+      router.replace('/profile');
+    } else if (pathname === '/signup') {
+      router.replace('/login');
+    } else {
+      router.back();
+    }
+  };
 
   return (
     <GoBackHeadBlok>
-      <div onClick={() => router.back()} role="button" className="back-btn">
+      <div onClick={handleGoBack} role="button" className="back-btn">
         <i className="i-back" />
       </div>
     </GoBackHeadBlok>
