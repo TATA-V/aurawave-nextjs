@@ -34,7 +34,7 @@ function Login() {
     // 로그인이 되어 있는 상태에서 로그인 페이지에 있다면 메인페이지로 이동
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        router.replace('/');
+        return router.replace('/');
       }
       setUserInfo((data) => ({ ...data, username: '', photoURL: '', isLoggedIn: false }));
     });
