@@ -271,5 +271,6 @@ const RightBox = styled.div`
 
   .profile-img {
     border-radius: 50%;
+    object-fit: cover;
   }
 `;

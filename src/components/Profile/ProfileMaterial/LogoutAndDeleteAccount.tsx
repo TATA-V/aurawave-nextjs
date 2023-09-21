@@ -9,6 +9,8 @@ import { auth } from '../../../firebase/config';
 import { signOut } from 'firebase/auth';
 import styled from 'styled-components';
 
+import CustomModal from '@/components/CustomModal/CustomModal';
+
 function LogoutAndDeleteAccount() {
   const [toggleModal, setToggleModal] = useState(false);
   const router = useRouter();
@@ -40,8 +42,10 @@ function LogoutAndDeleteAccount() {
         </button>
       )}
 
-      {/* 모달 */}
-      {/* {toggleModal && <CustomModal setToggleModal={setToggleModal} type="탈퇴" />} */}
+      {/* 탈퇴하기 모달 => CustomModal 컴포넌트 */}
+      {toggleModal && (
+        <CustomModal toggleModal={toggleModal} setToggleModal={setToggleModal} type="탈퇴" />
+      )}
     </LogoutAndDeleteAccountBlock>
   );
 }
