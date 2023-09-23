@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import styled from 'styled-components';
 import { useRouter, usePathname } from 'next/navigation';

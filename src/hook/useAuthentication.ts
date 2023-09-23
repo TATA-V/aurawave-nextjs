@@ -1,3 +1,4 @@
+'use client';
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { onAuthStateChanged } from 'firebase/auth';

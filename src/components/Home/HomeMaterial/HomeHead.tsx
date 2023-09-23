@@ -6,7 +6,6 @@ import userState from '@/atom/userState';
 import LogoMoonSvg from '@/../public/LogoMoonSvg.svg';
 import defaultProfileJpg from '@/assets/jpg-file/default-profile.jpg';
 import styled from 'styled-components';
-import { bubblegum } from '@/fonts/fonts';
 import Link from 'next/link';
 
 function HomeHead() {
@@ -16,7 +15,7 @@ function HomeHead() {
     <HomeHeadBlock>
       <LeftBox>
         <LogoMoonSvg />
-        <p className={`logo-text ${bubblegum.className}`}>AuraWave</p>
+        <p className="logo-text">AuraWave</p>
       </LeftBox>
 
       <RightBox>
@@ -26,8 +25,6 @@ function HomeHead() {
             className="image"
             width={33}
             height={33}
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAACAAIDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAZEAADAQEBAAAAAAAAAAAAAAAAAQIDMUH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AptLtaUlVdfoAA//Z"
             alt="user profile"
             src={isLoggedIn && photoURL !== null ? photoURL : defaultProfileJpg}
           />
@@ -61,6 +58,7 @@ const LeftBox = styled.div`
     font-size: 1.75rem;
     display: flex;
     align-items: center;
+    font-family: 'Bubblegum Sans', cursive;
   }
 `;
 

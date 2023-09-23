@@ -16,7 +16,6 @@ import * as S from '@/styled/AuthStyled';
 
 import GoBackHead from '../GoBackHead/GoBackHead';
 import GoogleAuth from '../GoogleAuth/GoogleAuth';
-import { setUserDoc } from '@/firebase/user';
 
 function Login() {
   const pwdRef = useRef<HTMLInputElement>(null);
@@ -45,12 +44,12 @@ function Login() {
     try {
       setLoading(true);
       const { email, password } = data;
-      await setPersistence(auth, browserSessionPersistence); // 세션에 저장
+      await setPersistence(auth, browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
 
       // 리코일에 유저정보 저장
       if (auth.currentUser) {
-        const { uid, displayName, photoURL } = auth.currentUser;
+        const { displayName, photoURL } = auth.currentUser;
         setUserState((data) => ({
           ...data,
           username: displayName,

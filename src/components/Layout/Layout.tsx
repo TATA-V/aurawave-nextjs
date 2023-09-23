@@ -1,17 +1,17 @@
+import useAuthentication from '@/hook/useAuthentication';
 import React from 'react';
 import styled from 'styled-components';
-import { RecoilRoot } from 'recoil';
 
 interface Props {
   children: React.ReactNode;
 }
 
 function Layout({ children }: Props) {
+  useAuthentication();
+
   return (
     <LayoutBlock>
-      <RecoilRoot>
-        <LayoutStyle>{children}</LayoutStyle>
-      </RecoilRoot>
+      <LayoutStyle>{children}</LayoutStyle>
     </LayoutBlock>
   );
 }
@@ -32,6 +32,7 @@ const LayoutStyle = styled.div`
   height: 100vh;
   overflow-y: scroll;
   background-color: #fff;
+  font-family: 'Noto Sans KR', sans-serif;
 
   &::-webkit-scrollbar {
     display: none;

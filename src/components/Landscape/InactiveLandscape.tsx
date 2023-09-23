@@ -1,5 +1,3 @@
-'use client';
-import { bubblegum } from '@/fonts/fonts';
 import React from 'react';
 import styled from 'styled-components';
 import defaultProfileJpg from '@/assets/jpg-file/landscape.jpg';
@@ -17,7 +15,7 @@ function InactiveLandscape() {
           placeholder="blur"
           alt="landscape"
         />
-        <p className={`stars-text ${bubblegum.className}`}>Stars</p>
+        <p className="stars-text">Stars</p>
       </div>
     </LandscapeBlock>
   );
@@ -46,6 +44,7 @@ const LandscapeBlock = styled.div`
     color: var(--white-100);
     font-size: 0.75rem;
     font-weight: 400;
+    font-family: 'Bubblegum Sans', cursive;
   }
 
   .image {

@@ -34,7 +34,7 @@ function LogoutAndDeleteAccount() {
           <p className="logout-txt">로그아웃</p>
         </button>
       )}
-      <Image className="crayon-img" src={crayonPng} alt="crayon line" />
+      <Image className="crayon-img" src={crayonPng} alt="crayon line" priority />
 
       {isLoggedIn && (
         <button onClick={() => setToggleModal(true)} className="delete-box">
@@ -76,7 +76,8 @@ const LogoutAndDeleteAccountBlock = styled.div`
   }
 
   .crayon-img {
-    height: 228px;
+    width: 390px;
+    height: auto;
     padding-top: 12px;
   }
 

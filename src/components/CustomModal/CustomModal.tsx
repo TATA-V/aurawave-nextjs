@@ -1,4 +1,4 @@
-'use clinet';
+'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useRouter } from 'next/navigation';
@@ -63,17 +63,18 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
           // 만약 현재 로그인 된 계정이 구글 계정이라면
           if (isGoogleSignIn) {
             await deleteUser(user);
+            setToggleModal(false);
           } else {
             // 만약 현재 로그인 된 계정이 일반 이메일 계정이라면
             const { email } = user;
             const credential = EmailAuthProvider.credential(email, password);
             await reauthenticateWithCredential(user, credential);
             await deleteUser(user);
+            setToggleModal(false);
           }
           await deleteUserDoc({ userUID: user.uid });
         }
         router.push('/login');
-        setToggleModal(false);
         setLoading(false);
       } catch (error) {
         console.log('회원 탈퇴 실패:', error);

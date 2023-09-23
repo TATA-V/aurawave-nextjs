@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import PeopleCircleSvg from '@/../public/PeopleCircleSvg.svg';
 import styled from 'styled-components';

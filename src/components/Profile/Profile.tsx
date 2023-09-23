@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import styled from 'styled-components';
-import useAuthentication from '@/hook/useAuthentication';
 
 import BottomTab from '../BottomTab/BottomTab';
 import MyProfile from './ProfileMaterial/MyProfile';
@@ -10,8 +9,6 @@ import InactiveLandscape from '../Landscape/InactiveLandscape';
 import LogoutAndDeleteAccount from './ProfileMaterial/LogoutAndDeleteAccount';
 
 function Profile() {
-  useAuthentication();
-
   return (
     <ProfileBlock>
       <MyProfile />
