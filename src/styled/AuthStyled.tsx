@@ -103,9 +103,15 @@ export const GrayLineTxtBox = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  .gray-line {
+  .gray-line-login {
     height: 1px;
     width: 103px;
+    background-color: var(--gray-100);
+  }
+
+  .gray-line-signup {
+    width: 97px;
+    height: 1px;
     background-color: var(--gray-100);
   }
 
