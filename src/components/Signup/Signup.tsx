@@ -3,12 +3,12 @@ import React, { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import * as S from '../../styled/AuthStyled';
-import { auth } from '../../firebase/config';
+import * as S from '@/styled/AuthStyled';
+import { auth } from '@/firebase/config';
+import { setUserDoc } from '@/firebase/user';
 
 import GoBackHead from '../GoBackHead/GoBackHead';
 import GoogleAuth from '../GoogleAuth/GoogleAuth';
-import { setUserDoc } from '@/firebase/user';
 
 function Signup() {
   const [loading, setLoading] = useState(false);
@@ -69,6 +69,9 @@ function Signup() {
   ) => {
     e.preventDefault();
     if (e.key === 'Enter') {
+      if (nextInputRef === submitRef) {
+        submitRef.current?.click();
+      }
       nextInputRef.current?.focus();
     }
   };
@@ -208,9 +211,9 @@ function Signup() {
         {/* 구글 계정으로 로그인 */}
         <S.GoogleBox>
           <S.GrayLineTxtBox>
-            <div className="gray-line" />
-            <p className="sns-txt">SNS 계정으로 로그인</p>
-            <div className="gray-line" />
+            <div className="gray-line-signup" />
+            <p className="sns-txt">SNS 계정으로 회원가입</p>
+            <div className="gray-line-signup" />
           </S.GrayLineTxtBox>
 
           {/* 구글로 signin => GoogleAuth 컴포넌트*/}

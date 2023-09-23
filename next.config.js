@@ -8,7 +8,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['firebasestorage.googleapis.com'], // Firebase Storage 호스트 추가
+    domains: ['firebasestorage.googleapis.com', 'lh3.googleusercontent.com'], // Firebase Storage 호스트 추가
   },
 };
 

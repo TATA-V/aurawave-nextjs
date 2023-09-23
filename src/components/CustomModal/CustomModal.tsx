@@ -20,6 +20,8 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
   const pwdRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const user = auth.currentUser; // 현재 유저
+  const isGoogleSignIn = user?.providerData[0].providerId === 'google.com'; // 현재 로그인 된 계정이 구글인지 확인
 
   // 모달창 밖에 눌렀을 시 모달창 닫힘
   useEffect(() => {
@@ -54,16 +56,20 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
 
   const handleWithdrawal = async () => {
     /* 유저 탈퇴 */
-    const user = auth.currentUser;
     if (type === '탈퇴') {
       try {
         setLoading(true);
-        // 만약 현재 로그인 된 계정이 일반 이메일 계정이라면
         if (user && user.email) {
-          const email = user.email;
-          const credential = EmailAuthProvider.credential(email, password);
-          await reauthenticateWithCredential(user, credential);
-          await deleteUser(user);
+          // 만약 현재 로그인 된 계정이 구글 계정이라면
+          if (isGoogleSignIn) {
+            await deleteUser(user);
+          } else {
+            // 만약 현재 로그인 된 계정이 일반 이메일 계정이라면
+            const { email } = user;
+            const credential = EmailAuthProvider.credential(email, password);
+            await reauthenticateWithCredential(user, credential);
+            await deleteUser(user);
+          }
           await deleteUserDoc({ userUID: user.uid });
         }
         router.push('/login');
@@ -91,7 +97,7 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
           <p className="modal-text">{message}</p>
         </div>
 
-        {type === '탈퇴' && (
+        {type === '탈퇴' && !isGoogleSignIn ? (
           <input
             ref={pwdRef}
             className="pwd-input"
@@ -100,7 +106,7 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        )}
+        ) : null}
 
         <div className="btn-box">
           <button className="btn cancel" onClick={() => setToggleModal(false)}>
