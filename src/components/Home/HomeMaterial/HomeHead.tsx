@@ -7,6 +7,7 @@ import LogoMoonSvg from '@/../public/LogoMoonSvg.svg';
 import defaultProfileJpg from '@/assets/jpg-file/default-profile.jpg';
 import styled from 'styled-components';
 import Link from 'next/link';
+import { bubblegum } from '@/fonts/fonts';
 
 function HomeHead() {
   const { photoURL, isLoggedIn } = useRecoilValue(userState);
@@ -15,7 +16,7 @@ function HomeHead() {
     <HomeHeadBlock>
       <LeftBox>
         <LogoMoonSvg />
-        <p className="logo-text">AuraWave</p>
+        <p className={`logo-text ${bubblegum.className}`}>AuraWave</p>
       </LeftBox>
 
       <RightBox>
@@ -58,7 +59,6 @@ const LeftBox = styled.div`
     font-size: 1.75rem;
     display: flex;
     align-items: center;
-    font-family: 'Bubblegum Sans', cursive;
   }
 `;
 
@@ -76,6 +76,7 @@ const RightBox = styled.div`
 
   .image {
     border-radius: 50%;
+    object-fit: 'cover';
     display: flex;
   }
 `;

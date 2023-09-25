@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import * as S from '@/styled/AuthStyled';
+import * as S from '@/styled/authStyled';
 import { auth } from '@/firebase/config';
 import { setUserDoc } from '@/firebase/user';
 

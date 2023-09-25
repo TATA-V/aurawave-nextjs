@@ -127,7 +127,7 @@ export default CustomModal;
 const fadeInUp = keyframes`
   from {
     opacity: 0;
-    transform: translateY(80px);
+    transform: translateY(70px);
   }
   to {
     opacity: 1;
@@ -160,7 +160,7 @@ const Modal = styled.div`
   align-items: center;
 
   .modal-content {
-    width: 220px;
+    width: 222px;
     padding-top: 36px;
     line-height: 1.5rem;
   }
