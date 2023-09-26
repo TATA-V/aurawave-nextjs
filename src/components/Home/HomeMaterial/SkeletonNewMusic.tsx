@@ -80,7 +80,7 @@ const SkeletonNewMusicBlock = styled.div`
 
   .composer {
     width: 32px;
-    height: 12px;
+    height: 10px;
     border-radius: 3px;
     margin-top: 3px;
     background-color: var(--gray-100);

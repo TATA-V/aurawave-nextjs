@@ -141,7 +141,7 @@ const PlaylistItem = styled.div<Num>`
   }
 
   .des {
-    width: 152px;
+    width: 160px;
     height: 36px;
     display: flex;
     justify-content: space-between;
@@ -164,6 +164,6 @@ const PlaylistItem = styled.div<Num>`
 
   .paly-blue {
     cursor: pointer;
-    transform: translate(3px, 1px);
+    transform: translate(2.5px, 1px);
   }
 `;

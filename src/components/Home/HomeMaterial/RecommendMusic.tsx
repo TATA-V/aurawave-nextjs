@@ -3,7 +3,9 @@ import MusicLi from '@/components/MusicLi/MusicLi';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import summer from '@/assets/png-file/summer.png';
+import LoadingLottie from '@/components/Lottie/LoadingLottie';
 
+// 임시 데이터
 const data = [
   {
     id: 1,
@@ -122,10 +124,11 @@ function RecommendMusic() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setLoading(true);
+          // Lottie 로딩을 보여주기 위한 setTimeout
           setTimeout(() => {
             setMusicData((prev) => [...prev, ...nextData]);
-          }, 5000);
-          setLoading(false);
+            setLoading(false);
+          }, 1000);
         }
       });
     };
@@ -153,6 +156,8 @@ function RecommendMusic() {
           <MusicLi key={el.id} image={el.image} title={el.title} composer={el.composer} />
         ))}
       </ul>
+
+      {loading && <LoadingLottie />}
       <End ref={endRef} />
     </RecommendMusicSection>
   );
