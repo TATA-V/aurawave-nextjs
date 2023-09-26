@@ -15,7 +15,6 @@ function InactiveLandscape() {
           placeholder="blur"
           alt="landscape"
         />
-        <p className="stars-text">Stars</p>
       </div>
     </LandscapeBlock>
   );
@@ -36,15 +35,6 @@ const LandscapeBlock = styled.div`
     display: flex;
     justify-content: end;
     align-items: end;
-  }
-
-  .stars-text {
-    position: absolute;
-    margin: 9px 13px 9px 13px;
-    color: var(--white-100);
-    font-size: 0.75rem;
-    font-weight: 400;
-    font-family: 'Bubblegum Sans', cursive;
   }
 
   .image {

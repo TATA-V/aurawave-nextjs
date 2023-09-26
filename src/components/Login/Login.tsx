@@ -12,7 +12,7 @@ import {
 } from 'firebase/auth';
 import userState from '@/atom/userState';
 import { auth } from '@/firebase/config';
-import * as S from '@/styled/AuthStyled';
+import * as S from '@/styled/authStyled';
 
 import GoBackHead from '../GoBackHead/GoBackHead';
 import GoogleAuth from '../GoogleAuth/GoogleAuth';

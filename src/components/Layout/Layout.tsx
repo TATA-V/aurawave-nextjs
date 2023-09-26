@@ -21,6 +21,7 @@ export default Layout;
 const LayoutBlock = styled.div`
   min-height: 100vh;
   background-color: rgb(233, 236, 239);
+  font-family: 'Noto Sans KR', sans-serif;
 
   display: flex;
   justify-content: center;
@@ -32,7 +33,6 @@ const LayoutStyle = styled.div`
   height: 100vh;
   overflow-y: scroll;
   background-color: #fff;
-  font-family: 'Noto Sans KR', sans-serif;
 
   &::-webkit-scrollbar {
     display: none;
