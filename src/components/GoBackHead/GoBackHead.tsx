@@ -1,8 +1,13 @@
+'use client';
 import React from 'react';
 import styled from 'styled-components';
 import { useRouter, usePathname } from 'next/navigation';
 
-function GoBackHead() {
+interface Props {
+  title?: string;
+}
+
+function GoBackHead({ title }: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -21,6 +26,10 @@ function GoBackHead() {
       <div onClick={handleGoBack} role="button" className="back-btn">
         <i className="i-back" />
       </div>
+
+      {title && <Title>{title}</Title>}
+
+      <div className="right-box" />
     </GoBackHeadBlok>
   );
 }
@@ -28,13 +37,15 @@ function GoBackHead() {
 export default GoBackHead;
 
 const GoBackHeadBlok = styled.header`
+  position: fixed;
+  top: 0;
   width: 390px;
   height: 61px;
   background-color: var(--white-100);
-  position: fixed;
-  top: 0;
+  z-index: 5;
 
   display: flex;
+  justify-content: space-between;
   align-items: center;
 
   .back-btn {
@@ -54,4 +65,15 @@ const GoBackHeadBlok = styled.header`
       color: var(--dark-blue-900);
     }
   }
+
+  .right-box {
+    width: 63px;
+    height: 61px;
+  }
+`;
+
+const Title = styled.p`
+  color: var(--dark-blue-900);
+  font-size: 1.09375rem;
+  font-weight: 600;
 `;

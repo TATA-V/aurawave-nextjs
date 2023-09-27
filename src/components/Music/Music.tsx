@@ -1,11 +1,14 @@
 import React from 'react';
 
 import BottomTab from '../BottomTab/BottomTab';
+import MusicHead from './MusicMaterial/MusicHead';
+import MusicSection from './MusicMaterial/MusicSection';
 
 function Music() {
   return (
     <>
-      <p>Music</p>
+      <MusicHead />
+      <MusicSection />
       <BottomTab />
     </>
   );

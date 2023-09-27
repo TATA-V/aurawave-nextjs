@@ -4,6 +4,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import summer from '@/assets/png-file/summer.png';
 import LoadingLottie from '@/components/Lottie/LoadingLottie';
+import Link from 'next/link';
+import { End } from '@/styled/endStyled';
+import useInfiniteScroll from '@/hook/useInfiniteScroll';
 
 // 임시 데이터
 const data = [
@@ -111,43 +114,16 @@ const nextData = [
 ];
 
 function RecommendMusic() {
-  const [musicData, setMusicData] = useState(data);
-  const [loading, setLoading] = useState(false);
-  console.log(musicData);
   const endRef = useRef(null);
-
-  // observer로 무한 스크롤 구현
-  useEffect(() => {
-    if (!endRef.current) return;
-
-    const callback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setLoading(true);
-          // Lottie 로딩을 보여주기 위한 setTimeout
-          setTimeout(() => {
-            setMusicData((prev) => [...prev, ...nextData]);
-            setLoading(false);
-          }, 1000);
-        }
-      });
-    };
-
-    const options = { root: null, rootMargin: '0px', threshold: 0.1 };
-
-    const observer = new IntersectionObserver(callback, options);
-    observer.observe(endRef.current);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
+  const { loading, musicData } = useInfiniteScroll({ data, nextData, endRef }); // hook
 
   return (
     <RecommendMusicSection>
       <TopBox>
         <h2 className="section-heading">추천 음악</h2>
-        <button className="view-all-btn">전체보기</button>
+        <Link href={'/music-collection'} className="view-all-btn">
+          전체보기
+        </Link>
       </TopBox>
 
       <ul>
@@ -184,12 +160,7 @@ const TopBox = styled.div`
     color: var(--gray-400);
     font-size: 0.875rem;
     font-weight: 500;
+    text-decoration: none;
     padding-right: 18px;
   }
-`;
-
-const End = styled.div`
-  width: 100%;
-  height: 5px;
-  background-color: var(--white-100);
 `;

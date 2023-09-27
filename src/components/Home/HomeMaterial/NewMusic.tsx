@@ -90,7 +90,7 @@ function NewMusic() {
       )}
 
       {loaded && (
-        <StyledSwiper spaceBetween={12} slidesPerView={3.1}>
+        <StyledSwiper spaceBetween={15} slidesPerView={3.1}>
           {data.map((el) => (
             <SwiperSlide key={el.id}>
               <NewMusicLi num={el.id}>
