@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PeopleCircleSvg from '@/../public/PeopleCircleSvg.svg';
 import styled from 'styled-components';
+import { auth } from '@/firebase/config';
+import { useRecoilValue } from 'recoil';
+import userState from '@/atom/userState';
+import Link from 'next/link';
 
 function MyFriendAndMyPlaylist() {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { isLoggedIn } = useRecoilValue(userState);
+
+  // admin 계정인지 확인
+  useEffect(() => {
+    const userEmail = auth?.currentUser?.email;
+    if (userEmail === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+      setIsAdmin(true);
+    }
+  }, [isLoggedIn]);
+
   return (
     <MyFriendAndMyPlaylistBlock>
       <li className="list-box">
@@ -13,6 +28,24 @@ function MyFriendAndMyPlaylist() {
         <i className="i-list-circle" />
         <p className="list-text">내 플레이리스트 목록</p>
       </li>
+
+      {/* andmin 계정일 때 */}
+      {isAdmin && (
+        <>
+          <li className="list-box">
+            <StyledLink href={'/admin-music'}>
+              <i className="i-plus-circle" />
+              <p className="list-text">음악 등록 & 삭제</p>
+            </StyledLink>
+          </li>
+          <li className="list-box">
+            <StyledLink href={'/admin-aw-playlist'}>
+              <i className="i-plus-circle" />
+              <p className="list-text">aurawave 플레이리스트 등록 & 삭제</p>
+            </StyledLink>
+          </li>
+        </>
+      )}
     </MyFriendAndMyPlaylistBlock>
   );
 }
@@ -32,7 +65,7 @@ const MyFriendAndMyPlaylistBlock = styled.ul`
   .list-text {
     color: var(--dark-blue-800);
     font-size: 0.8125rem;
-    padding-left: 6px;
+    padding: 0 0 1.5px 6px;
     cursor: pointer;
   }
 
@@ -41,4 +74,17 @@ const MyFriendAndMyPlaylistBlock = styled.ul`
     font-size: 14px;
     cursor: pointer;
   }
+
+  .i-plus-circle {
+    font-size: 14px;
+
+    &::before {
+      color: var(--dark-blue-800);
+    }
+  }
+`;
+
+const StyledLink = styled(Link)`
+  display: flex;
+  text-decoration: none;
 `;

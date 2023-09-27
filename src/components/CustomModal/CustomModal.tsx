@@ -3,8 +3,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useRouter } from 'next/navigation';
 import { EmailAuthProvider, deleteUser, reauthenticateWithCredential } from 'firebase/auth';
-import { auth } from '@/firebase/config';
+import { auth, storage } from '@/firebase/config';
 import { deleteUserDoc } from '@/firebase/user';
+import { deleteObject, ref } from 'firebase/storage';
 
 interface Props {
   toggleModal: boolean;
@@ -17,11 +18,11 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
   const [deleteTxt, setDeleteTxt] = useState('');
   const [message, setMessage] = useState('');
   const [password, setPassword] = useState('');
+  const [isGoogleSignIn, setIsGoogleSignIn] = useState(false);
   const pwdRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const user = auth.currentUser; // 현재 유저
-  const isGoogleSignIn = user?.providerData[0].providerId === 'google.com'; // 현재 로그인 된 계정이 구글인지 확인
 
   // 모달창 밖에 눌렀을 시 모달창 닫힘
   useEffect(() => {
@@ -41,6 +42,10 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
       pwdRef.current?.focus();
       setMessage('탈퇴하시겠습니까? 탈퇴 후에는 다시 복구할 수 없습니다.');
       setDeleteTxt('탈퇴');
+      const googleSignIn = user?.providerData[0].providerId === 'google.com'; // 현재 로그인 된 계정이 구글인지 확인
+      if (googleSignIn) {
+        setIsGoogleSignIn(true);
+      }
     }
 
     if (type === '플레이리스트삭제') {
@@ -52,7 +57,7 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
       setMessage('선택한 1곡을 재생목록에서 삭제하시겠습니까?');
       setDeleteTxt('삭제');
     }
-  }, [type]);
+  }, [type, user?.providerData]);
 
   const handleWithdrawal = async () => {
     /* 유저 탈퇴 */
@@ -72,7 +77,11 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
             await deleteUser(user);
             setToggleModal(false);
           }
+          // firestore에서 유저 정보 삭제
           await deleteUserDoc({ userUID: user.uid });
+          // storage에서 유저 이미지 삭제
+          const storageRef = ref(storage, `user_image/${user.uid}`);
+          await deleteObject(storageRef);
         }
         router.push('/login');
         setLoading(false);
@@ -98,7 +107,7 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
           <p className="modal-text">{message}</p>
         </div>
 
-        {type === '탈퇴' && !isGoogleSignIn ? (
+        {type === '탈퇴' && !isGoogleSignIn && (
           <input
             ref={pwdRef}
             className="pwd-input"
@@ -107,7 +116,7 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        ) : null}
+        )}
 
         <div className="btn-box">
           <button className="btn cancel" onClick={() => setToggleModal(false)}>

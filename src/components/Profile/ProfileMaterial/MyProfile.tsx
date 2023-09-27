@@ -64,8 +64,6 @@ function MyProfile() {
     if (user && files && files.length > 0) {
       const file = files[0];
       const metadata = { contentType: file.type };
-      console.log('file', file);
-      console.log('metadata', metadata);
       let uploadTask = uploadBytesResumable(
         ref(storage, `user_image/${user.uid}`), // 저장 경로
         file, // 이미지 파일
@@ -112,9 +110,7 @@ function MyProfile() {
             setUserInfo((data) => ({ ...data, photoURL: downloadURL }));
 
             // 파이어스토어 유저 이미지 수정하기
-            if (photoURL !== null) {
-              updateUserPhotoURL({ userUID: user.uid, photoURL });
-            }
+            updateUserPhotoURL({ userUID: user.uid, photoURL: downloadURL });
           });
         }
       );

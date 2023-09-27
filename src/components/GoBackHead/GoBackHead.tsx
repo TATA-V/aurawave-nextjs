@@ -1,15 +1,23 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRouter, usePathname } from 'next/navigation';
+import { bubblegum } from '@/fonts/fonts';
 
 interface Props {
   title?: string;
 }
 
 function GoBackHead({ title }: Props) {
+  const [isAurawaveTxt, setIsAurawaveTxt] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    if (title === '플레이리스트' || title === '플레이리스트 추가 & 삭제') {
+      setIsAurawaveTxt(true);
+    }
+  }, [title]);
 
   const handleGoBack = () => {
     if (pathname === '/login') {
@@ -27,7 +35,15 @@ function GoBackHead({ title }: Props) {
         <i className="i-back" />
       </div>
 
-      {title && <Title>{title}</Title>}
+      {title && !isAurawaveTxt && <Title>{title}</Title>}
+      {title && isAurawaveTxt && (
+        <Title>
+          <span className={`aw-txt ${bubblegum.className}`}>
+            {title === '플레이리스트' ? 'AuraWave' : 'AW'}
+          </span>{' '}
+          {title}
+        </Title>
+      )}
 
       <div className="right-box" />
     </GoBackHeadBlok>
@@ -76,4 +92,9 @@ const Title = styled.p`
   color: var(--dark-blue-900);
   font-size: 1.09375rem;
   font-weight: 600;
+
+  .aw-txt {
+    font-size: 1.1875rem;
+    font-weight: 400;
+  }
 `;

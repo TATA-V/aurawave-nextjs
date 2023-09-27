@@ -1,6 +1,6 @@
 'use client';
 import MusicLi from '@/components/MusicLi/MusicLi';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import summer from '@/assets/png-file/summer.png';
 import LoadingLottie from '@/components/Lottie/LoadingLottie';

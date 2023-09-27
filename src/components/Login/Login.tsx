@@ -62,7 +62,7 @@ function Login() {
     } catch (error) {
       console.log('로그인 실패:', error);
       setLoading(false);
-      alert('로그인 도중에 문제가 발생했습니다.');
+      alert('가입되지 않은 이메일이거나, 잘못된 비밀번호입니다.');
     }
   });
 
