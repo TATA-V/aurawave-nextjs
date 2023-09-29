@@ -8,6 +8,7 @@ import { auth, storage } from '@/firebase/config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { setMusicDoc } from '@/firebase/music';
+import { serverTimestamp } from 'firebase/firestore';
 
 function AddMusic() {
   const [progress, setProgress] = useState(0);
@@ -33,13 +34,13 @@ function AddMusic() {
       const file = files[0];
       const metadata = { contentType: file.type };
       const isImage = file.type === 'image/jpeg' || file.type === 'image/png';
-      const isMp3 = file.type === 'audio/mpeg';
+      const isAudio = file.type === 'audio/mpeg';
       let path = '';
 
       // 이미지 파일이라면
       if (isImage) {
         path = 'music_image';
-      } else if (isMp3) {
+      } else if (isAudio) {
         // 음악 파일이라면
         path = 'music_audio';
       }
@@ -54,7 +55,7 @@ function AddMusic() {
         'state_changed',
         (snapshot) => {
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          if (isMp3) {
+          if (isAudio) {
             setProgress(progress);
           }
           console.log('Upload is ' + progress + '% done');
@@ -87,7 +88,7 @@ function AddMusic() {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             if (isImage) {
               setImageUri(downloadURL);
-            } else if (isMp3) {
+            } else if (isAudio) {
               setMusicUri(downloadURL);
             }
           });
@@ -97,8 +98,8 @@ function AddMusic() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+    const isValid =
+      imageUri !== '' && musicUri !== '' && title !== '' && composer !== '' && copyright !== '';
     const musicData = {
       uuid: uuid,
       imageUri: imageUri,
@@ -106,22 +107,25 @@ function AddMusic() {
       title: title,
       composer: composer,
       copyright: copyright,
+      timestamp: serverTimestamp(),
     };
-    // firestore에 저장
-    try {
-      await setMusicDoc({ uuid, musicData });
-      // 비워주기
-      setProgress(0);
-      setImageUri('');
-      setMusicUri('');
-      setTitle('');
-      setComposer('');
-      setCopyright('');
-      const id = uuidv4(); // 새로운 uuid 생성
-      setUuid(id);
-    } catch (error) {
-      console.log(error);
-      alert('음악 등록 중에 문제가 발생했습니다.');
+    if (isValid) {
+      // firestore에 저장
+      try {
+        await setMusicDoc({ uuid, musicData });
+        // 비워주기
+        setProgress(0);
+        setImageUri('');
+        setMusicUri('');
+        setTitle('');
+        setComposer('');
+        setCopyright('');
+        const id = uuidv4(); // 새로운 uuid 생성
+        setUuid(id);
+      } catch (error) {
+        console.log(error);
+        alert('음악 등록 중에 문제가 발생했습니다.');
+      }
     }
   };
 
@@ -129,81 +133,73 @@ function AddMusic() {
     <AddMusicBlock>
       <H3>음악 등록</H3>
 
-      <form onSubmit={handleSubmit}>
+      <input
+        onChange={handleUploadImage}
+        ref={musicRef}
+        className="music-input"
+        accept="audio/mp3"
+        type="file"
+      />
+      <MusicFile>
+        <FileTxt>음악 파일</FileTxt>
+        <FileBtn onClick={() => musicRef.current?.click()}>
+          <i className="i-plus-small" />
+        </FileBtn>
+        <p className="upload-progress">
+          {progress !== 0 ? `${progress}%` : null} {progress === 100 ? 'upload successful!' : null}
+        </p>
+      </MusicFile>
+
+      <S.InputBox>
         <input
-          onChange={handleUploadImage}
-          ref={musicRef}
-          className="music-input"
-          accept="audio/mp3"
-          type="file"
-          required
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="margin-top"
+          type="text"
+          placeholder="음악 제목 입력"
+          autoComplete="off"
         />
-        <MusicFile>
-          <FileTxt>음악 파일</FileTxt>
-          <FileBtn onClick={() => musicRef.current?.click()}>
+        <input
+          value={composer}
+          onChange={(e) => setComposer(e.target.value)}
+          className="margin-top"
+          type="text"
+          placeholder="음악 작곡자 입력"
+          autoComplete="off"
+        />
+        <input
+          value={copyright}
+          onChange={(e) => setCopyright(e.target.value)}
+          className="margin-top"
+          type="text"
+          placeholder="출처 입력"
+          autoComplete="off"
+        />
+      </S.InputBox>
+
+      <input
+        onChange={handleUploadImage}
+        ref={imageRef}
+        className="image-input"
+        accept="image/jpeg, image/png"
+        type="file"
+      />
+      <AlbumFile>
+        <div className="album-file-box">
+          <FileTxt>앨범 이미지</FileTxt>
+          <FileBtn onClick={() => imageRef.current?.click()}>
             <i className="i-plus-small" />
           </FileBtn>
-          <p className="upload-progress">
-            {progress !== 0 ? `${progress}%` : null}{' '}
-            {progress === 100 ? 'upload successful!' : null}
-          </p>
-        </MusicFile>
-
-        <S.InputBox>
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="margin-top"
-            type="text"
-            placeholder="음악 제목 입력"
-            autoComplete="off"
-            required
-          />
-          <input
-            value={composer}
-            onChange={(e) => setComposer(e.target.value)}
-            className="margin-top"
-            type="text"
-            placeholder="음악 작곡자 입력"
-            autoComplete="off"
-            required
-          />
-          <input
-            value={copyright}
-            onChange={(e) => setCopyright(e.target.value)}
-            className="margin-top"
-            type="text"
-            placeholder="출처 입력"
-            autoComplete="off"
-            required
-          />
-        </S.InputBox>
-
-        <input
-          onChange={handleUploadImage}
-          ref={imageRef}
-          className="image-input"
-          accept="image/jpeg, image/png"
-          type="file"
-          required
+        </div>
+        <Image
+          width={147}
+          height={147}
+          src={imageUri !== '' ? imageUri : albumDefaultImg}
+          alt="album image"
+          className="album-img"
         />
-        <AlbumFile>
-          <div className="album-file-box">
-            <FileTxt>앨범 이미지</FileTxt>
-            <FileBtn onClick={() => imageRef.current?.click()}>
-              <i className="i-plus-small" />
-            </FileBtn>
-          </div>
-          <Image
-            width={147}
-            height={147}
-            src={imageUri !== '' ? imageUri : albumDefaultImg}
-            alt="album image"
-            className="album-img"
-          />
-        </AlbumFile>
-        <S.SubmitBtn>음악 등록</S.SubmitBtn>
-      </form>
+      </AlbumFile>
+      <S.SubmitBtn onClick={handleSubmit}>음악 등록</S.SubmitBtn>
     </AddMusicBlock>
   );
 }

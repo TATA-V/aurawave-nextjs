@@ -1,49 +1,28 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Link from 'next/link';
-import summer from '@/assets/png-file/summer.png';
-
+import { getMusicDocs } from '@/firebase/music';
+import { MusicData } from '@/types/musicTypes';
 import 'swiper/css';
 
 import CollectionLi from './CollectionLi';
 
-const data = [
-  {
-    id: 1,
-    image: summer,
-    title: '거리에서 (Feat. ASH ISLAND)',
-    composer: '릴러말즈 (Leellamarz)',
-  },
-  {
-    id: 2,
-    image: summer,
-    title: 'Love Me Again',
-    composer: 'V',
-  },
-  {
-    id: 3,
-    image: summer,
-    title: '후라이의 꿈',
-    composer: 'AKMU(악뮤)',
-  },
-  {
-    id: 4,
-    image: summer,
-    title: 'Bubble',
-    composer: 'STAYC(스테이씨)',
-  },
-  {
-    id: 5,
-    image: summer,
-    title: `그대만 있다면 (여름날 우리 X
-      너드커넥션 (Nerd Connection)`,
-    composer: '너드커넥션(Nerd Connection)',
-  },
-];
-
 function MusicSection() {
+  const [data, setData] = useState<MusicData[]>([]);
+
+  useEffect(() => {
+    // 최근에 추가한 음악 15개를 가져오기
+    getMusicDocs({ limitNum: 15, orderByField: 'timestamp', orderByDirection: 'desc' })
+      .then((data) => {
+        setData(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <MusicCollectionSection>
       <TopBox>
@@ -56,22 +35,37 @@ function MusicSection() {
       <StyledSwiper slidesPerView={1}>
         <SwiperSlide>
           <ul>
-            {data.map((el) => (
-              <CollectionLi key={el.id} image={el.image} title={el.title} composer={el.composer} />
+            {data.slice(0, 5).map((el) => (
+              <CollectionLi
+                key={el.uuid}
+                image={el.imageUri}
+                title={el.title}
+                composer={el.composer}
+              />
             ))}
           </ul>
         </SwiperSlide>
         <SwiperSlide>
           <ul>
-            {data.map((el) => (
-              <CollectionLi key={el.id} image={el.image} title={el.title} composer={el.composer} />
+            {data.slice(5, 10).map((el) => (
+              <CollectionLi
+                key={el.uuid}
+                image={el.imageUri}
+                title={el.title}
+                composer={el.composer}
+              />
             ))}
           </ul>
         </SwiperSlide>
         <SwiperSlide>
           <ul>
-            {data.map((el) => (
-              <CollectionLi key={el.id} image={el.image} title={el.title} composer={el.composer} />
+            {data.slice(10, 15).map((el) => (
+              <CollectionLi
+                key={el.uuid}
+                image={el.imageUri}
+                title={el.title}
+                composer={el.composer}
+              />
             ))}
           </ul>
         </SwiperSlide>

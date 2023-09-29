@@ -38,7 +38,7 @@ export const BottomTabBlock = styled.nav`
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.12);
   position: fixed;
   bottom: 0;
-  z-index: 5;
+  z-index: 2;
 
   .svg-box {
     display: flex;

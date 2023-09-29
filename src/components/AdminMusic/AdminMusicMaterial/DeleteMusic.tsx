@@ -7,19 +7,19 @@ import { storage } from '@/firebase/config';
 import { deleteObject, ref } from 'firebase/storage';
 
 function DeleteMusic() {
-  const [musicId, setMusicId] = useState('');
+  const [uuid, setUuid] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // firebase에 있는 음악 정보 삭제
-    await deleteMudicDoc({ uuid: musicId });
+    await deleteMudicDoc({ uuid: uuid });
     // storage에 있는 앨범 이미지 삭제
-    const musicRef = ref(storage, `music_image/${musicId}`);
+    const musicRef = ref(storage, `music_image/${uuid}`);
     await deleteObject(musicRef);
     // storage에 있는 음악 삭제
-    const mp3Ref = ref(storage, `music_audio/${musicId}`);
+    const mp3Ref = ref(storage, `music_audio/${uuid}`);
     await deleteObject(mp3Ref);
-    setMusicId('');
+    setUuid('');
   };
 
   return (
@@ -28,8 +28,8 @@ function DeleteMusic() {
       <form onSubmit={handleSubmit}>
         <S.InputBox>
           <input
-            value={musicId}
-            onChange={(e) => setMusicId(e.target.value)}
+            value={uuid}
+            onChange={(e) => setUuid(e.target.value)}
             type="text"
             placeholder="음악 uuid 입력"
             autoComplete="off"

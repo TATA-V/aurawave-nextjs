@@ -11,11 +11,13 @@ const useAuthentication = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        const isAdmin = user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
         setUserInfo((data) => ({
           ...data,
           username: user.displayName,
           photoURL: user.photoURL,
           isLoggedIn: true,
+          isAdmin: isAdmin,
         }));
       }
     });

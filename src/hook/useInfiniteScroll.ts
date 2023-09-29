@@ -1,46 +1,51 @@
-import React, { useEffect, useState } from 'react';
-
-interface Music {
-  id: number;
-  image: any;
-  title: string;
-  composer: string;
-}
+import { MusicData } from '@/types/musicTypes';
+import React, { SetStateAction, useEffect, useState } from 'react';
 
 interface Props {
-  data: Music[];
-  nextData: Music[];
+  allData: MusicData[];
+  data: MusicData[];
+  sliceNum: number;
+  setSliceNum: React.Dispatch<SetStateAction<number>>;
   endRef: React.MutableRefObject<null>;
 }
 
-const useInfiniteScroll = ({ data, nextData, endRef }: Props) => {
+const useInfiniteScroll = ({ allData, data, sliceNum, setSliceNum, endRef }: Props) => {
   const [loading, setLoading] = useState(false);
   const [musicData, setMusicData] = useState(data);
 
   useEffect(() => {
-    if (!endRef.current) return;
+    setMusicData(data);
+  }, [data]);
+
+  // 무한스크롤
+  useEffect(() => {
+    if (!endRef.current || loading) return;
 
     const callback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setLoading(true);
-          setTimeout(() => {
-            setMusicData((prev) => [...prev, ...nextData]);
-            setLoading(false);
-          }, 1000);
+          if (sliceNum < allData.length) {
+            setLoading(true);
+            setTimeout(() => {
+              // 그 다음 데이터 8개
+              const nextData = allData.slice(sliceNum, sliceNum + 8);
+              setMusicData((prev) => [...prev, ...nextData]);
+              setSliceNum((num) => num + 8);
+              setLoading(false);
+            }, 1000);
+          }
         }
       });
     };
 
     const options = { root: null, rootMargin: '0px', threshold: 0.1 };
-
     const observer = new IntersectionObserver(callback, options);
     observer.observe(endRef.current);
 
     return () => {
       observer.disconnect();
     };
-  }, [nextData, endRef]);
+  }, [allData, sliceNum, loading, data, endRef, setSliceNum]);
 
   return { loading, musicData };
 };

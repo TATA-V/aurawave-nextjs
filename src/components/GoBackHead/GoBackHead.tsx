@@ -58,7 +58,7 @@ const GoBackHeadBlok = styled.header`
   width: 390px;
   height: 61px;
   background-color: var(--white-100);
-  z-index: 5;
+  z-index: 2;
 
   display: flex;
   justify-content: space-between;

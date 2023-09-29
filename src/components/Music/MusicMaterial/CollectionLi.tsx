@@ -13,14 +13,7 @@ function CollectionLi({ image, title, composer }: Props) {
   return (
     <CollectionLiBlock>
       <div className="details-box">
-        <Image
-          className="image"
-          width={49}
-          height={49}
-          src={image}
-          alt="music"
-          placeholder="blur"
-        />
+        <Image className="image" width={49} height={49} src={image} alt="music" />
         <p className="details">
           <span className="title">{title}</span>
           <br />
@@ -49,6 +42,7 @@ const CollectionLiBlock = styled.li`
   .image {
     border: 1px solid var(--gray-100);
     border-radius: 2px;
+    object-fit: cover;
     cursor: pointer;
   }
 

@@ -48,13 +48,17 @@ function Login() {
       await signInWithEmailAndPassword(auth, email, password);
 
       // 리코일에 유저정보 저장
-      if (auth.currentUser) {
-        const { displayName, photoURL } = auth.currentUser;
+      const user = auth.currentUser;
+      if (user) {
+        const { displayName, photoURL, email } = user;
+        const isAdmin = email === process.env.NEXT_PUBLIC_ADMIN_EMAIL; // admin 계정인지 확인
+        console.log(isAdmin);
         setUserState((data) => ({
           ...data,
           username: displayName,
           photoURL: photoURL,
           isLoggedIn: true,
+          isAdmin: isAdmin,
         }));
       }
       router.replace('/');

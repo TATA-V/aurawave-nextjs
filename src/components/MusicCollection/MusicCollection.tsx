@@ -1,258 +1,68 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import * as S from '@/styled/searchStyled';
-import summer from '@/assets/png-file/summer.png';
+import { End } from '@/styled/endStyled';
+import useInfiniteScroll from '@/hook/useInfiniteScroll';
+import { getAllMusicDocs } from '@/firebase/music';
+import { MusicData } from '@/types/musicTypes';
 
 import GoBackHead from '../GoBackHead/GoBackHead';
 import MusicLi from '../MusicLi/MusicLi';
 import LoadingLottie from '../Lottie/LoadingLottie';
-import { End } from '@/styled/endStyled';
-import useInfiniteScroll from '@/hook/useInfiniteScroll';
-
-// 임시 데이터
-const data = [
-  {
-    id: 1,
-    image: summer,
-    title: '거리에서 (Feat. ASH ISLAND)',
-    composer: '릴러말즈 (Leellamarz)',
-  },
-  {
-    id: 2,
-    image: summer,
-    title: 'Love Me Again',
-    composer: 'V',
-  },
-  {
-    id: 3,
-    image: summer,
-    title: '후라이의 꿈',
-    composer: 'AKMU(악뮤)',
-  },
-  {
-    id: 4,
-    image: summer,
-    title: 'Bubble',
-    composer: 'STAYC(스테이씨)',
-  },
-  {
-    id: 5,
-    image: summer,
-    title: `그대만 있다면 (여름날 우리 X
-      너드커넥션 (Nerd Connection)`,
-    composer: '너드커넥션(Nerd Connection)',
-  },
-  {
-    id: 6,
-    image: summer,
-    title: 'Kidding',
-    composer: '이세계아이돌',
-  },
-  {
-    id: 7,
-    image: summer,
-    title: '달빛에 그려지는',
-    composer: '미연((여자)아이들)',
-  },
-  {
-    id: 8,
-    image: summer,
-    title: 'Love Lee',
-    composer: 'AKMU(악뮤)',
-  },
-  {
-    id: 9,
-    image: summer,
-    title: '거리에서 (Feat. ASH ISLAND)',
-    composer: '릴러말즈 (Leellamarz)',
-  },
-  {
-    id: 10,
-    image: summer,
-    title: 'Love Me Again',
-    composer: 'V',
-  },
-  {
-    id: 11,
-    image: summer,
-    title: '후라이의 꿈',
-    composer: 'AKMU(악뮤)',
-  },
-  {
-    id: 12,
-    image: summer,
-    title: 'Bubble',
-    composer: 'STAYC(스테이씨)',
-  },
-  {
-    id: 13,
-    image: summer,
-    title: `그대만 있다면 (여름날 우리 X
-      너드커넥션 (Nerd Connection)`,
-    composer: '너드커넥션(Nerd Connection)',
-  },
-  {
-    id: 14,
-    image: summer,
-    title: 'Kidding',
-    composer: '이세계아이돌',
-  },
-  {
-    id: 15,
-    image: summer,
-    title: '달빛에 그려지는',
-    composer: '미연((여자)아이들)',
-  },
-  {
-    id: 16,
-    image: summer,
-    title: 'Love Lee',
-    composer: 'AKMU(악뮤)',
-  },
-  {
-    id: 17,
-    image: summer,
-    title: '거리에서 (Feat. ASH ISLAND)',
-    composer: '릴러말즈 (Leellamarz)',
-  },
-  {
-    id: 18,
-    image: summer,
-    title: 'Love Me Again',
-    composer: 'V',
-  },
-  {
-    id: 19,
-    image: summer,
-    title: '후라이의 꿈',
-    composer: 'AKMU(악뮤)',
-  },
-  {
-    id: 20,
-    image: summer,
-    title: 'Bubble',
-    composer: 'STAYC(스테이씨)',
-  },
-  {
-    id: 21,
-    image: summer,
-    title: `그대만 있다면 (여름날 우리 X
-      너드커넥션 (Nerd Connection)`,
-    composer: '너드커넥션(Nerd Connection)',
-  },
-  {
-    id: 22,
-    image: summer,
-    title: 'Love Me Again',
-    composer: 'V',
-  },
-  {
-    id: 23,
-    image: summer,
-    title: '후라이의 꿈',
-    composer: 'AKMU(악뮤)',
-  },
-  {
-    id: 24,
-    image: summer,
-    title: 'Bubble',
-    composer: 'STAYC(스테이씨)',
-  },
-  {
-    id: 25,
-    image: summer,
-    title: `그대만 있다면 (여름날 우리 X
-      너드커넥션 (Nerd Connection)`,
-    composer: '너드커넥션(Nerd Connection)',
-  },
-  {
-    id: 26,
-    image: summer,
-    title: 'Kidding',
-    composer: '이세계아이돌',
-  },
-  {
-    id: 27,
-    image: summer,
-    title: '달빛에 그려지는',
-    composer: '미연((여자)아이들)',
-  },
-  {
-    id: 28,
-    image: summer,
-    title: 'Love Lee',
-    composer: 'AKMU(악뮤)',
-  },
-  {
-    id: 29,
-    image: summer,
-    title: '달빛에 그려지는',
-    composer: '미연((여자)아이들)',
-  },
-  {
-    id: 30,
-    image: summer,
-    title: 'Love Lee',
-    composer: 'AKMU(악뮤)',
-  },
-];
-
-const nextData = [
-  {
-    id: 31,
-    image: summer,
-    title: '거리에서 (Feat. ASH ISLAND)',
-    composer: '릴러말즈 (Leellamarz)',
-  },
-  {
-    id: 32,
-    image: summer,
-    title: 'Love Me Again',
-    composer: 'V',
-  },
-  {
-    id: 33,
-    image: summer,
-    title: '후라이의 꿈',
-    composer: 'AKMU(악뮤)',
-  },
-  {
-    id: 34,
-    image: summer,
-    title: 'Bubble',
-    composer: 'STAYC(스테이씨)',
-  },
-  {
-    id: 35,
-    image: summer,
-    title: `그대만 있다면 (여름날 우리 X
-      너드커넥션 (Nerd Connection)`,
-    composer: '너드커넥션(Nerd Connection)',
-  },
-  {
-    id: 36,
-    image: summer,
-    title: 'Kidding',
-    composer: '이세계아이돌',
-  },
-  {
-    id: 37,
-    image: summer,
-    title: '달빛에 그려지는',
-    composer: '미연((여자)아이들)',
-  },
-  {
-    id: 38,
-    image: summer,
-    title: 'Love Lee',
-    composer: 'AKMU(악뮤)',
-  },
-];
 
 function MusicCollection() {
+  const [allData, setAllData] = useState<MusicData[]>([]);
+  const [sliceNum, setSliceNum] = useState(30);
   const endRef = useRef(null);
-  const { loading, musicData } = useInfiniteScroll({ data, nextData, endRef }); // hook
+  const { loading, musicData } = useInfiniteScroll({
+    allData,
+    data: allData.slice(0, 30), // 처음 데이터 지정
+    sliceNum,
+    setSliceNum,
+    endRef,
+  }); // hook
+
+  useEffect(() => {
+    // 모든 데이터 가져오기
+    getAllMusicDocs()
+      .then((data) => {
+        setAllData(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  console.log(musicData);
+
+  // // 무한스크롤
+  // useEffect(() => {
+  //   if (!endRef.current || loading) return;
+  //   const callback = (entries: IntersectionObserverEntry[]) => {
+  //     entries.forEach((entry) => {
+  //       if (entry.isIntersecting) {
+  //         if (sliceNum < allData.length) {
+  //           setLoading(true);
+  //           setTimeout(() => {
+  //             // 그 다음 데이터 8개
+  //             const nextData = allData.slice(sliceNum, sliceNum + 8);
+  //             setData((prev) => [...prev, ...nextData]);
+  //             setSliceNum((num) => num + 8);
+  //             setLoading(false);
+  //           }, 1000);
+  //         }
+  //       }
+  //     });
+  //   };
+  //   const options = { root: null, rootMargin: '0px', threshold: 0.1 };
+  //   const observer = new IntersectionObserver(callback, options);
+  //   observer.observe(endRef.current);
+
+  //   return () => {
+  //     observer.disconnect();
+  //   };
+  // }, [allData, sliceNum, loading, data]);
 
   return (
     <>
@@ -270,7 +80,7 @@ function MusicCollection() {
         {/* 모든 음악 */}
         <MusicUl>
           {musicData.map((el) => (
-            <MusicLi key={el.id} image={el.image} title={el.title} composer={el.composer} />
+            <MusicLi key={el.uuid} image={el.imageUri} title={el.title} composer={el.composer} />
           ))}
         </MusicUl>
       </MusicCollectionBlock>

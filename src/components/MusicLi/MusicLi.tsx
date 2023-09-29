@@ -19,14 +19,7 @@ function MusicLi({ image, title, composer }: Props) {
     <MusicLiBlock>
       <div className="music-content">
         <div className="details-box">
-          <Image
-            className="image"
-            width={49}
-            height={49}
-            src={image}
-            alt="recommended music"
-            placeholder="blur"
-          />
+          <Image className="image" width={49} height={49} src={image} alt="recommended music" />
           <p className="details">
             <span className="title">{title}</span>
             <br />

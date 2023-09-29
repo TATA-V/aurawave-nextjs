@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PeopleCircleSvg from '@/../public/PeopleCircleSvg.svg';
 import styled from 'styled-components';
 import { auth } from '@/firebase/config';
@@ -7,16 +7,7 @@ import userState from '@/atom/userState';
 import Link from 'next/link';
 
 function MyFriendAndMyPlaylist() {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const { isLoggedIn } = useRecoilValue(userState);
-
-  // admin 계정인지 확인
-  useEffect(() => {
-    const userEmail = auth?.currentUser?.email;
-    if (userEmail === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-      setIsAdmin(true);
-    }
-  }, [isLoggedIn]);
+  const { isAdmin } = useRecoilValue(userState);
 
   return (
     <MyFriendAndMyPlaylistBlock>

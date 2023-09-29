@@ -1,121 +1,70 @@
 'use client';
 import MusicLi from '@/components/MusicLi/MusicLi';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import summer from '@/assets/png-file/summer.png';
 import LoadingLottie from '@/components/Lottie/LoadingLottie';
 import Link from 'next/link';
 import { End } from '@/styled/endStyled';
+import { MusicData } from '@/types/musicTypes';
+import { getAllMusicDocs } from '@/firebase/music';
 import useInfiniteScroll from '@/hook/useInfiniteScroll';
 
-// 임시 데이터
-const data = [
-  {
-    id: 1,
-    image: summer,
-    title: '거리에서 (Feat. ASH ISLAND)',
-    composer: '릴러말즈 (Leellamarz)',
-  },
-  {
-    id: 2,
-    image: summer,
-    title: 'Love Me Again',
-    composer: 'V',
-  },
-  {
-    id: 3,
-    image: summer,
-    title: '후라이의 꿈',
-    composer: 'AKMU(악뮤)',
-  },
-  {
-    id: 4,
-    image: summer,
-    title: 'Bubble',
-    composer: 'STAYC(스테이씨)',
-  },
-  {
-    id: 5,
-    image: summer,
-    title: `그대만 있다면 (여름날 우리 X
-      너드커넥션 (Nerd Connection)`,
-    composer: '너드커넥션(Nerd Connection)',
-  },
-  {
-    id: 6,
-    image: summer,
-    title: 'Kidding',
-    composer: '이세계아이돌',
-  },
-  {
-    id: 7,
-    image: summer,
-    title: '달빛에 그려지는',
-    composer: '미연((여자)아이들)',
-  },
-  {
-    id: 8,
-    image: summer,
-    title: 'Love Lee',
-    composer: 'AKMU(악뮤)',
-  },
-];
-
-const nextData = [
-  {
-    id: 9,
-    image: summer,
-    title: '거리에서 (Feat. ASH ISLAND)',
-    composer: '릴러말즈 (Leellamarz)',
-  },
-  {
-    id: 10,
-    image: summer,
-    title: 'Love Me Again',
-    composer: 'V',
-  },
-  {
-    id: 11,
-    image: summer,
-    title: '후라이의 꿈',
-    composer: 'AKMU(악뮤)',
-  },
-  {
-    id: 12,
-    image: summer,
-    title: 'Bubble',
-    composer: 'STAYC(스테이씨)',
-  },
-  {
-    id: 13,
-    image: summer,
-    title: `그대만 있다면 (여름날 우리 X
-      너드커넥션 (Nerd Connection)`,
-    composer: '너드커넥션(Nerd Connection)',
-  },
-  {
-    id: 14,
-    image: summer,
-    title: 'Kidding',
-    composer: '이세계아이돌',
-  },
-  {
-    id: 15,
-    image: summer,
-    title: '달빛에 그려지는',
-    composer: '미연((여자)아이들)',
-  },
-  {
-    id: 16,
-    image: summer,
-    title: 'Love Lee',
-    composer: 'AKMU(악뮤)',
-  },
-];
-
 function RecommendMusic() {
+  const [allRandomData, setAllRandomData] = useState<MusicData[]>([]);
+  const [sliceNum, setSliceNum] = useState(8);
   const endRef = useRef(null);
-  const { loading, musicData } = useInfiniteScroll({ data, nextData, endRef }); // hook
+  const { loading, musicData } = useInfiniteScroll({
+    allData: allRandomData,
+    data: allRandomData.slice(0, 8), // 처음 데이터 지정
+    sliceNum,
+    setSliceNum,
+    endRef,
+  }); // hook
+
+  // 배열 데이터를 랜덤으로
+  const shuffle = (array: MusicData[]) => {
+    return array.sort(() => Math.random() - 0.5);
+  };
+
+  // 모든 음악 데이터 가져오기
+  useEffect(() => {
+    getAllMusicDocs()
+      .then((data) => {
+        const randomData = shuffle(data); // 배열 데이터를 랜덤으로
+        setAllRandomData(randomData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  // 무한스크롤
+  // useEffect(() => {
+  //   if (!endRef.current || loading) return;
+  //   const callback = (entries: IntersectionObserverEntry[]) => {
+  //     entries.forEach((entry) => {
+  //       if (entry.isIntersecting) {
+  //         if (sliceNum < allRandomData.length) {
+  //           setLoading(true);
+  //           setTimeout(() => {
+  //             // 그 다음 데이터 8개
+  //             const nextData = allRandomData.slice(sliceNum, sliceNum + 8);
+  //             setData((prev) => [...prev, ...nextData]);
+  //             setSliceNum((num) => num + 8);
+  //             setLoading(false);
+  //           }, 1000);
+  //         }
+  //       }
+  //     });
+  //   };
+  //   const options = { root: null, rootMargin: '0px', threshold: 0.1 };
+  //   const observer = new IntersectionObserver(callback, options);
+  //   observer.observe(endRef.current);
+
+  //   return () => {
+  //     observer.disconnect();
+  //   };
+  // }, [allRandomData, sliceNum, loading, data]);
 
   return (
     <RecommendMusicSection>
@@ -129,7 +78,7 @@ function RecommendMusic() {
       <ul>
         {/* 음악 => MusicLi 컴포넌트 */}
         {musicData.map((el) => (
-          <MusicLi key={el.id} image={el.image} title={el.title} composer={el.composer} />
+          <MusicLi key={el.uuid} image={el.imageUri} title={el.title} composer={el.composer} />
         ))}
       </ul>
 
