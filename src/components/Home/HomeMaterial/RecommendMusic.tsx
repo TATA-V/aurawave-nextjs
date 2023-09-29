@@ -11,11 +11,14 @@ import useInfiniteScroll from '@/hook/useInfiniteScroll';
 
 function RecommendMusic() {
   const [allRandomData, setAllRandomData] = useState<MusicData[]>([]);
+  const [data, setData] = useState<MusicData[]>([]);
   const [sliceNum, setSliceNum] = useState(8);
+
   const endRef = useRef(null);
-  const { loading, musicData } = useInfiniteScroll({
+  const { loading } = useInfiniteScroll({
     allData: allRandomData,
-    data: allRandomData.slice(0, 8), // 처음 데이터 지정
+    data,
+    setData,
     sliceNum,
     setSliceNum,
     endRef,
@@ -32,39 +35,13 @@ function RecommendMusic() {
       .then((data) => {
         const randomData = shuffle(data); // 배열 데이터를 랜덤으로
         setAllRandomData(randomData);
+        const initialData = randomData.slice(0, 8); // 처음 데이터 지정
+        setData(initialData);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
-
-  // 무한스크롤
-  // useEffect(() => {
-  //   if (!endRef.current || loading) return;
-  //   const callback = (entries: IntersectionObserverEntry[]) => {
-  //     entries.forEach((entry) => {
-  //       if (entry.isIntersecting) {
-  //         if (sliceNum < allRandomData.length) {
-  //           setLoading(true);
-  //           setTimeout(() => {
-  //             // 그 다음 데이터 8개
-  //             const nextData = allRandomData.slice(sliceNum, sliceNum + 8);
-  //             setData((prev) => [...prev, ...nextData]);
-  //             setSliceNum((num) => num + 8);
-  //             setLoading(false);
-  //           }, 1000);
-  //         }
-  //       }
-  //     });
-  //   };
-  //   const options = { root: null, rootMargin: '0px', threshold: 0.1 };
-  //   const observer = new IntersectionObserver(callback, options);
-  //   observer.observe(endRef.current);
-
-  //   return () => {
-  //     observer.disconnect();
-  //   };
-  // }, [allRandomData, sliceNum, loading, data]);
 
   return (
     <RecommendMusicSection>
@@ -77,7 +54,7 @@ function RecommendMusic() {
 
       <ul>
         {/* 음악 => MusicLi 컴포넌트 */}
-        {musicData.map((el) => (
+        {data.map((el) => (
           <MusicLi key={el.uuid} image={el.imageUri} title={el.title} composer={el.composer} />
         ))}
       </ul>

@@ -13,11 +13,13 @@ import LoadingLottie from '../Lottie/LoadingLottie';
 
 function MusicCollection() {
   const [allData, setAllData] = useState<MusicData[]>([]);
+  const [data, setData] = useState<MusicData[]>([]);
   const [sliceNum, setSliceNum] = useState(30);
   const endRef = useRef(null);
-  const { loading, musicData } = useInfiniteScroll({
+  const { loading } = useInfiniteScroll({
     allData,
-    data: allData.slice(0, 30), // 처음 데이터 지정
+    data,
+    setData,
     sliceNum,
     setSliceNum,
     endRef,
@@ -28,41 +30,13 @@ function MusicCollection() {
     getAllMusicDocs()
       .then((data) => {
         setAllData(data);
+        const initialData = data.slice(0, 30); // 처음 데이터 지정
+        setData(initialData);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
-
-  console.log(musicData);
-
-  // // 무한스크롤
-  // useEffect(() => {
-  //   if (!endRef.current || loading) return;
-  //   const callback = (entries: IntersectionObserverEntry[]) => {
-  //     entries.forEach((entry) => {
-  //       if (entry.isIntersecting) {
-  //         if (sliceNum < allData.length) {
-  //           setLoading(true);
-  //           setTimeout(() => {
-  //             // 그 다음 데이터 8개
-  //             const nextData = allData.slice(sliceNum, sliceNum + 8);
-  //             setData((prev) => [...prev, ...nextData]);
-  //             setSliceNum((num) => num + 8);
-  //             setLoading(false);
-  //           }, 1000);
-  //         }
-  //       }
-  //     });
-  //   };
-  //   const options = { root: null, rootMargin: '0px', threshold: 0.1 };
-  //   const observer = new IntersectionObserver(callback, options);
-  //   observer.observe(endRef.current);
-
-  //   return () => {
-  //     observer.disconnect();
-  //   };
-  // }, [allData, sliceNum, loading, data]);
 
   return (
     <>
@@ -79,7 +53,7 @@ function MusicCollection() {
 
         {/* 모든 음악 */}
         <MusicUl>
-          {musicData.map((el) => (
+          {data.map((el) => (
             <MusicLi key={el.uuid} image={el.imageUri} title={el.title} composer={el.composer} />
           ))}
         </MusicUl>

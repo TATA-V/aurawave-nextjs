@@ -4,18 +4,14 @@ import React, { SetStateAction, useEffect, useState } from 'react';
 interface Props {
   allData: MusicData[];
   data: MusicData[];
+  setData: React.Dispatch<React.SetStateAction<MusicData[]>>;
   sliceNum: number;
   setSliceNum: React.Dispatch<SetStateAction<number>>;
   endRef: React.MutableRefObject<null>;
 }
 
-const useInfiniteScroll = ({ allData, data, sliceNum, setSliceNum, endRef }: Props) => {
+const useInfiniteScroll = ({ allData, data, setData, sliceNum, setSliceNum, endRef }: Props) => {
   const [loading, setLoading] = useState(false);
-  const [musicData, setMusicData] = useState(data);
-
-  useEffect(() => {
-    setMusicData(data);
-  }, [data]);
 
   // 무한스크롤
   useEffect(() => {
@@ -29,7 +25,7 @@ const useInfiniteScroll = ({ allData, data, sliceNum, setSliceNum, endRef }: Pro
             setTimeout(() => {
               // 그 다음 데이터 8개
               const nextData = allData.slice(sliceNum, sliceNum + 8);
-              setMusicData((prev) => [...prev, ...nextData]);
+              setData((prev) => [...prev, ...nextData]);
               setSliceNum((num) => num + 8);
               setLoading(false);
             }, 1000);
@@ -45,9 +41,9 @@ const useInfiniteScroll = ({ allData, data, sliceNum, setSliceNum, endRef }: Pro
     return () => {
       observer.disconnect();
     };
-  }, [allData, sliceNum, loading, data, endRef, setSliceNum]);
+  }, [allData, sliceNum, loading, data, setData, endRef, setSliceNum]);
 
-  return { loading, musicData };
+  return { loading, data };
 };
 
 export default useInfiniteScroll;
