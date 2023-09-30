@@ -8,7 +8,6 @@ import {
   orderBy,
   limit,
   updateDoc,
-  startAfter,
 } from 'firebase/firestore';
 import { firestore } from './config';
 import {
@@ -17,7 +16,6 @@ import {
   MusicData,
   GetMusicDocs,
   UpdateMusicPhoto,
-  GetNextMusicDocs,
 } from '@/types/musicTypes';
 
 // 새로운 음악 정보 등록
@@ -60,20 +58,6 @@ export async function getMusicDocs({ limitNum, orderByField, orderByDirection }:
   const querySanpshot = await getDocs(
     query(musicCollection, orderBy(orderByField, orderByDirection), limit(limitNum))
   );
-
-  querySanpshot.forEach((doc) => {
-    musicArr.push(doc.data() as MusicData);
-  });
-  return musicArr;
-}
-
-// 마지막 음악 데이터(lastDoc) 이후의 음악 데이터 가져오기
-export async function getNextMusicDocs({ lastDoc, limitNum }: GetNextMusicDocs) {
-  const musicArr: MusicData[] = [];
-
-  const querySanpshot = await getDocs(query(musicCollection, startAfter(lastDoc), limit(limitNum)));
-
-  console.log('querySanpshot:', querySanpshot);
 
   querySanpshot.forEach((doc) => {
     musicArr.push(doc.data() as MusicData);

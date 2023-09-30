@@ -29,8 +29,3 @@ export interface UpdateMusicPhoto {
   uuid: string;
   imageUri: string;
 }
-
-export interface GetNextMusicDocs {
-  lastDoc: { title: string };
-  limitNum: number;
-}

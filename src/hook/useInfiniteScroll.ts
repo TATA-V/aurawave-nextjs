@@ -43,7 +43,7 @@ const useInfiniteScroll = ({ allData, data, setData, sliceNum, setSliceNum, endR
     };
   }, [allData, sliceNum, loading, data, setData, endRef, setSliceNum]);
 
-  return { loading, data };
+  return { loading };
 };
 
 export default useInfiniteScroll;

@@ -12,6 +12,10 @@ import MusicLi from '../MusicLi/MusicLi';
 import LoadingLottie from '../Lottie/LoadingLottie';
 
 function MusicCollection() {
+  // search 음악
+  const [searchText, setSearchText] = useState('');
+  const [findSearchData, setFindSearchData] = useState<MusicData[]>([]);
+  // all 음악
   const [allData, setAllData] = useState<MusicData[]>([]);
   const [data, setData] = useState<MusicData[]>([]);
   const [sliceNum, setSliceNum] = useState(30);
@@ -38,6 +42,19 @@ function MusicCollection() {
       });
   }, []);
 
+  // 검색
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const regex = new RegExp(e.target.value, 'gi');
+    const searchResult = allData.reduce((acc, music) => {
+      if ((music.title && music.title.match(regex)) || music.composer.match(regex)) {
+        acc.push(music);
+      }
+      return acc;
+    }, [] as MusicData[]);
+    setFindSearchData(searchResult);
+    setSearchText(e.target.value);
+  };
+
   return (
     <>
       {/* 뒤로가기 => GoBackHead 컴포넌트 */}
@@ -46,14 +63,19 @@ function MusicCollection() {
       {/* 검색창 */}
       <MusicCollectionBlock>
         <S.SearchBox>
-          <input className="search-input" type="text" placeholder="원하는 곡을 검색해 보세요" />
+          <input
+            onChange={handleSearch}
+            className="search-input"
+            type="text"
+            placeholder="원하는 곡을 검색해 보세요"
+          />
           <i className="i-search" />
           <S.Bar className="bar" />
         </S.SearchBox>
 
         {/* 모든 음악 */}
         <MusicUl>
-          {data.map((el) => (
+          {(searchText.trim() !== '' ? findSearchData : data).map((el) => (
             <MusicLi key={el.uuid} image={el.imageUri} title={el.title} composer={el.composer} />
           ))}
         </MusicUl>
