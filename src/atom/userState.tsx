@@ -4,12 +4,14 @@ interface UserState {
   username: string | null;
   photoURL: string | null;
   isLoggedIn: boolean;
+  isAdmin: boolean;
 }
 
 const defaultValue: UserState = {
   username: '',
   photoURL: '',
   isLoggedIn: false,
+  isAdmin: false,
 };
 
 const userState = atom<UserState>({

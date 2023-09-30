@@ -19,18 +19,12 @@ function MusicLi({ image, title, composer }: Props) {
     <MusicLiBlock>
       <div className="music-content">
         <div className="details-box">
-          <Image
-            className="image"
-            width={49}
-            height={49}
-            src={image}
-            alt="recommended music"
-            placeholder="blur"
-          />
-          <div className="details">
-            <p className="title">{title}</p>
-            <p className="composer">{composer}</p>
-          </div>
+          <Image className="image" width={49} height={49} src={image} alt="recommended music" />
+          <p className="details">
+            <span className="title">{title}</span>
+            <br />
+            <span className="composer">{composer}</span>
+          </p>
         </div>
 
         {/* 더보기 */}
@@ -71,26 +65,27 @@ const MusicLiBlock = styled.li`
   .image {
     border: 1px solid var(--gray-100);
     border-radius: 2px;
+    cursor: pointer;
   }
 
   .details {
     width: 225px;
     padding-left: 16px;
-    display: flex;
-    flex-direction: column;
+    line-height: 1.1rem;
   }
 
   .title {
     color: var(--dark-blue-900);
     font-size: 0.9375rem;
     font-weight: 500;
+    cursor: pointer;
   }
 
   .composer {
     color: var(--gray-400);
     font-size: 0.8125rem;
     font-weight: 400;
-    padding-top: 5px;
+    cursor: pointer;
   }
 `;
 

@@ -2,80 +2,27 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
-import summer from '@/assets/png-file/summer.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import SkeletonNewMusic from './SkeletonNewMusic';
+import { getMusicDocs } from '@/firebase/music';
+import { MusicData } from '@/types/musicTypes';
 
-// 임시 데이터
-const data = [
-  {
-    id: 1,
-    image: summer,
-    title: '몇 번의 여름',
-    composer: 'TOIL, Gist',
-  },
-  {
-    id: 2,
-    image: summer,
-    title: 'Super Shy',
-    composer: 'NewJeans',
-  },
-  {
-    id: 3,
-    image: summer,
-    title: 'Seven',
-    composer: '정국',
-  },
-  {
-    id: 4,
-    image: summer,
-    title: '몇 번의 여름',
-    composer: 'TOIL, Gist',
-  },
-  {
-    id: 5,
-    image: summer,
-    title: 'Super Shy',
-    composer: 'NewJeans',
-  },
-  {
-    id: 6,
-    image: summer,
-    title: 'Seven',
-    composer: '정국',
-  },
-  {
-    id: 7,
-    image: summer,
-    title: '몇 번의 여름',
-    composer: 'TOIL, Gist',
-  },
-  {
-    id: 8,
-    image: summer,
-    title: 'Super Shy',
-    composer: 'NewJeans',
-  },
-  {
-    id: 9,
-    image: summer,
-    title: 'Seven',
-    composer: '정국',
-  },
-  {
-    id: 10,
-    image: summer,
-    title: 'Seven',
-    composer: '정국',
-  },
-];
+import SkeletonNewMusic from './SkeletonNewMusic';
 
 function NewMusic() {
   const [loaded, setLoaded] = useState(false);
+  const [data, setData] = useState<MusicData[]>([]);
 
   useEffect(() => {
-    setLoaded(true);
+    // 최근에 추가한 음악 10개를 가져오기
+    getMusicDocs({ limitNum: 10, orderByField: 'timestamp', orderByDirection: 'desc' })
+      .then((data) => {
+        setData(data);
+        setLoaded(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   return (
@@ -90,18 +37,17 @@ function NewMusic() {
       )}
 
       {loaded && (
-        <StyledSwiper spaceBetween={12} slidesPerView={3.1}>
+        <StyledSwiper spaceBetween={15} slidesPerView={3.1}>
           {data.map((el) => (
-            <SwiperSlide key={el.id}>
-              <NewMusicLi num={el.id}>
+            <SwiperSlide key={el.uuid}>
+              <NewMusicLi>
                 <div className="music-content">
                   <Image
                     className="image"
                     width={95}
                     height={95}
-                    src={el.image}
+                    src={el.imageUri}
                     alt="new music"
-                    placeholder="blur"
                   />
                   <div className="details">
                     <p className="title">{el.title}</p>
@@ -118,10 +64,6 @@ function NewMusic() {
 }
 
 export default NewMusic;
-
-interface Num {
-  num: number;
-}
 
 const SkeletonNewMusicBlock = styled.div`
   padding: 14px 21px 0 21px;
@@ -143,7 +85,7 @@ const StyledSwiper = styled(Swiper)`
   padding: 14px 21px 0 21px;
 `;
 
-const NewMusicLi = styled.li<Num>`
+const NewMusicLi = styled.li`
   .music-content {
     width: 95px;
     height: 133px;
@@ -154,7 +96,7 @@ const NewMusicLi = styled.li<Num>`
     height: 95px;
     border: 1px solid var(--gray-100);
     border-radius: 4px;
-    object-fit: 'cover';
+    object-fit: cover;
     cursor: pointer;
   }
 
@@ -168,9 +110,15 @@ const NewMusicLi = styled.li<Num>`
   }
 
   .title {
+    width: 95px;
+    height: 16px;
     color: var(--dark-blue-900);
     font-size: 0.625rem;
     font-weight: 500;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
     cursor: pointer;
   }
 

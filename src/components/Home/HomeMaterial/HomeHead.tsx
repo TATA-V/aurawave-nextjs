@@ -76,7 +76,7 @@ const RightBox = styled.div`
 
   .image {
     border-radius: 50%;
-    object-fit: 'cover';
+    object-fit: cover;
     display: flex;
   }
 `;

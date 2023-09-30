@@ -64,7 +64,7 @@ function AddToPlaylistModal({ showAddToPlaylistModal, setShowAddToPlaylistModal 
 
         <AddToPlaylistUl>
           {data.map((el) => (
-            <AddToPlaylistLi key={el.id}>
+            <AddToPlaylistLi key={el.id} num={el.id}>
               <div className="playlist-box">
                 <i className="i-plus-music-circle" />
                 <p className="playlist-title">{el.playlistTitle}</p>
@@ -82,6 +82,10 @@ function AddToPlaylistModal({ showAddToPlaylistModal, setShowAddToPlaylistModal 
 }
 
 export default AddToPlaylistModal;
+
+interface Num {
+  num: number;
+}
 
 const Container = styled.div`
   position: absolute;
@@ -104,7 +108,7 @@ const ModalTitle = styled.div`
   width: 120px;
   height: 38px;
   border-bottom: 1px solid var(--gray-50);
-  margin: 0 5px 2px 0;
+  margin-right: 5px;
 
   display: flex;
   justify-content: center;
@@ -143,16 +147,16 @@ const AddToPlaylistUl = styled.ul`
   }
 `;
 
-const AddToPlaylistLi = styled.li`
+const AddToPlaylistLi = styled.li<Num>`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: ${({ num }) => (num === 1 ? '2px' : '0')};
 
   .playlist-box {
     width: 110px;
     height: 35px;
     padding: 0 2px 0 2px;
-
     border-bottom: 1px solid var(--gray-50);
     cursor: pointer;
 

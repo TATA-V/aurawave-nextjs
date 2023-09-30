@@ -48,13 +48,17 @@ function Login() {
       await signInWithEmailAndPassword(auth, email, password);
 
       // 리코일에 유저정보 저장
-      if (auth.currentUser) {
-        const { displayName, photoURL } = auth.currentUser;
+      const user = auth.currentUser;
+      if (user) {
+        const { displayName, photoURL, email } = user;
+        const isAdmin = email === process.env.NEXT_PUBLIC_ADMIN_EMAIL; // admin 계정인지 확인
+        console.log(isAdmin);
         setUserState((data) => ({
           ...data,
           username: displayName,
           photoURL: photoURL,
           isLoggedIn: true,
+          isAdmin: isAdmin,
         }));
       }
       router.replace('/');
@@ -62,7 +66,7 @@ function Login() {
     } catch (error) {
       console.log('로그인 실패:', error);
       setLoading(false);
-      alert('로그인 도중에 문제가 발생했습니다.');
+      alert('가입되지 않은 이메일이거나, 잘못된 비밀번호입니다.');
     }
   });
 

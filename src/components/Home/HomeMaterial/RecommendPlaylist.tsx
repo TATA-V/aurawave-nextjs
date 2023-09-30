@@ -8,6 +8,7 @@ import gloomy from '@/assets/jpg-file/gloomy.jpg';
 import refresh from '@/assets/jpg-file/refresh.jpg';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+
 import SkeletonPlaylist from './SkeletonPlaylist';
 
 // 임시 데이터

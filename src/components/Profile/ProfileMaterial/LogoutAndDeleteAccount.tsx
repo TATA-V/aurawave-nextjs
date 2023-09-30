@@ -44,7 +44,11 @@ function LogoutAndDeleteAccount() {
 
       {/* 탈퇴하기 모달 => CustomModal 컴포넌트 */}
       {toggleModal && (
-        <CustomModal toggleModal={toggleModal} setToggleModal={setToggleModal} type="탈퇴" />
+        <CustomModal
+          toggleModal={toggleModal}
+          setToggleModal={setToggleModal}
+          type="플레이리스트삭제"
+        />
       )}
     </LogoutAndDeleteAccountBlock>
   );
