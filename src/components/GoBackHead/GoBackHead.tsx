@@ -14,7 +14,7 @@ function GoBackHead({ title }: Props) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (title === '플레이리스트' || title === '플레이리스트 추가 & 삭제') {
+    if (title === '플레이리스트' || title === '플레이리스트 등록 & 삭제') {
       setIsAurawaveTxt(true);
     }
   }, [title]);

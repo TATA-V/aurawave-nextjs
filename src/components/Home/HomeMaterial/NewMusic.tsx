@@ -7,11 +7,13 @@ import 'swiper/css';
 import { getMusicDocs } from '@/firebase/music';
 import { MusicData } from '@/types/musicTypes';
 
-import SkeletonNewMusic from './SkeletonNewMusic';
+import SkeletonNewMusic from '../../Skeleton/SkeletonNewMusic';
+import useMusicPlay from '@/hook/useMusicPlay';
 
 function NewMusic() {
   const [loaded, setLoaded] = useState(false);
   const [data, setData] = useState<MusicData[]>([]);
+  const musicPlay = useMusicPlay(); // hook
 
   useEffect(() => {
     // 최근에 추가한 음악 10개를 가져오기
@@ -22,15 +24,21 @@ function NewMusic() {
       })
       .catch((error) => {
         console.log(error);
+        setLoaded(false);
       });
   }, []);
+
+  const handleMusicPlay = (el: MusicData) => {
+    musicPlay(el);
+  };
 
   return (
     <NewMusicSection>
       <h2 className="section-heading">최신 음악</h2>
+      {/* 스켈레톤 => SkeletonNewMusic 컴포넌트 */}
       {!loaded && (
         <SkeletonNewMusicBlock>
-          {[...Array(4)].map((el, i) => (
+          {[...Array(4)].map((_, i) => (
             <SkeletonNewMusic key={i} />
           ))}
         </SkeletonNewMusicBlock>
@@ -43,6 +51,7 @@ function NewMusic() {
               <NewMusicLi>
                 <div className="music-content">
                   <Image
+                    onClick={() => handleMusicPlay(el)}
                     className="image"
                     width={95}
                     height={95}
@@ -50,8 +59,12 @@ function NewMusic() {
                     alt="new music"
                   />
                   <div className="details">
-                    <p className="title">{el.title}</p>
-                    <p className="composer">{el.composer}</p>
+                    <p onClick={() => handleMusicPlay(el)} className="title">
+                      {el.title}
+                    </p>
+                    <p onClick={() => handleMusicPlay(el)} className="composer">
+                      {el.composer}
+                    </p>
                   </div>
                 </div>
               </NewMusicLi>
@@ -110,7 +123,6 @@ const NewMusicLi = styled.li`
   }
 
   .title {
-    width: 95px;
     height: 16px;
     color: var(--dark-blue-900);
     font-size: 0.625rem;

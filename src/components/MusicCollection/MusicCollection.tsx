@@ -10,8 +10,10 @@ import { MusicData } from '@/types/musicTypes';
 import GoBackHead from '../GoBackHead/GoBackHead';
 import MusicLi from '../MusicLi/MusicLi';
 import LoadingLottie from '../Lottie/LoadingLottie';
+import SkeletonMusicCollection from '../Skeleton/SkeletonMusicCollection';
 
 function MusicCollection() {
+  const [loaded, setLoded] = useState(false);
   // search 음악
   const [searchText, setSearchText] = useState('');
   const [findSearchData, setFindSearchData] = useState<MusicData[]>([]);
@@ -36,9 +38,11 @@ function MusicCollection() {
         setAllData(data);
         const initialData = data.slice(0, 30); // 처음 데이터 지정
         setData(initialData);
+        setLoded(true);
       })
       .catch((error) => {
         console.log(error);
+        setLoded(false);
       });
   }, []);
 
@@ -72,11 +76,13 @@ function MusicCollection() {
           <i className="i-search" />
           <S.Bar className="bar" />
         </S.SearchBox>
+        {/* 스켈레톤 => SkeletonMusicCollection 컴포넌트 */}
+        {!loaded && <SkeletonMusicCollection />}
 
         {/* 모든 음악 */}
         <MusicUl>
           {(searchText.trim() !== '' ? findSearchData : data).map((el) => (
-            <MusicLi key={el.uuid} image={el.imageUri} title={el.title} composer={el.composer} />
+            <MusicLi key={el.uuid} el={el} />
           ))}
         </MusicUl>
       </MusicCollectionBlock>

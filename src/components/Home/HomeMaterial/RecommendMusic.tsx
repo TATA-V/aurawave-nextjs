@@ -8,8 +8,10 @@ import { End } from '@/styled/endStyled';
 import { MusicData } from '@/types/musicTypes';
 import { getAllMusicDocs } from '@/firebase/music';
 import useInfiniteScroll from '@/hook/useInfiniteScroll';
+import SkeletonRecommendMusic from '@/components/Skeleton/SkeletonRecommendMusic';
 
 function RecommendMusic() {
+  const [loaded, setLoaded] = useState(false);
   const [allRandomData, setAllRandomData] = useState<MusicData[]>([]);
   const [data, setData] = useState<MusicData[]>([]);
   const [sliceNum, setSliceNum] = useState(8);
@@ -37,9 +39,11 @@ function RecommendMusic() {
         setAllRandomData(randomData);
         const initialData = randomData.slice(0, 8); // 처음 데이터 지정
         setData(initialData);
+        setLoaded(true);
       })
       .catch((error) => {
         console.log(error);
+        setLoaded(false);
       });
   }, []);
 
@@ -51,11 +55,13 @@ function RecommendMusic() {
           전체보기
         </Link>
       </TopBox>
+      {/* 스켈레톤 => SkeletonRecommendMusic 컴포넌트 */}
+      {!loaded && <SkeletonRecommendMusic />}
 
       <ul>
         {/* 음악 => MusicLi 컴포넌트 */}
         {data.map((el) => (
-          <MusicLi key={el.uuid} image={el.imageUri} title={el.title} composer={el.composer} />
+          <MusicLi key={el.uuid} el={el} />
         ))}
       </ul>
 

@@ -11,7 +11,7 @@ function DeleteMusic() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // firebase에 있는 음악 정보 삭제
+    // firestore에 있는 음악 정보 삭제
     await deleteMudicDoc({ uuid: uuid });
     // storage에 있는 앨범 이미지 삭제
     const musicRef = ref(storage, `music_image/${uuid}`);
