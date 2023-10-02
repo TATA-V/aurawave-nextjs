@@ -7,19 +7,23 @@ import { getMusicDocs } from '@/firebase/music';
 import { MusicData } from '@/types/musicTypes';
 import 'swiper/css';
 
-import CollectionLi from './CollectionLi';
+import SkeletonMusicSection from '@/components/Skeleton/SkeletonMusicSection';
+import MusicLi from '@/components/MusicLi/MusicLi';
 
 function MusicSection() {
   const [data, setData] = useState<MusicData[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     // 최근에 추가한 음악 15개를 가져오기
     getMusicDocs({ limitNum: 15, orderByField: 'timestamp', orderByDirection: 'desc' })
       .then((data) => {
         setData(data);
+        setLoaded(true);
       })
       .catch((error) => {
         console.log(error);
+        setLoaded(false);
       });
   }, []);
 
@@ -31,45 +35,34 @@ function MusicSection() {
           전체보기
         </Link>
       </TopBox>
+      {/* 스켈레톤 => SkeletonMusicSection 컴포넌트 */}
+      {!loaded && <SkeletonMusicSection />}
 
-      <StyledSwiper slidesPerView={1}>
-        <SwiperSlide>
-          <ul>
-            {data.slice(0, 5).map((el) => (
-              <CollectionLi
-                key={el.uuid}
-                image={el.imageUri}
-                title={el.title}
-                composer={el.composer}
-              />
-            ))}
-          </ul>
-        </SwiperSlide>
-        <SwiperSlide>
-          <ul>
-            {data.slice(5, 10).map((el) => (
-              <CollectionLi
-                key={el.uuid}
-                image={el.imageUri}
-                title={el.title}
-                composer={el.composer}
-              />
-            ))}
-          </ul>
-        </SwiperSlide>
-        <SwiperSlide>
-          <ul>
-            {data.slice(10, 15).map((el) => (
-              <CollectionLi
-                key={el.uuid}
-                image={el.imageUri}
-                title={el.title}
-                composer={el.composer}
-              />
-            ))}
-          </ul>
-        </SwiperSlide>
-      </StyledSwiper>
+      {loaded && (
+        <StyledSwiper slidesPerView={1}>
+          <SwiperSlide>
+            <ul>
+              {data.slice(0, 5).map((el) => (
+                <MusicLi key={el.uuid} el={el} hideRightBtn={true} />
+              ))}
+            </ul>
+          </SwiperSlide>
+          <SwiperSlide>
+            <ul>
+              {data.slice(5, 10).map((el) => (
+                <MusicLi key={el.uuid} el={el} hideRightBtn={true} />
+              ))}
+            </ul>
+          </SwiperSlide>
+          <SwiperSlide>
+            <ul>
+              {data.slice(10, 15).map((el) => (
+                <MusicLi key={el.uuid} el={el} hideRightBtn={true} />
+              ))}
+            </ul>
+          </SwiperSlide>
+        </StyledSwiper>
+      )}
     </MusicCollectionSection>
   );
 }

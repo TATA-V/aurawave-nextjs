@@ -1,13 +1,14 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
 import userState from '@/atom/userState';
 import Image from 'next/image';
 import crayonPng from '@/assets/png-file/crayon-line.png';
 import { auth } from '@/firebase/config';
 import { signOut } from 'firebase/auth';
 import styled from 'styled-components';
+import currentTrackState from '@/atom/currentTrackState';
 
 import CustomModal from '@/components/CustomModal/CustomModal';
 
@@ -15,10 +16,12 @@ function LogoutAndDeleteAccount() {
   const [toggleModal, setToggleModal] = useState(false);
   const router = useRouter();
   const { isLoggedIn } = useRecoilValue(userState); // 리코일
+  const resetCurrentMusicAndTrack = useResetRecoilState(currentTrackState); // 리코일
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      resetCurrentMusicAndTrack();
       router.replace('/login');
     } catch (error) {
       console.log('로그아웃 실패:', error);
@@ -44,11 +47,7 @@ function LogoutAndDeleteAccount() {
 
       {/* 탈퇴하기 모달 => CustomModal 컴포넌트 */}
       {toggleModal && (
-        <CustomModal
-          toggleModal={toggleModal}
-          setToggleModal={setToggleModal}
-          type="플레이리스트삭제"
-        />
+        <CustomModal toggleModal={toggleModal} setToggleModal={setToggleModal} type="탈퇴" />
       )}
     </LogoutAndDeleteAccountBlock>
   );

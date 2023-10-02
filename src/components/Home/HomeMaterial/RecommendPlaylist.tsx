@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import PlayBlue from '@/../public/PlayBlueSvg.svg';
+import PlayBlue from '@/../public/playBlueSvg.svg';
 import Image from 'next/image';
 import love from '@/assets/jpg-file/love.jpg';
 import gloomy from '@/assets/jpg-file/gloomy.jpg';
@@ -9,7 +9,7 @@ import refresh from '@/assets/jpg-file/refresh.jpg';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 
-import SkeletonPlaylist from './SkeletonPlaylist';
+import SkeletonPlaylist from '../../Skeleton/SkeletonPlaylist';
 
 // 임시 데이터
 const data = [

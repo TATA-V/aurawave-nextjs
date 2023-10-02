@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import styled from 'styled-components';
-import GoogleSvg from '@/../public/GoogleSvg.svg';
+import GoogleSvg from '@/../public/googleSvg.svg';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '@/firebase/config';
 import { setUserDoc } from '@/firebase/user';

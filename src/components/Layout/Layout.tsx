@@ -1,22 +1,34 @@
 import useAuthentication from '@/hook/useAuthentication';
 import React from 'react';
 import styled from 'styled-components';
+import AudioControlBar from '../AudioControlBar/AudioControlBar';
+import { useRecoilValue } from 'recoil';
+import currentTrackState from '@/atom/currentTrackState';
 
 interface Props {
   children: React.ReactNode;
 }
 
 function Layout({ children }: Props) {
+  const { isShow } = useRecoilValue(currentTrackState);
+
   useAuthentication();
 
   return (
     <LayoutBlock>
-      <LayoutStyle>{children}</LayoutStyle>
+      <LayoutStyle isShow={isShow}>
+        {children}
+        {isShow && <AudioControlBar />}
+      </LayoutStyle>
     </LayoutBlock>
   );
 }
 
 export default Layout;
+
+interface IsShow {
+  isShow: boolean;
+}
 
 const LayoutBlock = styled.div`
   min-height: 100vh;
@@ -28,11 +40,12 @@ const LayoutBlock = styled.div`
   align-items: center;
 `;
 
-const LayoutStyle = styled.div`
+const LayoutStyle = styled.div<IsShow>`
   width: 390px;
   height: 100vh;
   overflow-y: scroll;
   background-color: #fff;
+  padding-bottom: ${({ isShow }) => (isShow ? '61px' : '0')};
 
   &::-webkit-scrollbar {
     display: none;

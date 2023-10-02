@@ -11,11 +11,15 @@ import PeopleGraySvg from '@/../public/PeopleGraySvg.svg';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { usePathname } from 'next/navigation';
+import currentTrackState from '@/atom/currentTrackState';
+import { useRecoilValue } from 'recoil';
 
 function BottomTab() {
+  const { isShow } = useRecoilValue(currentTrackState);
   const pathname = usePathname();
+
   return (
-    <BottomTabBlock>
+    <BottomTabBlock isShow={isShow}>
       <div className="svg-box">
         <Link href={'/'}>{pathname === '/' ? <MoonBlueSvg /> : <MoonGraySvg />}</Link>
         <Link href={'/music'}>{pathname === '/music' ? <MusicBlueSvg /> : <MusicGraySvg />}</Link>
@@ -30,12 +34,16 @@ function BottomTab() {
 
 export default BottomTab;
 
-export const BottomTabBlock = styled.nav`
+interface IsShow {
+  isShow: boolean;
+}
+
+export const BottomTabBlock = styled.nav<IsShow>`
   width: 390px;
   height: 50px;
   padding: 14px 44px;
   background-color: var(--white-100);
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.12);
+  box-shadow: ${({ isShow }) => (isShow ? null : `0 0 7px rgba(0, 0, 0, 0.12)`)};
   position: fixed;
   bottom: 0;
   z-index: 2;

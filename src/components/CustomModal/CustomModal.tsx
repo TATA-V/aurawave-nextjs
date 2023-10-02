@@ -6,6 +6,8 @@ import { EmailAuthProvider, deleteUser, reauthenticateWithCredential } from 'fir
 import { auth, storage } from '@/firebase/config';
 import { deleteUserDoc } from '@/firebase/user';
 import { deleteObject, ref } from 'firebase/storage';
+import { useResetRecoilState } from 'recoil';
+import currentTrackState from '@/atom/currentTrackState';
 
 interface Props {
   toggleModal: boolean;
@@ -19,6 +21,7 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
   const [message, setMessage] = useState('');
   const [password, setPassword] = useState('');
   const [isGoogleSignIn, setIsGoogleSignIn] = useState(false);
+  const resetCurrentMusicAndTrack = useResetRecoilState(currentTrackState); // 리코일
   const pwdRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -85,6 +88,7 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
         }
         router.push('/login');
         setLoading(false);
+        resetCurrentMusicAndTrack();
       } catch (error) {
         console.log('회원 탈퇴 실패:', error);
         setLoading(false);
