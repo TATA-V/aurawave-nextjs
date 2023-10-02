@@ -12,7 +12,6 @@ const useMusicPlay = () => {
     setCurrentMusicAndTrack((prev) => ({
       ...prev,
       isShow: true,
-      isPlaying: true,
       currentMusic: {
         uuid: el.uuid,
         imageUri: el.imageUri,

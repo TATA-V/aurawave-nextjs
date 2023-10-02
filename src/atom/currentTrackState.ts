@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-interface CurrentMusic {
+export interface CurrentMusic {
   uuid: string;
   imageUri: string;
   musicUri: string;
@@ -11,14 +11,17 @@ interface CurrentMusic {
 
 export interface CurrentTrackState {
   isShow: boolean;
-  isPlaying: boolean;
+  isLoop: boolean;
+  playMode: string;
   currentMusic: CurrentMusic;
   currentTrack: CurrentMusic[];
+  suffleTrack: CurrentMusic[];
 }
 
 const DefaultValue: CurrentTrackState = {
   isShow: false,
-  isPlaying: false,
+  isLoop: false,
+  playMode: '',
   currentMusic: {
     uuid: '',
     imageUri: '',
@@ -28,6 +31,7 @@ const DefaultValue: CurrentTrackState = {
     copyright: '',
   },
   currentTrack: [],
+  suffleTrack: [],
 };
 
 const currentTrackState = atom<CurrentTrackState>({

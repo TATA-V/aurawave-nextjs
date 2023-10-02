@@ -1,24 +1,32 @@
 'use client';
-import currentTrackState from '@/atom/currentTrackState';
+import currentTrackState, { CurrentMusic } from '@/atom/currentTrackState';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import styled, { keyframes } from 'styled-components';
+import * as S from '@/styled/audioControl';
 import Image from 'next/image';
 import MusicPauseSvg from '@/../public/musicPauseSvg.svg';
 import formatTime from '@/utils/formatTime';
 import updateProgressBarOnInteraction from '@/utils/updateProgressBarOnInteraction';
+import PlayModeModal from './PlayModeModal';
 
 function AudioControlBar() {
+  // 음악 재생 유무
   const [play, setPlay] = useState(false);
+  // 음악 progressBar
   const [progressBarWidth, setProgressBarWidth] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [currentTimeWidth, setCurrentTimeWidth] = useState(0);
+  const [isMouseMoveActive, setIsMouseMoveActive] = useState(false);
+  // BottomTab 컴포넌트 유무
   const [hasBottomTab, setHasBottomTab] = useState(true);
+  // 옵션(Loop, Shuffle) 모달
+  const [playModeModal, setPlayModeModal] = useState(false);
 
   const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
-  const { isPlaying, currentMusic, currentTrack } = currentMusicAndTrack;
-  const { imageUri, musicUri, title, composer } = currentMusic;
+  const { isLoop, isShow, playMode, currentMusic, currentTrack, suffleTrack } =
+    currentMusicAndTrack;
+  const { uuid, imageUri, musicUri, title, composer } = currentMusic; // 현재 재생 중인 음악
   const pathname = usePathname();
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -37,12 +45,12 @@ function AudioControlBar() {
   // 음악 재생
   useEffect(() => {
     const audio = audioRef.current;
-    if (audio && isPlaying) {
+    if (audio && isShow) {
       setPlay(true);
       audio.src = musicUri;
       audio.play();
     }
-  }, [isPlaying, musicUri]);
+  }, [isShow, musicUri]);
 
   // 현재 재생 중인 음악을 멈추거나 다시 재생
   const handleTogglePlay = () => {
@@ -67,6 +75,10 @@ function AudioControlBar() {
   // ProgressBar를 클릭하면 클릭한 위치에서 음악을 재생(onClick)
   // ProgressBar위에 마우스 올리면 해당 위치의 음악 시간 표시(onMouseMove)
   const handleProgressBarClickAndHover = (e: React.MouseEvent<HTMLDivElement>, type: string) => {
+    if (type === 'hover') {
+      setIsMouseMoveActive(true);
+    }
+
     updateProgressBarOnInteraction({
       e,
       type,
@@ -77,249 +89,155 @@ function AudioControlBar() {
     });
   };
 
+  // 현재 재생중인 음악 정보 업데이트
+  const updateCurrentMusic = (music: CurrentMusic) => {
+    setCurrentMusicAndTrack((prev) => ({
+      ...prev,
+      currentMusic: {
+        uuid: music.uuid,
+        imageUri: music.imageUri,
+        musicUri: music.musicUri,
+        title: music.title,
+        composer: music.composer,
+        copyright: music.copyright,
+      },
+    }));
+    const audio = audioRef.current;
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.src = music.musicUri;
+      audio.play();
+    }
+  };
+
+  // 이전, 다음 음악 재생
+  const handlePrevNextMusic = (type = 'next') => {
+    const musicTrack = playMode === 'shuffle' ? suffleTrack : currentTrack;
+
+    console.log(suffleTrack);
+    console.log(playMode);
+
+    const currentIndex = musicTrack.findIndex((track) => track.uuid === uuid);
+    const isFirstMusic = currentIndex === 0;
+    const isLastMusic = currentIndex === musicTrack.length - 1;
+
+    // 무한 재생 아닐 때
+    if (!isLoop) {
+      if ((type === 'prev' && isFirstMusic) || (type === 'next' && isLastMusic)) return;
+      const music = type === 'next' ? musicTrack[currentIndex + 1] : musicTrack[currentIndex - 1];
+      updateCurrentMusic(music);
+    }
+
+    // 무한 재생일 때
+    if (isLoop) {
+      if (type === 'next') {
+        const music = isLastMusic ? musicTrack[0] : musicTrack[currentIndex + 1];
+        updateCurrentMusic(music);
+      } else if (type === 'prev') {
+        const music = isFirstMusic
+          ? musicTrack[musicTrack.length - 1]
+          : musicTrack[currentIndex - 1];
+        updateCurrentMusic(music);
+      }
+    }
+  };
+
   return (
     <>
-      <StyledAudio ref={audioRef} onTimeUpdate={handleUpdateTime} controls>
+      <S.StyledAudio
+        ref={audioRef}
+        onEnded={() => handlePrevNextMusic()}
+        onTimeUpdate={handleUpdateTime}
+        controls
+      >
         <source src={musicUri} type="audio/mpeg" />
-      </StyledAudio>
+      </S.StyledAudio>
 
-      <AudioControlBarBlock hasBottomTab={hasBottomTab}>
-        <ProgressBarBox currentTimeWidth={currentTimeWidth}>
-          <ProgressBar
-            onMouseMove={(e) => handleProgressBarClickAndHover(e, 'hover')}
-            onClick={(e) => handleProgressBarClickAndHover(e, 'click')}
-            progressBarWidth={progressBarWidth}
-          />
+      <S.AudioControlBarBlock hasBottomTab={hasBottomTab}>
+        <S.ProgressBarAndTime
+          currentTimeWidth={currentTimeWidth}
+          isMouseMoveActive={isMouseMoveActive}
+        >
+          <S.ProgressBarBox currentTimeWidth={currentTimeWidth}>
+            <S.ProgressBar
+              onMouseMove={(e) => handleProgressBarClickAndHover(e, 'hover')}
+              onMouseLeave={() => setIsMouseMoveActive(false)}
+              onClick={(e) => handleProgressBarClickAndHover(e, 'click')}
+              progressBarWidth={progressBarWidth}
+            />
+          </S.ProgressBarBox>
           <div className="hover-time">
             <p>{formatTime(currentTime)}</p>
           </div>
-        </ProgressBarBox>
+        </S.ProgressBarAndTime>
 
-        <MusicPlayer>
-          {/* 현재 재생되고 있는 음악 정보 */}
-          <LeftBox>
-            <Image className="image" width={36} height={36} src={imageUri} alt="album image" />
-            <div className="details">
-              <p className="title">{title}</p>
-              <p className="composer">{composer}</p>
-            </div>
-          </LeftBox>
+        {/* 현재 페이지에 BottomTab 컴포넌트가 없다면 */}
+        {!hasBottomTab && (
+          <S.SimpleMusicPlayer>
+            <Image className="image" width={38} height={38} src={imageUri} alt="album image" />
+            <S.Controls>
+              <button>
+                <i onClick={() => handlePrevNextMusic('prev')} className="i-back-music" />
+              </button>
+              <button onClick={handleTogglePlay}>
+                {play ? (
+                  <MusicPauseSvg width={26} height={28} fill={'white'} />
+                ) : (
+                  <i className="i-play" />
+                )}
+              </button>
+              <button onClick={() => handlePrevNextMusic()}>
+                <i className="i-next-play" />
+              </button>
+            </S.Controls>
 
-          {/* 음악 컨트롤 */}
-          <RightBox>
-            <button onClick={handleTogglePlay}>
-              {play ? (
-                <div className="pause-box">
-                  <MusicPauseSvg width={19} height={21} fill={'white'} />
-                </div>
-              ) : (
-                <i className="i-play" />
+            <S.Option>
+              <button onClick={() => setPlayModeModal(!playModeModal)}>
+                <i className="i-setting" />
+              </button>
+
+              {/* 재생 모드 모달 => PlayModeModal 컴포넌트 */}
+              {playModeModal && (
+                <PlayModeModal playModeModal={playModeModal} setPlayModeModal={setPlayModeModal} />
               )}
-            </button>
-            <button className="next-play-btn">
-              <i className="i-next-play" />
-            </button>
-            <button className="menu-btn">
-              <i className="i-menu" />
-            </button>
-          </RightBox>
-        </MusicPlayer>
-      </AudioControlBarBlock>
+            </S.Option>
+          </S.SimpleMusicPlayer>
+        )}
+
+        {/* 현재 페이지에 BottomTab 컴포넌트가 있다면 */}
+        {hasBottomTab && (
+          <S.BottomTabMusicPlayer>
+            {/* 현재 재생되고 있는 음악 정보 */}
+            <S.LeftBox>
+              <Image className="image" width={36} height={36} src={imageUri} alt="album image" />
+              <div className="details">
+                <p className="title">{title}</p>
+                <p className="composer">{composer}</p>
+              </div>
+            </S.LeftBox>
+
+            {/* 음악 컨트롤 */}
+            <S.RightBox>
+              <button onClick={handleTogglePlay}>
+                {play ? (
+                  <MusicPauseSvg width={19} height={21} fill={'white'} />
+                ) : (
+                  <i className="i-play" />
+                )}
+              </button>
+              <button onClick={() => handlePrevNextMusic()}>
+                <i className="i-next-play" />
+              </button>
+              <button>
+                <i className="i-menu" />
+              </button>
+            </S.RightBox>
+          </S.BottomTabMusicPlayer>
+        )}
+      </S.AudioControlBarBlock>
     </>
   );
 }
 
 export default AudioControlBar;
-
-interface HasBottomTab {
-  hasBottomTab: boolean;
-}
-
-interface ProgressBarWidth {
-  progressBarWidth: number;
-}
-
-interface CurrentTimeWidth {
-  currentTimeWidth: number;
-}
-
-const fadeInUp = keyframes`
-  from {
-    opacity: 0.8;
-    transform: translateY(60px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-`;
-
-const StyledAudio = styled.audio`
-  display: none;
-`;
-
-const AudioControlBarBlock = styled.div<HasBottomTab>`
-  animation: ${fadeInUp} 0.2s ease-out;
-  width: 390px;
-  height: ${({ hasBottomTab }) => (hasBottomTab ? '60px' : '71px')};
-  border-radius: 10px 10px 0 0;
-  background: linear-gradient(to right, #648b8b, #e38989);
-  overflow: hidden;
-  position: fixed;
-  bottom: ${({ hasBottomTab }) => (hasBottomTab ? '50px' : '0')};
-  z-index: 1;
-`;
-
-const ProgressBarBox = styled.div<CurrentTimeWidth>`
-  display: flex;
-  justify-content: center;
-  position: relative;
-  width: 390px;
-
-  .hover-time {
-    width: 42px;
-    height: 22px;
-    color: var(--white-100);
-    font-size: 0.75rem;
-    font-weight: 500;
-    border-radius: 2px;
-    background-color: #648b8b;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    opacity: 0;
-    position: absolute;
-    top: 8px;
-    left: ${({ currentTimeWidth }) => currentTimeWidth - 12}%;
-    transition: opacity 0.1s ease;
-    z-index: 1;
-  }
-
-  &:hover .hover-time {
-    opacity: 100;
-  }
-`;
-
-const ProgressBar = styled.div<ProgressBarWidth>`
-  width: 100%;
-  height: 2px;
-  background-color: var(--gray-70);
-  position: relative;
-  cursor: pointer;
-
-  &:hover::before,
-  &:hover::after {
-    height: 5px;
-    transition: height 0.25s ease;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    height: 2px;
-    z-index: 1;
-    width: ${({ progressBarWidth }) => progressBarWidth}%;
-    transition: width 0.1s ease;
-    background-color: var(--dark-green-700);
-  }
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    height: 2px;
-    width: 100%;
-    z-index: 1;
-    background-color: var(--gray-70);
-  }
-`;
-
-const MusicPlayer = styled.div`
-  padding: 10px 16px 12px 16px;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const LeftBox = styled.div`
-  display: flex;
-  align-items: center;
-
-  .image {
-    border-radius: 2px;
-  }
-
-  .details {
-    padding-left: 13px;
-    height: 33px;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-  }
-
-  .title {
-    color: var(--white-100);
-    font-size: 0.9375rem;
-    font-weight: 400;
-    white-space: nowrap;
-  }
-
-  .composer {
-    color: var(--blue-gray-400);
-    font-size: 0.8125rem;
-    font-weight: 400;
-  }
-`;
-
-const RightBox = styled.div`
-  width: 101px;
-  padding-top: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-
-  .pause-box {
-    padding-top: 1px;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    right: 116px;
-    height: 58px;
-    width: 17px;
-    background: linear-gradient(to right, transparent, #bf8a8a);
-  }
-  &::before {
-    content: '';
-    position: absolute;
-    right: 101px;
-    height: 58px;
-    width: 17px;
-    background-color: #bd8a8a;
-  }
-
-  .i-play {
-    font-size: 21px;
-  }
-
-  .i-next-play {
-    font-size: 18px;
-  }
-
-  .i-menu {
-    font-size: 13px;
-  }
-
-  .menu-btn {
-    padding-top: 1.8px;
-  }
-
-  .next-play-btn {
-    padding-top: 1%.8;
-  }
-`;

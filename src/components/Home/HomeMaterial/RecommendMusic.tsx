@@ -28,7 +28,8 @@ function RecommendMusic() {
 
   // 배열 데이터를 랜덤으로
   const shuffle = (array: MusicData[]) => {
-    return array.sort(() => Math.random() - 0.5);
+    const arr = [...array];
+    return arr.sort(() => Math.random() - 0.5);
   };
 
   // 모든 음악 데이터 가져오기
