@@ -54,6 +54,7 @@ function MusicLi({ el, hideRightBtn }: Props) {
             {/* 플레이리스트에 음악 추가하는 모달 => AddToPlaylistModal 컴포넌트 */}
             {showAddToPlaylistModal && (
               <AddToPlaylistModal
+                el={el}
                 showAddToPlaylistModal={showAddToPlaylistModal}
                 setShowAddToPlaylistModal={setShowAddToPlaylistModal}
               />

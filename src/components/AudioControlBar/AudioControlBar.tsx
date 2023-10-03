@@ -8,6 +8,7 @@ import Image from 'next/image';
 import MusicPauseSvg from '@/../public/musicPauseSvg.svg';
 import formatTime from '@/utils/formatTime';
 import updateProgressBarOnInteraction from '@/utils/updateProgressBarOnInteraction';
+
 import PlayModeModal from './PlayModeModal';
 
 function AudioControlBar() {
@@ -226,9 +227,9 @@ function AudioControlBar() {
               <button onClick={() => handlePrevNextMusic()}>
                 <i className="i-next-play" />
               </button>
-              <button>
+              <S.StyledLink href={'/soundtrack'}>
                 <i className="i-menu" />
-              </button>
+              </S.StyledLink>
             </S.RightBox>
           </S.BottomTabMusicPlayer>
         )}

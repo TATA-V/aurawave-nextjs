@@ -32,7 +32,7 @@ function GoBackHead({ title }: Props) {
   return (
     <GoBackHeadBlok>
       <div onClick={handleGoBack} role="button" className="back-btn">
-        <i className="i-back" />
+        {title !== '재생목록' && <i className="i-back" />}
       </div>
 
       {title && !isAurawaveTxt && <Title>{title}</Title>}
@@ -45,7 +45,9 @@ function GoBackHead({ title }: Props) {
         </Title>
       )}
 
-      <div className="right-box" />
+      <div className="right-box">
+        {title === '재생목록' && <i onClick={handleGoBack} className="i-down" />}
+      </div>
     </GoBackHeadBlok>
   );
 }
@@ -85,6 +87,19 @@ const GoBackHeadBlok = styled.header`
   .right-box {
     width: 63px;
     height: 61px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .i-down {
+    font-size: 10px;
+    cursor: pointer;
+
+    &::before {
+      color: var(--dark-blue-900);
+    }
   }
 `;
 

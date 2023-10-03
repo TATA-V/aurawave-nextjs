@@ -7,7 +7,7 @@ export interface MusicData {
   title: string;
   composer: string;
   copyright: string;
-  timestamp: FieldValue;
+  timestamp?: FieldValue;
 }
 
 export interface SetMusicDoc {

@@ -1,5 +1,6 @@
 'use client';
 import styled, { keyframes } from 'styled-components';
+import Link from 'next/link';
 
 interface HasBottomTab {
   hasBottomTab: boolean;
@@ -238,6 +239,13 @@ export const Option = styled.div`
     font-size: 22px;
     padding-right: 1px;
   }
+`;
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 // PlayModeModal

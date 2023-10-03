@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import LoadingLottie from '@/components/Lottie/LoadingLottie';
 import Link from 'next/link';
-import { End } from '@/styled/endStyled';
+import { End } from '@/styled/frequentlyStyled';
 import { MusicData } from '@/types/musicTypes';
 import { getAllMusicDocs } from '@/firebase/music';
 import useInfiniteScroll from '@/hook/useInfiniteScroll';

@@ -1,5 +1,9 @@
 'use clinet';
-import React, { useEffect, useRef } from 'react';
+import currentTrackState from '@/atom/currentTrackState';
+import { MusicData } from '@/types/musicTypes';
+import { usePathname } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 /**
@@ -32,11 +36,24 @@ const data = [
 ];
 
 interface Props {
+  el: MusicData;
   showAddToPlaylistModal: boolean;
   setShowAddToPlaylistModal: (value: boolean) => void;
 }
-function AddToPlaylistModal({ showAddToPlaylistModal, setShowAddToPlaylistModal }: Props) {
+function AddToPlaylistModal({ el, showAddToPlaylistModal, setShowAddToPlaylistModal }: Props) {
+  const [soundtrackPage, setSoundtrackPage] = useState(false);
+  const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
+  const { currentTrack, suffleTrack } = currentMusicAndTrack;
+
   const modalRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+
+  // 현재 페이지가 /soundtrack이라면
+  useEffect(() => {
+    if (pathname === '/soundtrack') {
+      setSoundtrackPage(true);
+    }
+  }, [pathname]);
 
   // 모달창 밖에 눌렀을 시 모달창 닫힘
   useEffect(() => {
@@ -55,11 +72,27 @@ function AddToPlaylistModal({ showAddToPlaylistModal, setShowAddToPlaylistModal 
     };
   }, [showAddToPlaylistModal, setShowAddToPlaylistModal]);
 
+  // 재생목록에서 음악 삭제
+  const handleDeleteMusic = () => {
+    const newCurrnetTrack = currentTrack.filter((track) => track.uuid !== el.uuid);
+    const newSuffleTrack = suffleTrack.filter((track) => track.uuid !== el.uuid);
+    setCurrentMusicAndTrack((prev) => ({
+      ...prev,
+      currentTrack: newCurrnetTrack,
+      suffleTrack: newSuffleTrack,
+    }));
+  };
+
   return (
     <Container>
       <AddToPlaylistModalBlock ref={modalRef}>
+        {soundtrackPage && (
+          <ModalTitle onClick={handleDeleteMusic}>
+            <p className="delete-music">현재 재생목록에서 삭제</p>
+          </ModalTitle>
+        )}
         <ModalTitle>
-          <p>내 플레이리스트에 추가</p>
+          <p className="add-music">내 플레이리스트에 추가</p>
         </ModalTitle>
 
         <AddToPlaylistUl>
@@ -119,6 +152,12 @@ const ModalTitle = styled.div`
     font-size: 0.65rem;
     font-weight: 500;
     padding-top: 1px;
+  }
+
+  .delete-music {
+    cursor: pointer;
+  }
+  .add-music {
     user-select: none;
   }
 `;
