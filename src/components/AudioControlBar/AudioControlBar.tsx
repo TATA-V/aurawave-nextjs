@@ -115,9 +115,6 @@ function AudioControlBar() {
   const handlePrevNextMusic = (type = 'next') => {
     const musicTrack = playMode === 'shuffle' ? suffleTrack : currentTrack;
 
-    console.log(suffleTrack);
-    console.log(playMode);
-
     const currentIndex = musicTrack.findIndex((track) => track.uuid === uuid);
     const isFirstMusic = currentIndex === 0;
     const isLastMusic = currentIndex === musicTrack.length - 1;

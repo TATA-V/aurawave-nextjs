@@ -11,7 +11,7 @@ interface Props {
 
 function PlayModeModal({ playModeModal, setPlayModeModal }: Props) {
   const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState);
-  const { isLoop, playMode, currentTrack } = currentMusicAndTrack;
+  const { isLoop, playMode, currentMusic, currentTrack } = currentMusicAndTrack;
   const modalRef = useRef<HTMLUListElement>(null);
 
   // 모달창 밖을 클릭하면 모달창 닫힘
@@ -45,14 +45,15 @@ function PlayModeModal({ playModeModal, setPlayModeModal }: Props) {
   // shuffle
   const handlePlayShuffle = () => {
     if (playMode === 'shuffle') {
-      setCurrentMusicAndTrack((prev) => ({ ...prev, playMode: '' }));
+      setCurrentMusicAndTrack((prev) => ({ ...prev, playMode: '', suffleTrack: [] }));
     } else {
-      setCurrentMusicAndTrack((prev) => ({ ...prev, playMode: 'shuffle' }));
-    }
-
-    if (playMode === 'shuffle') {
       const randomData = shuffle(currentTrack);
-      setCurrentMusicAndTrack((prev) => ({ ...prev, suffleTrack: randomData }));
+      const randomTrack = randomData.filter((track) => track.uuid !== currentMusic.uuid);
+      setCurrentMusicAndTrack((prev) => ({
+        ...prev,
+        playMode: 'shuffle',
+        suffleTrack: [...prev.suffleTrack, currentMusic, ...randomTrack],
+      }));
     }
   };
 
