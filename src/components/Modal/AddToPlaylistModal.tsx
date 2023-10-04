@@ -1,5 +1,6 @@
 'use clinet';
 import currentTrackState from '@/atom/currentTrackState';
+import useCloseModal from '@/hook/useCloseModal';
 import { MusicData } from '@/types/musicTypes';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
@@ -37,42 +38,29 @@ const data = [
 
 interface Props {
   el: MusicData;
+  top?: string;
   showAddToPlaylistModal: boolean;
   setShowAddToPlaylistModal: (value: boolean) => void;
 }
-function AddToPlaylistModal({ el, showAddToPlaylistModal, setShowAddToPlaylistModal }: Props) {
+function AddToPlaylistModal({ el, top, showAddToPlaylistModal, setShowAddToPlaylistModal }: Props) {
   const [soundtrackPage, setSoundtrackPage] = useState(false);
   const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
-  const { currentTrack, suffleTrack } = currentMusicAndTrack;
+  const { showMusicDetail, currentTrack, suffleTrack } = currentMusicAndTrack;
 
   const modalRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
-  // 현재 페이지가 /soundtrack이라면
+  // 현재 페이지가 soundtrack이라면
   useEffect(() => {
     if (pathname === '/soundtrack') {
       setSoundtrackPage(true);
     }
   }, [pathname]);
 
-  // 모달창 밖에 눌렀을 시 모달창 닫힘
-  useEffect(() => {
-    const clickOutside = (e: MouseEvent) => {
-      if (
-        showAddToPlaylistModal &&
-        modalRef.current &&
-        !modalRef.current.contains(e.target as Node)
-      ) {
-        setShowAddToPlaylistModal(false);
-      }
-    };
-    document.addEventListener('mousedown', clickOutside);
-    return () => {
-      document.removeEventListener('mousedown', clickOutside);
-    };
-  }, [showAddToPlaylistModal, setShowAddToPlaylistModal]);
+  // 모달창 영역 밖을 클릭하면 모달창 닫힘
+  useCloseModal({ modalRef, state: showAddToPlaylistModal, setState: setShowAddToPlaylistModal }); // hook
 
-  // 재생목록에서 음악 삭제
+  // 현재 재생목록에서 음악 삭제
   const handleDeleteMusic = () => {
     const newCurrnetTrack = currentTrack.filter((track) => track.uuid !== el.uuid);
     const newSuffleTrack = suffleTrack.filter((track) => track.uuid !== el.uuid);
@@ -84,9 +72,9 @@ function AddToPlaylistModal({ el, showAddToPlaylistModal, setShowAddToPlaylistMo
   };
 
   return (
-    <Container>
+    <Container top={top}>
       <AddToPlaylistModalBlock ref={modalRef}>
-        {soundtrackPage && (
+        {soundtrackPage && !showMusicDetail && (
           <ModalTitle onClick={handleDeleteMusic}>
             <p className="delete-music">현재 재생목록에서 삭제</p>
           </ModalTitle>
@@ -120,9 +108,13 @@ interface Num {
   num: number;
 }
 
-const Container = styled.div`
+interface Top {
+  top: string | undefined;
+}
+
+const Container = styled.div<Top>`
   position: absolute;
-  top: 23px;
+  top: ${({ top }) => (top ? `${top}px` : '23px')};
   right: 0;
   width: 130px;
   padding-bottom: 65px;

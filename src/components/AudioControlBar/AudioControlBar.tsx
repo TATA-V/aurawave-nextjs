@@ -7,13 +7,17 @@ import * as S from '@/styled/audioControl';
 import Image from 'next/image';
 import MusicPauseSvg from '@/../public/musicPauseSvg.svg';
 import formatTime from '@/utils/formatTime';
-import updateProgressBarOnInteraction from '@/utils/updateProgressBarOnInteraction';
+import updateProgressBarWidth from '@/utils/updateProgressBarWidth';
 
 import PlayModeModal from './PlayModeModal';
+import MusicDetailModal from '../Modal/MusicDetailModal';
 
 function AudioControlBar() {
   // 음악 재생 유무
   const [play, setPlay] = useState(false);
+  // 음악 총 시간, 현재 시간
+  const [totalDuration, setTotalDuration] = useState(0); // 총 시간
+  const [currentDuration, setCurrentDuration] = useState(0); // 현재 시간
   // 음악 progressBar
   const [progressBarWidth, setProgressBarWidth] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -25,11 +29,36 @@ function AudioControlBar() {
   const [playModeModal, setPlayModeModal] = useState(false);
 
   const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
-  const { isLoop, isShow, playMode, currentMusic, currentTrack, suffleTrack } =
+  const { isLoop, isShow, playMode, showMusicDetail, currentMusic, currentTrack, suffleTrack } =
     currentMusicAndTrack;
   const { uuid, imageUri, musicUri, title, composer } = currentMusic; // 현재 재생 중인 음악
   const pathname = usePathname();
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      // 음악 재생 상태 변경 시 총 시간 업데이트
+      audio.addEventListener('durationchange', () => {
+        setTotalDuration(audio.duration);
+      });
+      // 음악 재생 상태 변경 시 현재 시간 업데이트
+      audio.addEventListener('timeupdate', () => {
+        setCurrentDuration(audio.currentTime);
+      });
+    }
+
+    return () => {
+      if (audio) {
+        audio.removeEventListener('durationchange', () => {
+          setTotalDuration(audio.duration);
+        });
+        audio.removeEventListener('timeupdate', () => {
+          setCurrentDuration(audio.currentTime);
+        });
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const hasBottomTabPage =
@@ -75,12 +104,12 @@ function AudioControlBar() {
 
   // ProgressBar를 클릭하면 클릭한 위치에서 음악을 재생(onClick)
   // ProgressBar위에 마우스 올리면 해당 위치의 음악 시간 표시(onMouseMove)
-  const handleProgressBarClickAndHover = (e: React.MouseEvent<HTMLDivElement>, type: string) => {
+  const handleProgressBar = (e: React.MouseEvent<HTMLDivElement>, type: string) => {
     if (type === 'hover') {
       setIsMouseMoveActive(true);
     }
 
-    updateProgressBarOnInteraction({
+    updateProgressBarWidth({
       e,
       type,
       audioRef,
@@ -141,8 +170,25 @@ function AudioControlBar() {
     }
   };
 
+  const handleshowMusicDetail = () => {
+    setCurrentMusicAndTrack((prev) => ({ ...prev, showMusicDetail: true }));
+  };
+
   return (
     <>
+      {/* 음악 디테일 => MusicDetailModal 컴포넌트 */}
+      {showMusicDetail && (
+        <MusicDetailModal
+          play={play}
+          totalDuration={totalDuration}
+          currentDuration={currentDuration}
+          handleTogglePlay={handleTogglePlay}
+          handlePrevNextMusic={handlePrevNextMusic}
+          progressBarWidth={progressBarWidth}
+          handleProgressBar={handleProgressBar}
+        />
+      )}
+
       <S.StyledAudio
         ref={audioRef}
         onEnded={() => handlePrevNextMusic()}
@@ -159,9 +205,9 @@ function AudioControlBar() {
         >
           <S.ProgressBarBox currentTimeWidth={currentTimeWidth}>
             <S.ProgressBar
-              onMouseMove={(e) => handleProgressBarClickAndHover(e, 'hover')}
+              onMouseMove={(e) => handleProgressBar(e, 'hover')}
               onMouseLeave={() => setIsMouseMoveActive(false)}
-              onClick={(e) => handleProgressBarClickAndHover(e, 'click')}
+              onClick={(e) => handleProgressBar(e, 'click')}
               progressBarWidth={progressBarWidth}
             />
           </S.ProgressBarBox>
@@ -173,7 +219,14 @@ function AudioControlBar() {
         {/* 현재 페이지에 BottomTab 컴포넌트가 없다면 */}
         {!hasBottomTab && (
           <S.SimpleMusicPlayer>
-            <Image className="image" width={38} height={38} src={imageUri} alt="album image" />
+            <Image
+              onClick={handleshowMusicDetail}
+              className="image"
+              width={38}
+              height={38}
+              src={imageUri}
+              alt="album image"
+            />
             <S.Controls>
               <button>
                 <i onClick={() => handlePrevNextMusic('prev')} className="i-back-music" />
@@ -208,10 +261,21 @@ function AudioControlBar() {
           <S.BottomTabMusicPlayer>
             {/* 현재 재생되고 있는 음악 정보 */}
             <S.LeftBox>
-              <Image className="image" width={36} height={36} src={imageUri} alt="album image" />
+              <Image
+                onClick={handleshowMusicDetail}
+                className="image"
+                width={36}
+                height={36}
+                src={imageUri}
+                alt="album image"
+              />
               <div className="details">
-                <p className="title">{title}</p>
-                <p className="composer">{composer}</p>
+                <p onClick={handleshowMusicDetail} className="title">
+                  {title}
+                </p>
+                <p onClick={handleshowMusicDetail} className="composer">
+                  {composer}
+                </p>
               </div>
             </S.LeftBox>
 

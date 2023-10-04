@@ -8,6 +8,7 @@ import { deleteUserDoc } from '@/firebase/user';
 import { deleteObject, ref } from 'firebase/storage';
 import { useResetRecoilState } from 'recoil';
 import currentTrackState from '@/atom/currentTrackState';
+import useCloseModal from '@/hook/useCloseModal';
 
 interface Props {
   toggleModal: boolean;
@@ -27,18 +28,8 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
   const router = useRouter();
   const user = auth.currentUser; // 현재 유저
 
-  // 모달창 밖에 눌렀을 시 모달창 닫힘
-  useEffect(() => {
-    const clickOutside = (e: MouseEvent) => {
-      if (toggleModal && modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        setToggleModal(false);
-      }
-    };
-    document.addEventListener('mousedown', clickOutside);
-    return () => {
-      document.removeEventListener('mousedown', clickOutside);
-    };
-  }, [toggleModal, setToggleModal]);
+  // 모달창 영역 밖을 클릭하면 모달창 닫힘
+  useCloseModal({ modalRef, state: toggleModal, setState: setToggleModal }); // hook
 
   useEffect(() => {
     if (type === '탈퇴') {

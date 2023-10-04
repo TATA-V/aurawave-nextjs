@@ -1,3 +1,6 @@
+import currentTrackState from '@/atom/currentTrackState';
+import { useSetRecoilState } from 'recoil';
+
 interface Props {
   e: React.MouseEvent<HTMLDivElement>;
   type: string;
@@ -9,7 +12,7 @@ interface Props {
 
 // ProgressBar를 클릭하면 클릭한 위치에서 음악을 재생(onClick)
 // ProgressBar위에 마우스 올리면 해당 위치의 음악 시간 표시(onMouseMove)
-const updateProgressBarOnInteraction = ({
+const updateProgressBarWidth = ({
   e,
   type,
   audioRef,
@@ -37,4 +40,4 @@ const updateProgressBarOnInteraction = ({
   }
 };
 
-export default updateProgressBarOnInteraction;
+export default updateProgressBarWidth;

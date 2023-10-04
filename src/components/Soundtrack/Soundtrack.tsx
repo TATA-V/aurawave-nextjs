@@ -1,15 +1,14 @@
 'use client';
 import React from 'react';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import currentTrackState from '@/atom/currentTrackState';
 import CheckSvg from '@/../public/checkSvg.svg';
 
 import GoBackHead from '../GoBackHead/GoBackHead';
 import MusicLi from '../MusicLi/MusicLi';
 function Soundtrack() {
-  const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
-  const { playMode, currentTrack, suffleTrack } = currentMusicAndTrack;
+  const { playMode, currentTrack, suffleTrack } = useRecoilValue(currentTrackState); // 리코일
   const musicTrack = playMode === 'shuffle' ? suffleTrack : currentTrack;
 
   return (

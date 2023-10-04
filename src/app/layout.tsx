@@ -3,7 +3,7 @@ import './globals.css';
 import './reset.css';
 import './iconfonts.css';
 import Layout from '@/components/Layout/Layout';
-import StyledComponentsRegistry from './lib/registry';
+import StyledComponentsRegistry from '../lib/registry';
 import { RecoilRoot } from 'recoil';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
