@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 
 import AddToPlaylistModal from './AddToPlaylistModal';
 import { useMusicLoop, useMusicShuffle } from '@/hook/useMusicControl';
+import useCloseModal from '@/hook/useCloseModal';
 
 interface Props {
   play: boolean;
@@ -31,54 +32,44 @@ function MusicDetailModal({
   progressBarWidth,
   handleProgressBar,
 }: Props) {
-  const [close, setClose] = useState(false);
+  const [openModal, setOpenModal] = useState(true);
   const [showCopyright, setShowCopyright] = useState(false);
   const [showAddToPlaylistModal, setShowAddToPlaylistModal] = useState(false);
 
   const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
   const { isLoop, playMode, showMusicDetail, currentMusic } = currentMusicAndTrack;
-  const { imageUri, musicUri, title, composer, copyright } = currentMusic;
+  const { imageUri, title, composer, copyright } = currentMusic;
   const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const handleLoop = useMusicLoop(); // hook
   const handleShuffle = useMusicShuffle(); // hook
 
   const handleClose = () => {
-    setClose(true);
-    setTimeout(() => {
-      setCurrentMusicAndTrack((prev) => ({ ...prev, showMusicDetail: false }));
-    }, 150);
+    setOpenModal(false);
   };
 
-  // 모달창 영역 밖을 클릭하면 모달창 닫힘
   useEffect(() => {
-    const clickOutside = (e: MouseEvent) => {
-      if (showMusicDetail && modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        setClose(true);
-        setTimeout(() => {
-          setCurrentMusicAndTrack((prev) => ({ ...prev, showMusicDetail: false }));
-        }, 150);
-      }
-    };
-    document.addEventListener('mousedown', clickOutside);
-    return () => {
-      document.removeEventListener('mousedown', clickOutside);
-    };
-  }, [showMusicDetail, setCurrentMusicAndTrack]);
+    if (!openModal) {
+      // 모달이 닫힌 후 수행할 작업
+      setTimeout(() => {
+        setCurrentMusicAndTrack((prev) => ({ ...prev, showMusicDetail: false }));
+      }, 150);
+    }
+  }, [openModal, setCurrentMusicAndTrack]);
+
+  // 모달창 영역 밖을 클릭하면 모달창 닫힘
+  useCloseModal({ modalRef, state: showMusicDetail, setState: setOpenModal }); // hook
 
   // soundtrack 페이지로 이동
   const handleSoundtrack = () => {
     router.push('soundtrack');
-    setClose(true);
-    setTimeout(() => {
-      setCurrentMusicAndTrack((prev) => ({ ...prev, showMusicDetail: false }));
-    }, 150);
+    setOpenModal(true);
   };
 
   return (
     <>
       <MusicDetailModalBlock>
-        <MusicDetailBox close={close} ref={modalRef}>
+        <MusicDetailBox openModal={openModal} ref={modalRef}>
           <MusicDetail>
             <CloseBtnBox>
               <button onClick={handleClose} className="close-btn">
@@ -175,8 +166,8 @@ function MusicDetailModal({
 
 export default MusicDetailModal;
 
-interface Close {
-  close: boolean;
+interface OpenModal {
+  openModal: boolean;
 }
 
 interface ProgressBarWidth {
@@ -222,15 +213,15 @@ const MusicDetailModalBlock = styled.div`
   z-index: 2;
 `;
 
-const MusicDetailBox = styled.div<Close>`
+const MusicDetailBox = styled.div<OpenModal>`
   width: 390px;
   height: 100%;
   background-color: var(--white-100);
   border-radius: 20px 20px 0 0;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.12);
   animation: ${fadeInUp} 0.25s ease-out;
-  transform: ${({ close }) => (close ? 'translateY(370px)' : 'translateY(0)')};
-  opacity: ${({ close }) => (close ? '0' : '1')};
+  transform: ${({ openModal }) => (openModal ? 'translateY(0)' : 'translateY(370px)')};
+  opacity: ${({ openModal }) => (openModal ? '1' : '0')};
   transition: transform 0.15s ease-in-out, opacity 0.15s ease-in-out;
 
   position: absolute;
