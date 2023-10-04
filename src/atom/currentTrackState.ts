@@ -13,6 +13,7 @@ export interface CurrentTrackState {
   isShow: boolean;
   isLoop: boolean;
   playMode: string;
+  showMusicDetail: boolean;
   currentMusic: CurrentMusic;
   currentTrack: CurrentMusic[];
   suffleTrack: CurrentMusic[];
@@ -22,6 +23,7 @@ const DefaultValue: CurrentTrackState = {
   isShow: false,
   isLoop: false,
   playMode: '',
+  showMusicDetail: false,
   currentMusic: {
     uuid: '',
     imageUri: '',

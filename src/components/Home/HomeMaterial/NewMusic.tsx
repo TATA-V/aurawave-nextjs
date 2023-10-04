@@ -6,9 +6,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { getMusicDocs } from '@/firebase/music';
 import { MusicData } from '@/types/musicTypes';
+import useMusicPlay from '@/hook/useMusicPlay';
 
 import SkeletonNewMusic from '../../Skeleton/SkeletonNewMusic';
-import useMusicPlay from '@/hook/useMusicPlay';
 
 function NewMusic() {
   const [loaded, setLoaded] = useState(false);

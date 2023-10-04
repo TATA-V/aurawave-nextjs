@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import MoreSvg from '@/../public/more.svg';
 
-import AddToPlaylistModal from './AddToPlaylistModal';
+import AddToPlaylistModal from '../Modal/AddToPlaylistModal';
 import { MusicData } from '@/types/musicTypes';
 import useMusicPlay from '@/hook/useMusicPlay';
 
@@ -49,11 +49,12 @@ function MusicLi({ el, hideRightBtn }: Props) {
         {!hideRightBtn && (
           <MoreBox>
             <button onClick={() => setShowAddToPlaylistModal(true)}>
-              <MoreSvg />
+              <MoreSvg width={19} height={4} fill={'#62686A'} />
             </button>
             {/* 플레이리스트에 음악 추가하는 모달 => AddToPlaylistModal 컴포넌트 */}
             {showAddToPlaylistModal && (
               <AddToPlaylistModal
+                el={el}
                 showAddToPlaylistModal={showAddToPlaylistModal}
                 setShowAddToPlaylistModal={setShowAddToPlaylistModal}
               />

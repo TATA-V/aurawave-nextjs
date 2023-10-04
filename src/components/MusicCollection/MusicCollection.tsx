@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import * as S from '@/styled/searchStyled';
-import { End } from '@/styled/endStyled';
+import { End } from '@/styled/frequentlyStyled';
 import useInfiniteScroll from '@/hook/useInfiniteScroll';
 import { getAllMusicDocs } from '@/firebase/music';
 import { MusicData } from '@/types/musicTypes';

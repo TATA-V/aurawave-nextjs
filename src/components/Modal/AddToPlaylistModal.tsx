@@ -1,5 +1,10 @@
 'use clinet';
-import React, { useEffect, useRef } from 'react';
+import currentTrackState from '@/atom/currentTrackState';
+import useCloseModal from '@/hook/useCloseModal';
+import { MusicData } from '@/types/musicTypes';
+import { usePathname } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 /**
@@ -32,34 +37,50 @@ const data = [
 ];
 
 interface Props {
+  el: MusicData;
+  top?: string;
   showAddToPlaylistModal: boolean;
   setShowAddToPlaylistModal: (value: boolean) => void;
 }
-function AddToPlaylistModal({ showAddToPlaylistModal, setShowAddToPlaylistModal }: Props) {
-  const modalRef = useRef<HTMLDivElement>(null);
+function AddToPlaylistModal({ el, top, showAddToPlaylistModal, setShowAddToPlaylistModal }: Props) {
+  const [soundtrackPage, setSoundtrackPage] = useState(false);
+  const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
+  const { showMusicDetail, currentTrack, suffleTrack } = currentMusicAndTrack;
 
-  // 모달창 밖에 눌렀을 시 모달창 닫힘
+  const modalRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+
+  // 현재 페이지가 soundtrack이라면
   useEffect(() => {
-    const clickOutside = (e: MouseEvent) => {
-      if (
-        showAddToPlaylistModal &&
-        modalRef.current &&
-        !modalRef.current.contains(e.target as Node)
-      ) {
-        setShowAddToPlaylistModal(false);
-      }
-    };
-    document.addEventListener('mousedown', clickOutside);
-    return () => {
-      document.removeEventListener('mousedown', clickOutside);
-    };
-  }, [showAddToPlaylistModal, setShowAddToPlaylistModal]);
+    if (pathname === '/soundtrack') {
+      setSoundtrackPage(true);
+    }
+  }, [pathname]);
+
+  // 모달창 영역 밖을 클릭하면 모달창 닫힘
+  useCloseModal({ modalRef, state: showAddToPlaylistModal, setState: setShowAddToPlaylistModal }); // hook
+
+  // 현재 재생목록에서 음악 삭제
+  const handleDeleteMusic = () => {
+    const newCurrnetTrack = currentTrack.filter((track) => track.uuid !== el.uuid);
+    const newSuffleTrack = suffleTrack.filter((track) => track.uuid !== el.uuid);
+    setCurrentMusicAndTrack((prev) => ({
+      ...prev,
+      currentTrack: newCurrnetTrack,
+      suffleTrack: newSuffleTrack,
+    }));
+  };
 
   return (
-    <Container>
+    <Container top={top}>
       <AddToPlaylistModalBlock ref={modalRef}>
+        {soundtrackPage && !showMusicDetail && (
+          <ModalTitle onClick={handleDeleteMusic}>
+            <p className="delete-music">현재 재생목록에서 삭제</p>
+          </ModalTitle>
+        )}
         <ModalTitle>
-          <p>내 플레이리스트에 추가</p>
+          <p className="add-music">내 플레이리스트에 추가</p>
         </ModalTitle>
 
         <AddToPlaylistUl>
@@ -87,9 +108,13 @@ interface Num {
   num: number;
 }
 
-const Container = styled.div`
+interface Top {
+  top: string | undefined;
+}
+
+const Container = styled.div<Top>`
   position: absolute;
-  top: 23px;
+  top: ${({ top }) => (top ? `${top}px` : '23px')};
   right: 0;
   width: 130px;
   padding-bottom: 65px;
@@ -119,6 +144,12 @@ const ModalTitle = styled.div`
     font-size: 0.65rem;
     font-weight: 500;
     padding-top: 1px;
+  }
+
+  .delete-music {
+    cursor: pointer;
+  }
+  .add-music {
     user-select: none;
   }
 `;

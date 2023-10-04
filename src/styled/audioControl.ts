@@ -1,5 +1,6 @@
 'use client';
 import styled, { keyframes } from 'styled-components';
+import Link from 'next/link';
 
 interface HasBottomTab {
   hasBottomTab: boolean;
@@ -69,11 +70,10 @@ export const ProgressBarAndTime = styled.div<CurrentTimeWidth & IsMouseMoveActiv
     justify-content: center;
     align-items: center;
 
-    opacity: ${({ isMouseMoveActive }) => (isMouseMoveActive ? '1' : '0')};
+    display: ${({ isMouseMoveActive }) => (isMouseMoveActive ? 'flex' : 'none')};
     position: absolute;
     top: 8px;
     left: ${({ currentTimeWidth }) => currentTimeWidth - 12}%;
-    transition: opacity 0.1s ease;
     z-index: 1;
   }
 `;
@@ -132,6 +132,8 @@ export const LeftBox = styled.div`
 
   .image {
     border-radius: 2px;
+    object-fit: cover;
+    cursor: pointer;
   }
 
   .details {
@@ -147,12 +149,14 @@ export const LeftBox = styled.div`
     font-size: 0.9375rem;
     font-weight: 400;
     white-space: nowrap;
+    cursor: pointer;
   }
 
   .composer {
     color: var(--blue-gray-400);
     font-size: 0.8125rem;
     font-weight: 400;
+    cursor: pointer;
   }
 `;
 
@@ -202,6 +206,8 @@ export const SimpleMusicPlayer = styled.div`
 
   .image {
     border-radius: 2px;
+    object-fit: cover;
+    cursor: pointer;
   }
 
   button {
@@ -238,6 +244,13 @@ export const Option = styled.div`
     font-size: 22px;
     padding-right: 1px;
   }
+`;
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 // PlayModeModal

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import AudioControlBar from '../AudioControlBar/AudioControlBar';
 import { useRecoilValue } from 'recoil';
 import currentTrackState from '@/atom/currentTrackState';
+// import MusicDetailModal from '../Modal/MusicDetailModal';
 
 interface Props {
   children: React.ReactNode;
