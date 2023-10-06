@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import localStorageEffect from './localStorageEffect';
 
 export interface CurrentMusic {
   uuid: string;
@@ -39,6 +40,7 @@ const DefaultValue: CurrentTrackState = {
 const currentTrackState = atom<CurrentTrackState>({
   key: 'currentTrackState',
   default: DefaultValue,
+  effects: [localStorageEffect('current_track')],
 });
 
 export default currentTrackState;

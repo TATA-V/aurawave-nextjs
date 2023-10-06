@@ -10,7 +10,7 @@ import formatTime from '@/utils/formatTime';
 import updateProgressBarWidth from '@/utils/updateProgressBarWidth';
 
 import PlayModeModal from './PlayModeModal';
-import MusicDetailModal from '../Modal/MusicDetailModal';
+import MusicDetailModal from '../MusicDetailModal/MusicDetailModal';
 
 function AudioControlBar() {
   // 음악 재생 유무

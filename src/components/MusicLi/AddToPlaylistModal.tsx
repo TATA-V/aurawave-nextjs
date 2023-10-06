@@ -45,7 +45,8 @@ interface Props {
 function AddToPlaylistModal({ el, top, showAddToPlaylistModal, setShowAddToPlaylistModal }: Props) {
   const [soundtrackPage, setSoundtrackPage] = useState(false);
   const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
-  const { showMusicDetail, currentTrack, suffleTrack } = currentMusicAndTrack;
+  const { playMode, showMusicDetail, currentMusic, currentTrack, suffleTrack } =
+    currentMusicAndTrack;
 
   const modalRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -62,6 +63,20 @@ function AddToPlaylistModal({ el, top, showAddToPlaylistModal, setShowAddToPlayl
 
   // 현재 재생목록에서 음악 삭제
   const handleDeleteMusic = () => {
+    const deleteMatchCurrent = el.uuid === currentMusic.uuid;
+    const musicTrack = playMode === 'shuffle' ? suffleTrack : currentTrack;
+    const deleteIndex = musicTrack.findIndex((track) => track.uuid === el.uuid);
+
+    // 재생목록에서 삭제하는 음악이 현재 재생 중인 음악과 같다면
+    // 현재 재생 중인 곡을 다음 곡으로 바꿈
+    if (deleteMatchCurrent) {
+      let nextIndex = deleteIndex === musicTrack.length - 1 ? 0 : deleteIndex + 1;
+      setCurrentMusicAndTrack((prev) => ({
+        ...prev,
+        currentMusic: musicTrack[nextIndex],
+      }));
+    }
+
     const newCurrnetTrack = currentTrack.filter((track) => track.uuid !== el.uuid);
     const newSuffleTrack = suffleTrack.filter((track) => track.uuid !== el.uuid);
     setCurrentMusicAndTrack((prev) => ({

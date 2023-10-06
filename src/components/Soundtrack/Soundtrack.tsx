@@ -1,15 +1,26 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
 import currentTrackState from '@/atom/currentTrackState';
 import CheckSvg from '@/../public/checkSvg.svg';
+import { useRouter } from 'next/navigation';
 
 import GoBackHead from '../GoBackHead/GoBackHead';
 import MusicLi from '../MusicLi/MusicLi';
 function Soundtrack() {
+  const resetCurrentMusicAndTrack = useResetRecoilState(currentTrackState); // 리코일
   const { playMode, currentTrack, suffleTrack } = useRecoilValue(currentTrackState); // 리코일
   const musicTrack = playMode === 'shuffle' ? suffleTrack : currentTrack;
+  const router = useRouter();
+
+  // 재생목록에 노래가 한 개도 없다면
+  useEffect(() => {
+    if (currentTrack.length === 0) {
+      resetCurrentMusicAndTrack();
+      router.back();
+    }
+  }, [currentTrack.length, resetCurrentMusicAndTrack, router]);
 
   return (
     <>

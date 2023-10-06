@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import MoreSvg from '@/../public/more.svg';
 
-import AddToPlaylistModal from '../Modal/AddToPlaylistModal';
+import AddToPlaylistModal from './AddToPlaylistModal';
 import { MusicData } from '@/types/musicTypes';
 import useMusicPlay from '@/hook/useMusicPlay';
 
@@ -86,6 +86,7 @@ const MusicLiBlock = styled.li`
   .image {
     border: 1px solid var(--gray-100);
     border-radius: 2px;
+    object-fit: cover;
     cursor: pointer;
   }
 

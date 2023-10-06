@@ -10,7 +10,7 @@ import { signOut } from 'firebase/auth';
 import styled from 'styled-components';
 import currentTrackState from '@/atom/currentTrackState';
 
-import CustomModal from '@/components/Modal/CustomModal';
+import CustomModal from '@/components/CustomModal/CustomModal';
 
 function LogoutAndDeleteAccount() {
   const [toggleModal, setToggleModal] = useState(false);
