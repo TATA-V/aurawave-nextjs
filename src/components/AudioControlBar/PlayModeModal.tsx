@@ -22,7 +22,7 @@ function PlayModeModal({ playModeModal, setPlayModeModal }: Props) {
   useCloseModal({ modalRef, state: playModeModal, setState: setPlayModeModal }); // hook
 
   return (
-    <S.PlayModeModalBlock ref={modalRef} isLoop={isLoop} playMode={playMode}>
+    <S.PlayModeModalBlock ref={modalRef} $isLoop={isLoop} $playMode={playMode}>
       <li onClick={handleLoop} className="option-box border-bottom">
         <i className="i-loop" />
         <span className="option-txt loop">LOOP</span>

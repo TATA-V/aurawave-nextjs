@@ -17,7 +17,7 @@ function Layout({ children }: Props) {
 
   return (
     <LayoutBlock>
-      <LayoutStyle isShow={isShow}>
+      <LayoutStyle $isShow={isShow}>
         {children}
         {isShow && <AudioControlBar />}
       </LayoutStyle>
@@ -28,7 +28,7 @@ function Layout({ children }: Props) {
 export default Layout;
 
 interface IsShow {
-  isShow: boolean;
+  $isShow: boolean;
 }
 
 const LayoutBlock = styled.div`
@@ -46,7 +46,7 @@ const LayoutStyle = styled.div<IsShow>`
   height: 100vh;
   overflow-y: scroll;
   background-color: #fff;
-  padding-bottom: ${({ isShow }) => (isShow ? '61px' : '0')};
+  padding-bottom: ${({ $isShow }) => ($isShow ? '61px' : '0')};
 
   &::-webkit-scrollbar {
     display: none;

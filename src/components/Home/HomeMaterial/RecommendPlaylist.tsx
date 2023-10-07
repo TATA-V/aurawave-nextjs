@@ -55,7 +55,7 @@ function RecommendPlaylist() {
         <StyledSwiper spaceBetween={22} slidesPerView={1.7}>
           {data.map((el) => (
             <SwiperSlide key={el.id}>
-              <PlaylistItem className="playlist-li" num={el.id}>
+              <PlaylistItem className="playlist-li">
                 <div className="playlist-content">
                   <Image
                     className="image"
@@ -84,10 +84,6 @@ function RecommendPlaylist() {
 
 export default RecommendPlaylist;
 
-interface Num {
-  num: number;
-}
-
 const SkeletonPlaylistBlock = styled.div`
   width: 439px;
   padding-left: 21px;
@@ -112,7 +108,7 @@ const StyledSwiper = styled(Swiper)`
   height: 259px;
 `;
 
-const PlaylistItem = styled.div<Num>`
+const PlaylistItem = styled.div`
   .playlist-content {
     width: 200px;
     height: 243px;

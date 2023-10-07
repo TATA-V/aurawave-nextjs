@@ -1,6 +1,6 @@
 'use client';
 import currentTrackState from '@/atom/currentTrackState';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { SetStateAction, useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import * as S from '@/styled/MusicDetailModalStyled';
 import Image from 'next/image';
@@ -20,24 +20,32 @@ interface Props {
   handlePrevNextMusic: (type?: 'prev' | 'next') => void;
   handleTogglePlay: () => void;
   handleProgressBar: (e: React.MouseEvent<HTMLDivElement>, type: string) => void;
+  currentTimeWidth: number;
+  currentTime: number;
 }
 
 function MusicDetailModal({
-  play,
-  totalDuration,
-  currentDuration,
-  handleTogglePlay,
-  handlePrevNextMusic,
-  progressBarWidth,
-  handleProgressBar,
+  play, // 음악 재생 유무
+  totalDuration, // 총 음악 시간
+  currentDuration, // 현재 음악 시간
+  handleTogglePlay, // 현재 재생 중인 음악을 멈추거나 다시 재생
+  handlePrevNextMusic, // 이전, 다음 음악 재생
+  progressBarWidth, //음악 재생 중인 상태에서 progressBar의 가로 길이
+  handleProgressBar, // progressBar 클릭한 위치에서 음악 재생(onClick), ProgressBar위에 마우스 올리면 해당 위치의 음악 시간 표시(onMouseMove)
+  currentTimeWidth, // progressBar 위에 마우스가 올릴 때 해당 음악의 가로 길이
+  currentTime, // progressBar 위에 마우스가 올릴 때 해당 음악의 시간
 }: Props) {
+  // 현재 모달창이 열렸는지 여부
   const [openModal, setOpenModal] = useState(true);
+  // progressBar 위에 마우스가 있는지
+  const [isMouseMoveActive, setIsMouseMoveActive] = useState(false);
 
   const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
   const { showMusicDetail, currentMusic } = currentMusicAndTrack;
   const { imageUri, composer } = currentMusic;
   const modalRef = useRef<HTMLDivElement>(null);
 
+  // 모달창 닫기
   const handleClose = () => {
     setOpenModal(false);
   };
@@ -57,7 +65,7 @@ function MusicDetailModal({
   return (
     <>
       <S.MusicDetailModalBlock>
-        <S.MusicDetailBox openModal={openModal} ref={modalRef}>
+        <S.MusicDetailBox $openModal={openModal} ref={modalRef}>
           <S.MusicDetail>
             {/* 닫기 버튼 */}
             <S.CloseBtnBox>
@@ -78,10 +86,21 @@ function MusicDetailModal({
             </S.Composer>
             {/* 프로그레스바 */}
             <S.ProgressBarBox
-              onMouseDown={(e) => handleProgressBar(e, 'click')}
-              progressBarWidth={progressBarWidth}
+              onMouseMove={(e) => {
+                handleProgressBar(e, 'hover');
+                setIsMouseMoveActive(true);
+              }}
+              onMouseLeave={() => setIsMouseMoveActive(false)}
+              onClick={(e) => handleProgressBar(e, 'click')}
+              $progressBarWidth={progressBarWidth}
+              $currentTimeWidth={currentTimeWidth}
             >
               <div className="progressbar" />
+              {isMouseMoveActive && (
+                <div className="hover-time">
+                  <p>{formatTime(currentTime)}</p>
+                </div>
+              )}
             </S.ProgressBarBox>
             {/* 음악 시간 - 현재 재생 시간, 총 음악 시간 */}
             <S.MusicTime>

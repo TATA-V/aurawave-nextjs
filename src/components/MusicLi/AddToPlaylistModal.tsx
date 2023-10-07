@@ -87,7 +87,7 @@ function AddToPlaylistModal({ el, top, showAddToPlaylistModal, setShowAddToPlayl
   };
 
   return (
-    <Container top={top}>
+    <Container $top={top}>
       <AddToPlaylistModalBlock ref={modalRef}>
         {soundtrackPage && !showMusicDetail && (
           <ModalTitle onClick={handleDeleteMusic}>
@@ -100,7 +100,7 @@ function AddToPlaylistModal({ el, top, showAddToPlaylistModal, setShowAddToPlayl
 
         <AddToPlaylistUl>
           {data.map((el) => (
-            <AddToPlaylistLi key={el.id} num={el.id}>
+            <AddToPlaylistLi key={el.id} $num={el.id}>
               <div className="playlist-box">
                 <i className="i-plus-music-circle" />
                 <p className="playlist-title">{el.playlistTitle}</p>
@@ -120,16 +120,16 @@ function AddToPlaylistModal({ el, top, showAddToPlaylistModal, setShowAddToPlayl
 export default AddToPlaylistModal;
 
 interface Num {
-  num: number;
+  $num: number;
 }
 
 interface Top {
-  top: string | undefined;
+  $top: string | undefined;
 }
 
 const Container = styled.div<Top>`
   position: absolute;
-  top: ${({ top }) => (top ? `${top}px` : '23px')};
+  top: ${({ $top }) => ($top ? `${$top}px` : '23px')};
   right: 0;
   width: 130px;
   padding-bottom: 65px;
@@ -197,7 +197,7 @@ const AddToPlaylistLi = styled.li<Num>`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: ${({ num }) => (num === 1 ? '2px' : '0')};
+  margin-top: ${({ $num }) => ($num === 1 ? '2px' : '0')};
 
   .playlist-box {
     width: 110px;

@@ -22,7 +22,7 @@ function PlaymodeMenu({ setOpenModal }: Props) {
   };
 
   return (
-    <PlaymodeMenuBlock isLoop={isLoop} playMode={playMode}>
+    <PlaymodeMenuBlock $isLoop={isLoop} $playMode={playMode}>
       <button onClick={handleLoop}>
         <i className="i-loop" />
       </button>
@@ -39,11 +39,11 @@ function PlaymodeMenu({ setOpenModal }: Props) {
 export default PlaymodeMenu;
 
 interface IsLoop {
-  isLoop: boolean;
+  $isLoop: boolean;
 }
 
 interface PlayMode {
-  playMode: string;
+  $playMode: string;
 }
 
 export const PlaymodeMenuBlock = styled.div<IsLoop & PlayMode>`
@@ -58,14 +58,14 @@ export const PlaymodeMenuBlock = styled.div<IsLoop & PlayMode>`
   .i-loop {
     font-size: 18px;
     &::before {
-      color: ${({ isLoop }) => (isLoop ? 'var(--sky-blue-400)' : null)};
+      color: ${({ $isLoop }) => ($isLoop ? 'var(--sky-blue-400)' : null)};
     }
   }
 
   .i-shuffle {
     font-size: 18px;
     &::before {
-      color: ${({ playMode }) => (playMode === 'shuffle' ? 'var(--sky-blue-400)' : null)};
+      color: ${({ $playMode }) => ($playMode === 'shuffle' ? 'var(--sky-blue-400)' : null)};
     }
   }
 

@@ -3,19 +3,15 @@ import styled, { keyframes } from 'styled-components';
 import Link from 'next/link';
 
 interface HasBottomTab {
-  hasBottomTab: boolean;
+  $hasBottomTab: boolean;
 }
 
 interface ProgressBarWidth {
-  progressBarWidth: number;
+  $progressBarWidth: number;
 }
 
 interface CurrentTimeWidth {
-  currentTimeWidth: number;
-}
-
-interface IsMouseMoveActive {
-  isMouseMoveActive: boolean;
+  $currentTimeWidth: number;
 }
 
 const fadeInUp = keyframes`
@@ -36,11 +32,11 @@ export const StyledAudio = styled.audio`
 export const AudioControlBarBlock = styled.div<HasBottomTab>`
   animation: ${fadeInUp} 0.2s ease-out;
   width: 390px;
-  height: ${({ hasBottomTab }) => (hasBottomTab ? '60px' : '71px')};
+  height: ${({ $hasBottomTab }) => ($hasBottomTab ? '60px' : '71px')};
   border-radius: 10px 10px 0 0;
   background: linear-gradient(to right, #648b8b, #e38989);
   position: fixed;
-  bottom: ${({ hasBottomTab }) => (hasBottomTab ? '50px' : '0')};
+  bottom: ${({ $hasBottomTab }) => ($hasBottomTab ? '50px' : '0')};
   z-index: 1;
 `;
 
@@ -54,7 +50,7 @@ export const ProgressBarBox = styled.div<CurrentTimeWidth>`
   overflow: hidden;
 `;
 
-export const ProgressBarAndTime = styled.div<CurrentTimeWidth & IsMouseMoveActive>`
+export const ProgressBarAndTime = styled.div<CurrentTimeWidth>`
   position: relative;
 
   .hover-time {
@@ -70,10 +66,9 @@ export const ProgressBarAndTime = styled.div<CurrentTimeWidth & IsMouseMoveActiv
     justify-content: center;
     align-items: center;
 
-    display: ${({ isMouseMoveActive }) => (isMouseMoveActive ? 'flex' : 'none')};
     position: absolute;
     top: 8px;
-    left: ${({ currentTimeWidth }) => currentTimeWidth - 12}%;
+    left: ${({ $currentTimeWidth }) => $currentTimeWidth - 12}%;
     z-index: 1;
   }
 `;
@@ -98,7 +93,7 @@ export const ProgressBar = styled.div<ProgressBarWidth>`
     left: 0px;
     height: 2px;
     z-index: 1;
-    width: ${({ progressBarWidth }) => progressBarWidth}%;
+    width: ${({ $progressBarWidth }) => $progressBarWidth}%;
     transition: width 0.1s ease;
     background-color: var(--dark-green-700);
   }
@@ -255,11 +250,11 @@ export const StyledLink = styled(Link)`
 
 // PlayModeModal
 interface PlayMode {
-  playMode: string;
+  $playMode: string;
 }
 
 interface IsLoop {
-  isLoop: boolean;
+  $isLoop: boolean;
 }
 
 export const PlayModeModalBlock = styled.ul<PlayMode & IsLoop>`
@@ -298,19 +293,19 @@ export const PlayModeModalBlock = styled.ul<PlayMode & IsLoop>`
   }
 
   .loop {
-    color: ${({ isLoop }) => (isLoop ? 'var(--sky-blue-500)' : 'var(--dark-blue-700)')};
+    color: ${({ $isLoop }) => ($isLoop ? 'var(--sky-blue-500)' : 'var(--dark-blue-700)')};
   }
 
   .shuffle {
-    color: ${({ playMode }) =>
-      playMode === 'shuffle' ? 'var(--sky-blue-500)' : 'var(--dark-blue-700)'};
+    color: ${({ $playMode }) =>
+      $playMode === 'shuffle' ? 'var(--sky-blue-500)' : 'var(--dark-blue-700)'};
   }
 
   .i-loop {
     font-size: 7px;
 
     &::before {
-      color: ${({ isLoop }) => (isLoop ? 'var(--sky-blue-500)' : 'var(--dark-blue-700)')};
+      color: ${({ $isLoop }) => ($isLoop ? 'var(--sky-blue-500)' : 'var(--dark-blue-700)')};
     }
   }
 
@@ -318,8 +313,8 @@ export const PlayModeModalBlock = styled.ul<PlayMode & IsLoop>`
     font-size: 7px;
 
     &::before {
-      color: ${({ playMode }) =>
-        playMode === 'shuffle' ? 'var(--sky-blue-500)' : 'var(--dark-blue-700)'};
+      color: ${({ $playMode }) =>
+        $playMode === 'shuffle' ? 'var(--sky-blue-500)' : 'var(--dark-blue-700)'};
     }
   }
 `;

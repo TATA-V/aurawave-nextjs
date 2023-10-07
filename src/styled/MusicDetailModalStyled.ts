@@ -2,11 +2,15 @@
 import styled, { keyframes } from 'styled-components';
 
 interface OpenModal {
-  openModal: boolean;
+  $openModal: boolean;
 }
 
 interface ProgressBarWidth {
-  progressBarWidth: number;
+  $progressBarWidth: number;
+}
+
+interface CurrentTimeWidth {
+  $currentTimeWidth: number;
 }
 
 export const fadeInUp = keyframes`
@@ -36,8 +40,8 @@ export const MusicDetailBox = styled.div<OpenModal>`
   border-radius: 20px 20px 0 0;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.12);
   animation: ${fadeInUp} 0.25s ease-out;
-  transform: ${({ openModal }) => (openModal ? 'translateY(0)' : 'translateY(370px)')};
-  opacity: ${({ openModal }) => (openModal ? '1' : '0')};
+  transform: ${({ $openModal }) => ($openModal ? 'translateY(0)' : 'translateY(370px)')};
+  opacity: ${({ $openModal }) => ($openModal ? '1' : '0')};
   transition: transform 0.15s ease-in-out, opacity 0.15s ease-in-out;
 
   position: absolute;
@@ -86,16 +90,18 @@ export const Composer = styled.div`
   }
 `;
 
-export const ProgressBarBox = styled.div<ProgressBarWidth>`
+export const ProgressBarBox = styled.div<ProgressBarWidth & CurrentTimeWidth>`
   width: 100%;
   height: 5.3px;
   border-radius: 10px;
   background-color: #e5ecee;
   box-shadow: inset 0.5px -1.5px 2px rgba(16, 29, 33, 0.1);
+  position: relative;
   cursor: pointer;
 
   .progressbar {
-    width: ${({ progressBarWidth }) => (isNaN(progressBarWidth) ? '0%' : `${progressBarWidth}%`)};
+    width: ${({ $progressBarWidth }) =>
+      isNaN($progressBarWidth) ? '0%' : `${$progressBarWidth}%`};
     height: 5.3px;
     border-radius: 50px 0 0 50px;
     background: linear-gradient(to top, #2f7381, #7a99a4);
@@ -114,6 +120,25 @@ export const ProgressBarBox = styled.div<ProgressBarWidth>`
     background-image: linear-gradient(345deg, #255660 0%, #587f86 50%, #8da7b1 100%);
     box-shadow: 2px 1px 3px rgba(16, 29, 33, 0.15);
     cursor: pointer;
+  }
+
+  .hover-time {
+    width: 42px;
+    height: 22px;
+    color: var(--white-100);
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 2px;
+    background-color: #648b8b;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    top: 9px;
+    left: ${({ $currentTimeWidth }) => $currentTimeWidth - 14}%;
+    z-index: 1;
   }
 `;
 
