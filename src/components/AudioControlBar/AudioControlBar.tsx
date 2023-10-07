@@ -10,7 +10,7 @@ import formatTime from '@/utils/formatTime';
 import updateProgressBarWidth from '@/utils/updateProgressBarWidth';
 
 import PlayModeModal from './PlayModeModal';
-import MusicDetailModal from '../Modal/MusicDetailModal';
+import MusicDetailModal from '../MusicDetailModal/MusicDetailModal';
 
 function AudioControlBar() {
   // 음악 재생 유무
@@ -19,10 +19,10 @@ function AudioControlBar() {
   const [totalDuration, setTotalDuration] = useState(0); // 총 시간
   const [currentDuration, setCurrentDuration] = useState(0); // 현재 시간
   // 음악 progressBar
-  const [progressBarWidth, setProgressBarWidth] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [currentTimeWidth, setCurrentTimeWidth] = useState(0);
-  const [isMouseMoveActive, setIsMouseMoveActive] = useState(false);
+  const [progressBarWidth, setProgressBarWidth] = useState(0); // 음악 재생 중인 상태에서 progressBar의 가로 길이
+  const [currentTime, setCurrentTime] = useState(0); // progressBar 위에 마우스가 올릴 때 해당 음악의 시간
+  const [currentTimeWidth, setCurrentTimeWidth] = useState(0); // progressBar 위에 마우스가 올릴 때 해당 음악의 가로 길이
+  const [isMouseMoveActive, setIsMouseMoveActive] = useState(false); // progressBar 위에 마우스가 있는지
   // BottomTab 컴포넌트 유무
   const [hasBottomTab, setHasBottomTab] = useState(true);
   // 옵션(Loop, Shuffle) 모달
@@ -105,10 +105,6 @@ function AudioControlBar() {
   // ProgressBar를 클릭하면 클릭한 위치에서 음악을 재생(onClick)
   // ProgressBar위에 마우스 올리면 해당 위치의 음악 시간 표시(onMouseMove)
   const handleProgressBar = (e: React.MouseEvent<HTMLDivElement>, type: string) => {
-    if (type === 'hover') {
-      setIsMouseMoveActive(true);
-    }
-
     updateProgressBarWidth({
       e,
       type,
@@ -174,20 +170,24 @@ function AudioControlBar() {
     setCurrentMusicAndTrack((prev) => ({ ...prev, showMusicDetail: true }));
   };
 
+  const musicDetailProps = {
+    play, // 음악 재생 유무
+    totalDuration, // 총 음악 시간
+    currentDuration, // 현재 음악 시간
+    handleTogglePlay, // 현재 재생 중인 음악을 멈추거나 다시 재생
+    handlePrevNextMusic, // 이전, 다음 음악 재생
+    progressBarWidth, // 음악 재생 중인 상태에서 progressBar의 가로 길이
+    handleProgressBar, // progressBar 클릭한 위치에서 음악 재생(onClick), ProgressBar위에 마우스 올리면 해당 위치의 음악 시간 표시(onMouseMove)
+    setIsMouseMoveActive, // progressBar 위에 마우스가 있는지 수정
+    isMouseMoveActive, // progressBar 위에 마우스가 있는지
+    currentTimeWidth, // progressBar 위에 마우스가 올릴 때 해당 음악의 가로 길이
+    currentTime, // progressBar 위에 마우스가 올릴 때 해당 음악의 시간
+  };
+
   return (
     <>
       {/* 음악 디테일 => MusicDetailModal 컴포넌트 */}
-      {showMusicDetail && (
-        <MusicDetailModal
-          play={play}
-          totalDuration={totalDuration}
-          currentDuration={currentDuration}
-          handleTogglePlay={handleTogglePlay}
-          handlePrevNextMusic={handlePrevNextMusic}
-          progressBarWidth={progressBarWidth}
-          handleProgressBar={handleProgressBar}
-        />
-      )}
+      {showMusicDetail && <MusicDetailModal {...musicDetailProps} />}
 
       <S.StyledAudio
         ref={audioRef}
@@ -198,22 +198,24 @@ function AudioControlBar() {
         <source src={musicUri} type="audio/mpeg" />
       </S.StyledAudio>
 
-      <S.AudioControlBarBlock hasBottomTab={hasBottomTab}>
-        <S.ProgressBarAndTime
-          currentTimeWidth={currentTimeWidth}
-          isMouseMoveActive={isMouseMoveActive}
-        >
-          <S.ProgressBarBox currentTimeWidth={currentTimeWidth}>
+      <S.AudioControlBarBlock $hasBottomTab={hasBottomTab}>
+        <S.ProgressBarAndTime $currentTimeWidth={currentTimeWidth}>
+          <S.ProgressBarBox $currentTimeWidth={currentTimeWidth}>
             <S.ProgressBar
-              onMouseMove={(e) => handleProgressBar(e, 'hover')}
+              onMouseMove={(e) => {
+                handleProgressBar(e, 'hover');
+                setIsMouseMoveActive(true);
+              }}
               onMouseLeave={() => setIsMouseMoveActive(false)}
               onClick={(e) => handleProgressBar(e, 'click')}
-              progressBarWidth={progressBarWidth}
+              $progressBarWidth={progressBarWidth}
             />
           </S.ProgressBarBox>
-          <div className="hover-time">
-            <p>{formatTime(currentTime)}</p>
-          </div>
+          {isMouseMoveActive && (
+            <div className="hover-time">
+              <p>{formatTime(currentTime)}</p>
+            </div>
+          )}
         </S.ProgressBarAndTime>
 
         {/* 현재 페이지에 BottomTab 컴포넌트가 없다면 */}

@@ -4,12 +4,10 @@ import { MusicData } from '@/types/musicTypes';
 
 const useMusicPlay = () => {
   const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
-  const { playMode, currentTrack, suffleTrack } = currentMusicAndTrack;
-  const musicTrack = playMode === 'shuffle' ? suffleTrack : currentTrack;
-  const musicTrackTxt = playMode === 'shuffle' ? 'suffleTrack' : 'currentTrack';
+  const { currentTrack, suffleTrack } = currentMusicAndTrack;
 
   const musicPlay = (el: MusicData) => {
-    const isUuidInCurrentTrack = musicTrack.some((track) => track.uuid === el.uuid);
+    const isUuidInCurrentTrack = currentTrack.some((track) => track.uuid === el.uuid);
 
     setCurrentMusicAndTrack((prev) => ({
       ...prev,
@@ -28,8 +26,8 @@ const useMusicPlay = () => {
     if (!isUuidInCurrentTrack) {
       setCurrentMusicAndTrack((prev) => ({
         ...prev,
-        [musicTrackTxt]: [
-          ...prev[musicTrackTxt],
+        currentTrack: [
+          ...prev.currentTrack,
           {
             uuid: el.uuid,
             imageUri: el.imageUri,
@@ -40,6 +38,22 @@ const useMusicPlay = () => {
           },
         ],
       }));
+      if (suffleTrack.length !== 0) {
+        setCurrentMusicAndTrack((prev) => ({
+          ...prev,
+          suffleTrack: [
+            ...prev.suffleTrack,
+            {
+              uuid: el.uuid,
+              imageUri: el.imageUri,
+              musicUri: el.musicUri,
+              title: el.title,
+              composer: el.composer,
+              copyright: el.copyright,
+            },
+          ],
+        }));
+      }
     }
   };
 

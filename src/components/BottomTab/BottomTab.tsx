@@ -19,7 +19,7 @@ function BottomTab() {
   const pathname = usePathname();
 
   return (
-    <BottomTabBlock isShow={isShow}>
+    <BottomTabBlock $isShow={isShow}>
       <div className="svg-box">
         <Link href={'/'}>{pathname === '/' ? <MoonBlueSvg /> : <MoonGraySvg />}</Link>
         <Link href={'/music'}>{pathname === '/music' ? <MusicBlueSvg /> : <MusicGraySvg />}</Link>
@@ -35,7 +35,7 @@ function BottomTab() {
 export default BottomTab;
 
 interface IsShow {
-  isShow: boolean;
+  $isShow: boolean;
 }
 
 export const BottomTabBlock = styled.nav<IsShow>`
@@ -43,7 +43,7 @@ export const BottomTabBlock = styled.nav<IsShow>`
   height: 50px;
   padding: 14px 44px;
   background-color: var(--white-100);
-  box-shadow: ${({ isShow }) => (isShow ? null : `0 0 7px rgba(0, 0, 0, 0.12)`)};
+  box-shadow: ${({ $isShow }) => ($isShow ? null : `0 0 7px rgba(0, 0, 0, 0.12)`)};
   position: fixed;
   bottom: 0;
   z-index: 2;
