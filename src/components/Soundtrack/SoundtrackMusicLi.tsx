@@ -6,14 +6,16 @@ import MoreSvg from '@/../public/more.svg';
 import { MusicData } from '@/types/musicTypes';
 import useMusicPlay from '@/hook/useMusicPlay';
 
-import AddToPlaylistModal from './AddToPlaylistModal';
+import AddToPlaylistModal from '../MusicLi/AddToPlaylistModal';
 
 interface Props {
   el: MusicData;
-  hideRightBtn?: boolean;
+  idx: number;
+  handleDragStart: (idx: number) => void;
+  handelDragEnter: (idx: number) => void;
+  handleDragEnd: () => void;
 }
-
-function MusicLi({ el, hideRightBtn }: Props) {
+function SoundtrackMusicLi({ el, idx, handleDragStart, handelDragEnter, handleDragEnd }: Props) {
   const [showAddToPlaylistModal, setShowAddToPlaylistModal] = useState(false);
   const { imageUri, title, composer } = el;
   const musicPlay = useMusicPlay(); // hook
@@ -23,7 +25,13 @@ function MusicLi({ el, hideRightBtn }: Props) {
   };
 
   return (
-    <MusicLiBlock>
+    <MusicLiBlock
+      draggable
+      onDragStart={() => handleDragStart(idx)}
+      onDragEnter={() => handelDragEnter(idx)}
+      onDragEnd={handleDragEnd}
+      onDragOver={(e) => e.preventDefault()}
+    >
       <div className="music-content">
         <div className="details-box">
           <Image
@@ -46,27 +54,25 @@ function MusicLi({ el, hideRightBtn }: Props) {
         </div>
 
         {/* 더보기 */}
-        {!hideRightBtn && (
-          <MoreBox>
-            <button onClick={() => setShowAddToPlaylistModal(true)}>
-              <MoreSvg width={19} height={4} fill={'#62686A'} />
-            </button>
-            {/* 플레이리스트에 음악 추가하는 모달 => AddToPlaylistModal 컴포넌트 */}
-            {showAddToPlaylistModal && (
-              <AddToPlaylistModal
-                el={el}
-                showAddToPlaylistModal={showAddToPlaylistModal}
-                setShowAddToPlaylistModal={setShowAddToPlaylistModal}
-              />
-            )}
-          </MoreBox>
-        )}
+        <MoreBox>
+          <button onClick={() => setShowAddToPlaylistModal(true)}>
+            <MoreSvg width={19} height={4} fill={'#62686A'} />
+          </button>
+          {/* 플레이리스트에 음악 추가하는 모달 => AddToPlaylistModal 컴포넌트 */}
+          {showAddToPlaylistModal && (
+            <AddToPlaylistModal
+              el={el}
+              showAddToPlaylistModal={showAddToPlaylistModal}
+              setShowAddToPlaylistModal={setShowAddToPlaylistModal}
+            />
+          )}
+        </MoreBox>
       </div>
     </MusicLiBlock>
   );
 }
 
-export default MusicLi;
+export default SoundtrackMusicLi;
 
 const MusicLiBlock = styled.li`
   margin-bottom: 17px;

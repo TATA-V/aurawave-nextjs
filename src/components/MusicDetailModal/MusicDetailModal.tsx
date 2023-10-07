@@ -1,6 +1,6 @@
 'use client';
 import currentTrackState from '@/atom/currentTrackState';
-import React, { SetStateAction, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import * as S from '@/styled/MusicDetailModalStyled';
 import Image from 'next/image';
