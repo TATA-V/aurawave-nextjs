@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { bubblegum } from '@/fonts/fonts';
 import createPlaylistState from '@/atom/createPlaylistState';
 import { useRecoilState, useResetRecoilState } from 'recoil';
-import { setAWPlaylistDoc } from '@/firebase/playlist';
+import { setAWPlaylistDoc, setUserPlaylistDoc } from '@/firebase/playlist';
 import uploadImage from '@/firebase/image';
 import formatDateToYYYYMMDD from '@/utils/formatDateToYYYYMMDD';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,13 +24,13 @@ function PlaylistGoBackHead({ title }: Props) {
   const formattedDate = formatDateToYYYYMMDD(); // 현재 날짜
   const router = useRouter();
   const pathname = usePathname();
+  const adminPlaylist = pathname === '/admin-awplaylist';
 
   // 오른쪽 글자
   useEffect(() => {
-    if (pathname === '/admin-awplaylist') {
+    if (pathname === '/admin-awplaylist' || pathname === '/playlist') {
       setRightTxt('저장');
-    }
-    if (pathname === '/admin-awplaylist/add-music') {
+    } else {
       setRightTxt('닫기');
     }
   }, [pathname]);
@@ -58,7 +58,8 @@ function PlaylistGoBackHead({ title }: Props) {
         description: description,
         musicList: musicList,
       };
-      setAWPlaylistDoc({ uuid, awplaylistData });
+      const setPlaylistDoc = adminPlaylist ? setAWPlaylistDoc : setUserPlaylistDoc;
+      setPlaylistDoc({ uuid, awplaylistData });
       resetCreatePlaylistState();
       const id = uuidv4(); // uuid 생성
       setCreatePlaylist((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
@@ -71,6 +72,7 @@ function PlaylistGoBackHead({ title }: Props) {
     musicList,
     playlistTitle,
     formattedDate,
+    adminPlaylist,
     setCreatePlaylist,
     resetCreatePlaylistState,
   ]);

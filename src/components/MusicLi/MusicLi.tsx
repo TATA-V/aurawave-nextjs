@@ -115,6 +115,7 @@ const MoreBox = styled.div`
   position: relative;
 
   button {
+    padding: 5px 0 5px 0;
     display: flex;
     justify-content: center;
     align-items: center;

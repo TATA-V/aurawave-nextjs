@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import Link from 'next/link';
 
 /**
  * 상위에서 쓰이고 있는 useState
@@ -109,8 +110,10 @@ function AddToPlaylistModal({ el, top, showAddToPlaylistModal, setShowAddToPlayl
           ))}
         </AddToPlaylistUl>
         <AddNewPlaylist>
-          <i className="i-plus-circle" />
-          <p className="add-new-playlist">새 플레이리스트 추가</p>
+          <StyledLink href={'/playlist'}>
+            <i className="i-plus-circle" />
+            <p className="add-new-playlist">새 플레이리스트 추가</p>
+          </StyledLink>
         </AddNewPlaylist>
       </AddToPlaylistModalBlock>
     </Container>
@@ -204,7 +207,6 @@ const AddToPlaylistLi = styled.li<Num>`
     height: 35px;
     padding: 0 2px 0 2px;
     border-bottom: 1px solid var(--gray-50);
-    cursor: pointer;
 
     display: flex;
     align-items: center;
@@ -221,6 +223,7 @@ const AddToPlaylistLi = styled.li<Num>`
     font-weight: 400;
     line-height: 0.75rem;
     padding-left: 4px;
+    cursor: pointer;
   }
 `;
 
@@ -228,7 +231,6 @@ const AddNewPlaylist = styled.div`
   width: 100%;
   height: 35px;
   padding-right: 5px;
-  cursor: pointer;
 
   display: flex;
   justify-content: center;
@@ -245,4 +247,9 @@ const AddNewPlaylist = styled.div`
     font-weight: 400;
     padding-left: 4px;
   }
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  display: flex;
 `;

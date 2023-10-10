@@ -1,8 +1,8 @@
 import React from 'react';
 import CreatePlaylist from '@/components/CreatePlaylist/CreatePlaylist';
 
-function AdminCreateAwPlaylistPage() {
+function CreatePlaylistPage() {
   return <CreatePlaylist />;
 }
 
-export default AdminCreateAwPlaylistPage;
+export default CreatePlaylistPage;

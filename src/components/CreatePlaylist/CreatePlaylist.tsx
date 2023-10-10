@@ -17,12 +17,15 @@ function CreatePlaylist() {
   const { isAdmin } = useRecoilValue(userState); // 리코일
   const router = useRouter();
   const pathname = usePathname();
+  const adminPlaylist = pathname === '/admin-awplaylist';
 
   useEffect(() => {
-    if (!isAdmin) {
-      router.replace('/');
+    if (adminPlaylist) {
+      if (!isAdmin) {
+        router.replace('/');
+      }
     }
-  }, [isAdmin, router]);
+  }, [adminPlaylist, isAdmin, router]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,65 +34,63 @@ function CreatePlaylist() {
 
   return (
     <>
-      {isAdmin && (
-        <>
-          <PlaylistGoBackHead title="플레이리스트 등록" />
+      <>
+        <PlaylistGoBackHead title={adminPlaylist ? '플레이리스트 등록' : '새 플레이리스트 추가'} />
 
-          <CreatePlaylistBlock>
-            {/* 플레이리스트 이미지 => PlaylistImage 컴포넌트 */}
-            <PlaylistImage />
+        <CreatePlaylistBlock>
+          {/* 플레이리스트 이미지 => PlaylistImage 컴포넌트 */}
+          <PlaylistImage />
 
-            {/* 플레이리스트 제목, 간단한 설명 작성 */}
-            <S.InputBox>
-              <input
-                onChange={handleInputChange}
-                className="title"
-                type="text"
-                value={playlistTitle}
-                placeholder="플레이리스트 제목을 적어주세요."
-                autoComplete="off"
-                name="playlistTitle"
-              />
-              <button onClick={() => setCreatePlaylist((prev) => ({ ...prev, playlistTitle: '' }))}>
-                <i className="i-delete-thin" />
-              </button>
-            </S.InputBox>
-            <S.InputBox>
-              <input
-                onChange={handleInputChange}
-                className="description margin-top"
-                type="text"
-                value={description}
-                placeholder="플레이리스트 설명을 간략하게 적어주세요."
-                autoComplete="off"
-                name="description"
-              />
-              <button onClick={() => setCreatePlaylist((prev) => ({ ...prev, description: '' }))}>
-                <i className="i-delete-thin margin-top" />
-              </button>
-            </S.InputBox>
+          {/* 플레이리스트 제목, 간단한 설명 작성 */}
+          <S.InputBox>
+            <input
+              onChange={handleInputChange}
+              className="title"
+              type="text"
+              value={playlistTitle}
+              placeholder="플레이리스트 제목을 적어주세요."
+              autoComplete="off"
+              name="playlistTitle"
+            />
+            <button onClick={() => setCreatePlaylist((prev) => ({ ...prev, playlistTitle: '' }))}>
+              <i className="i-delete-thin" />
+            </button>
+          </S.InputBox>
+          <S.InputBox>
+            <input
+              onChange={handleInputChange}
+              className="description margin-top"
+              type="text"
+              value={description}
+              placeholder="플레이리스트 설명을 간략하게 적어주세요."
+              autoComplete="off"
+              name="description"
+            />
+            <button onClick={() => setCreatePlaylist((prev) => ({ ...prev, description: '' }))}>
+              <i className="i-delete-thin margin-top" />
+            </button>
+          </S.InputBox>
 
-            {/* 새로운 곡  추가 */}
-            <S.AddNewMusic>
-              <S.StyledLink href={`${pathname}/add-music`}>
-                <div className="plus-icon">
-                  <i className="i-plus-small" />
-                </div>
-              </S.StyledLink>
-              <S.StyledLink className="add-music" href={`${pathname}/add-music`}>
-                <p>새로운 곡 추가</p>
-              </S.StyledLink>
-            </S.AddNewMusic>
+          {/* 새로운 곡  추가 */}
+          <S.AddNewMusic>
+            <S.StyledLink href={`${pathname}/add-music`}>
+              <div className="plus-icon">
+                <i className="i-plus-small" />
+              </div>
+            </S.StyledLink>
+            <S.StyledLink className="add-music" href={`${pathname}/add-music`}>
+              <p>새로운 곡 추가</p>
+            </S.StyledLink>
+          </S.AddNewMusic>
 
-            {/* 플레이리스트에 추가된 곡 */}
-            <ul>
-              {musicList.map((el) => (
-                <CreatePlaylistMusicLi key={el.uuid} el={el} />
-              ))}
-            </ul>
-          </CreatePlaylistBlock>
-        </>
-      )}
+          {/* 플레이리스트에 추가된 곡 */}
+          <ul>
+            {musicList.map((el) => (
+              <CreatePlaylistMusicLi key={el.uuid} el={el} />
+            ))}
+          </ul>
+        </CreatePlaylistBlock>
+      </>
     </>
   );
 }
