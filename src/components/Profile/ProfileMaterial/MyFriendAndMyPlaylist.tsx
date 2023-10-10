@@ -29,9 +29,9 @@ function MyFriendAndMyPlaylist() {
             </StyledLink>
           </li>
           <li className="list-box">
-            <StyledLink href={'/admin-aw-playlist'}>
+            <StyledLink href={'/admin-awplaylist'}>
               <i className="i-plus-circle" />
-              <p className="list-text">aurawave 플레이리스트 등록 & 삭제</p>
+              <p className="list-text">aurawave 플레이리스트 등록</p>
             </StyledLink>
           </li>
         </>

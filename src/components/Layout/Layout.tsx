@@ -1,10 +1,13 @@
+'use client';
 import useAuthentication from '@/hook/useAuthentication';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import AudioControlBar from '../AudioControlBar/AudioControlBar';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import currentTrackState from '@/atom/currentTrackState';
-// import MusicDetailModal from '../Modal/MusicDetailModal';
+import { v4 as uuidv4 } from 'uuid';
+import formatDateToYYYYMMDD from '@/utils/formatDateToYYYYMMDD';
+import createPlaylistState from '@/atom/createPlaylistState';
 
 interface Props {
   children: React.ReactNode;
@@ -12,8 +15,15 @@ interface Props {
 
 function Layout({ children }: Props) {
   const { isShow } = useRecoilValue(currentTrackState);
+  const setCreatePlaylist = useSetRecoilState(createPlaylistState);
 
   useAuthentication();
+
+  useEffect(() => {
+    const id = uuidv4(); // uuid 생성
+    const formattedDate = formatDateToYYYYMMDD(); // 현재 날짜
+    setCreatePlaylist((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
+  }, [setCreatePlaylist]);
 
   return (
     <LayoutBlock>

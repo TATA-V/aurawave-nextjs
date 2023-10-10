@@ -129,7 +129,7 @@ interface Top {
 
 const Container = styled.div<Top>`
   position: absolute;
-  top: ${({ $top }) => ($top ? `${$top}px` : '23px')};
+  top: ${({ $top }) => ($top ? `${$top}px` : '13px')};
   right: 0;
   width: 130px;
   padding-bottom: 65px;

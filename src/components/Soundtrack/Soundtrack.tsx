@@ -54,7 +54,6 @@ function Soundtrack() {
     newMusicTrack.splice(dragOverItemIdx, 0, dragItemValue);
     setDragItemIdx(0);
     setDragOverItemIdx(0);
-    setMusicTrack(newMusicTrack);
 
     setCurrentMusicAndTrack((prev) => ({
       ...prev,

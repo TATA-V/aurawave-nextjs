@@ -14,7 +14,7 @@ function GoBackHead({ title }: Props) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (title === '플레이리스트' || title === '플레이리스트 등록 & 삭제') {
+    if (title === '플레이리스트') {
       setIsAurawaveTxt(true);
     }
   }, [title]);
@@ -38,9 +38,7 @@ function GoBackHead({ title }: Props) {
       {title && !isAurawaveTxt && <Title>{title}</Title>}
       {title && isAurawaveTxt && (
         <Title>
-          <span className={`aw-txt ${bubblegum.className}`}>
-            {title === '플레이리스트' ? 'AuraWave' : 'AW'}
-          </span>{' '}
+          <span className={`aw-txt ${bubblegum.className}`}>{isAurawaveTxt && 'AuraWave'}</span>{' '}
           {title}
         </Title>
       )}

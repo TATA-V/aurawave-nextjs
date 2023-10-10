@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import * as S from '@/styled/authStyled';
 import Image from 'next/image';
-import albumDefaultImg from '@/assets/jpg-file/album-defult-Img.jpg';
+import albumDefaultImg from '@/assets/jpg-file/album-default.jpg';
 import { auth, storage } from '@/firebase/config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
