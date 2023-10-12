@@ -1,7 +1,7 @@
 import { MusicData } from '@/types/musicTypes';
 import { atom } from 'recoil';
 
-interface CreatePlaylist {
+interface PlaylistData {
   uuid: string;
   isPublic: boolean;
   playlistImageUri: string | File;
@@ -10,7 +10,7 @@ interface CreatePlaylist {
   musicList: MusicData[];
 }
 
-const DefaultValue: CreatePlaylist = {
+const DefaultValue: PlaylistData = {
   uuid: '',
   isPublic: false,
   playlistImageUri: '',
@@ -19,9 +19,9 @@ const DefaultValue: CreatePlaylist = {
   musicList: [],
 };
 
-const createPlaylistState = atom<CreatePlaylist>({
-  key: 'createPlaylist',
+const playlistDataState = atom<PlaylistData>({
+  key: 'playlistData',
   default: DefaultValue,
 });
 
-export default createPlaylistState;
+export default playlistDataState;

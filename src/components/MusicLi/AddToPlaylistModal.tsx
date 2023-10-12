@@ -110,7 +110,7 @@ function AddToPlaylistModal({ el, top, showAddToPlaylistModal, setShowAddToPlayl
           ))}
         </AddToPlaylistUl>
         <AddNewPlaylist>
-          <StyledLink href={'/playlist'}>
+          <StyledLink href={'/playlist-editor'}>
             <i className="i-plus-circle" />
             <p className="add-new-playlist">새 플레이리스트 추가</p>
           </StyledLink>
@@ -219,7 +219,7 @@ const AddToPlaylistLi = styled.li<Num>`
 
   .playlist-title {
     color: var(--dark-blue-700);
-    font-size: 0.3375rem;
+    font-size: 0.6rem;
     font-weight: 400;
     line-height: 0.75rem;
     padding-left: 4px;
@@ -238,12 +238,12 @@ const AddNewPlaylist = styled.div`
 
   .i-plus-circle {
     color: var(--gray-300);
-    font-size: 5px;
+    font-size: 9.5px;
   }
 
   .add-new-playlist {
     color: var(--gray-300);
-    font-size: 0.375rem;
+    font-size: 0.58rem;
     font-weight: 400;
     padding-left: 4px;
   }
@@ -252,4 +252,5 @@ const AddNewPlaylist = styled.div`
 const StyledLink = styled(Link)`
   text-decoration: none;
   display: flex;
+  align-items: center;
 `;

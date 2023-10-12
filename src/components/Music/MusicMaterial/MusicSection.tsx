@@ -28,7 +28,7 @@ function MusicSection() {
   }, []);
 
   return (
-    <MusicCollectionSection>
+    <section>
       <TopBox>
         <p className="music-collection">음악 컬렉션</p>
         <Link href={'/music-collection'} className="all-txt">
@@ -63,13 +63,11 @@ function MusicSection() {
           </SwiperSlide>
         </StyledSwiper>
       )}
-    </MusicCollectionSection>
+    </section>
   );
 }
 
 export default MusicSection;
-
-const MusicCollectionSection = styled.section``;
 
 const TopBox = styled.div`
   width: 100%;

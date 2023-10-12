@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import SkeletonMusicLi from './SkeletonMusicLi';
 
-function SkeletonRecommendMusic() {
+function SkeletonMusicLi8() {
   return (
     <>
       {[...Array(8)].map((_, i) => (
@@ -13,4 +13,4 @@ function SkeletonRecommendMusic() {
   );
 }
 
-export default SkeletonRecommendMusic;
+export default SkeletonMusicLi8;

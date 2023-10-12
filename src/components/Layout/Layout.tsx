@@ -7,7 +7,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import currentTrackState from '@/atom/currentTrackState';
 import { v4 as uuidv4 } from 'uuid';
 import formatDateToYYYYMMDD from '@/utils/formatDateToYYYYMMDD';
-import createPlaylistState from '@/atom/createPlaylistState';
+import playlistDataState from '@/atom/playlistDataState';
 
 interface Props {
   children: React.ReactNode;
@@ -15,15 +15,15 @@ interface Props {
 
 function Layout({ children }: Props) {
   const { isShow } = useRecoilValue(currentTrackState);
-  const setCreatePlaylist = useSetRecoilState(createPlaylistState);
+  const setPlaylistData = useSetRecoilState(playlistDataState);
 
   useAuthentication();
 
   useEffect(() => {
     const id = uuidv4(); // uuid 생성
     const formattedDate = formatDateToYYYYMMDD(); // 현재 날짜
-    setCreatePlaylist((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
-  }, [setCreatePlaylist]);
+    setPlaylistData((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
+  }, [setPlaylistData]);
 
   return (
     <LayoutBlock>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import * as S from '@/styled/authStyled';
@@ -13,8 +13,17 @@ function ChangeMusicImg() {
   const [imageUri, setImageUri] = useState('');
   const imageRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    if (imageUri !== '') {
+      updateMusicImg({ uuid, imageUri });
+      setUuid('');
+      setImageUri('');
+      setImageFile(null);
+    }
+  }, [imageUri, uuid]);
+
   const handleSubmit = () => {
-    if (uuid !== '' && imageUri !== '') {
+    if (uuid !== '' && imageFile) {
       const props = {
         file: imageFile,
         setState: setImageUri,
@@ -22,14 +31,10 @@ function ChangeMusicImg() {
         uuid,
       };
       uploadImage(props);
-      updateMusicImg({ uuid, imageUri });
-      setUuid('');
-      setImageUri('');
-      setImageFile(null);
     }
   };
 
-  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     const user = auth.currentUser;
     if (user && files && files.length > 0) {
@@ -37,6 +42,8 @@ function ChangeMusicImg() {
       setImageFile(file);
     }
   };
+
+  console.log(imageFile);
 
   return (
     <>

@@ -9,9 +9,9 @@ import { MusicData } from '@/types/musicTypes';
 import useInfiniteScroll from '@/hook/useInfiniteScroll';
 
 import LoadingLottie from '../Lottie/LoadingLottie';
-import SkeletonMusicCollection from '../Skeleton/SkeletonMusicCollection';
+import SkeletonMusicLi30 from '../Skeleton/SkeletonMusicLi30';
 
-function AddMusicPlaylist() {
+function AddMusicToPlaylist() {
   const [loaded, setLoded] = useState(false);
   // search 음악
   const [searchText, setSearchText] = useState('');
@@ -60,7 +60,7 @@ function AddMusicPlaylist() {
 
   return (
     <>
-      <PlaylistGoBackHead title="새로운 곡 추가" />
+      <PlaylistGoBackHead />
 
       <AddMusicPlaylistblock>
         {/* 검색창 */}
@@ -75,7 +75,7 @@ function AddMusicPlaylist() {
           <S.Bar className="bar" />
         </S.SearchBox>
         {/* 스켈레톤 => SkeletonMusicCollection 컴포넌트 */}
-        {!loaded && <SkeletonMusicCollection />}
+        {!loaded && <SkeletonMusicLi30 />}
 
         {/* 모든 음악들 */}
         <MusicUl>
@@ -89,7 +89,7 @@ function AddMusicPlaylist() {
   );
 }
 
-export default AddMusicPlaylist;
+export default AddMusicToPlaylist;
 
 const AddMusicPlaylistblock = styled.div`
   padding-top: 61px;

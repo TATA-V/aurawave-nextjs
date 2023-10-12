@@ -1,29 +1,41 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { MusicData } from '@/types/musicTypes';
-import useMusicPlay from '@/hook/useMusicPlay';
 import { useRecoilState } from 'recoil';
-import createPlaylistState from '@/atom/createPlaylistState';
+import playlistDataState from '@/atom/playlistDataState';
+import useMusicPlay from '@/hook/useMusicPlay';
 
 interface Props {
   el: MusicData;
 }
-function CreatePlaylistMusicLi({ el }: Props) {
-  const [createPlaylist, setCreatePlaylist] = useRecoilState(createPlaylistState); // 리코일
-  const { musicList } = createPlaylist;
+function AddMusicMusicLi({ el }: Props) {
+  const [isInPlaylist, setIsInPlaylist] = useState(false);
+  const [playlistData, setPlaylistData] = useRecoilState(playlistDataState); // 리코일
+  const { musicList } = playlistData;
   const { imageUri, title, composer } = el;
   const musicPlay = useMusicPlay(); // hook
 
-  const handleMusicPlay = () => {
+  useEffect(() => {
+    const inPlaylist = musicList.some((music) => music.uuid === el.uuid);
+    setIsInPlaylist(inPlaylist);
+  }, [musicList, el.uuid]);
+
+  const handleMusicPlay = (el: MusicData) => {
     musicPlay(el);
   };
 
-  // 플레이리스트에 음악을 추가
-  const handleRemove = () => {
-    const removeMusic = musicList.filter((music) => music.uuid !== el.uuid);
-    setCreatePlaylist((prev) => ({ ...prev, musicList: removeMusic }));
+  const handleAddMusic = () => {
+    if (isInPlaylist) {
+      // 플레이리스트에서 음악을 삭제
+      const removeMusic = musicList.filter((music) => music.uuid !== el.uuid);
+      setPlaylistData((prev) => ({ ...prev, musicList: removeMusic }));
+    } else {
+      // 플레이리스트에 음악을 추가
+      setPlaylistData((prev) => ({ ...prev, musicList: [...prev.musicList, el] }));
+    }
+    setIsInPlaylist(!isInPlaylist);
   };
 
   return (
@@ -31,7 +43,7 @@ function CreatePlaylistMusicLi({ el }: Props) {
       <div className="music-content">
         <div className="details-box">
           <Image
-            onClick={handleMusicPlay}
+            onClick={() => handleMusicPlay(el)}
             className="image"
             width={49}
             height={49}
@@ -39,26 +51,30 @@ function CreatePlaylistMusicLi({ el }: Props) {
             alt="recommended music"
           />
           <p className="details">
-            <span onClick={handleMusicPlay} className="title">
+            <span onClick={() => handleMusicPlay(el)} className="title">
               {title}
             </span>
             <br />
-            <span onClick={handleMusicPlay} className="composer">
+            <span onClick={() => handleMusicPlay(el)} className="composer">
               {composer}
             </span>
           </p>
         </div>
 
         {/* 플레이리스트에서 해당 음악 삭제 */}
-        <DeleteBtn onClick={handleRemove}>
-          <i className="i-trash" />
+        <DeleteBtn onClick={handleAddMusic} $isInPlaylist={isInPlaylist}>
+          <i className="i-music-plus" />
         </DeleteBtn>
       </div>
     </MusicLiBlock>
   );
 }
 
-export default CreatePlaylistMusicLi;
+export default AddMusicMusicLi;
+
+interface IsInPlaylist {
+  $isInPlaylist: boolean;
+}
 
 const MusicLiBlock = styled.li`
   margin-bottom: 17px;
@@ -103,12 +119,17 @@ const MusicLiBlock = styled.li`
   }
 `;
 
-const DeleteBtn = styled.button`
+const DeleteBtn = styled.button<IsInPlaylist>`
   display: flex;
   justify-content: center;
   align-items: center;
 
-  .i-trash {
-    font-size: 13.89px;
+  .i-music-plus {
+    font-size: 20px;
+
+    &::before {
+      color: ${({ $isInPlaylist }) =>
+        $isInPlaylist ? 'var(--fl-blue-500)' : 'var(--sky-blue-300)'};
+    }
   }
 `;

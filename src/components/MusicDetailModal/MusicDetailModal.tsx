@@ -2,7 +2,7 @@
 import currentTrackState from '@/atom/currentTrackState';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import * as S from '@/styled/MusicDetailModalStyled';
+import * as S from '@/styled/musicDetailModalStyled';
 import Image from 'next/image';
 import formatTime from '@/utils/formatTime';
 import MusicPauseSvg from '@/../public/musicPauseSvg.svg';
@@ -13,7 +13,7 @@ import MusicCopyright from './MusicDetailModalMaterial/MusicCopyright';
 import PlaymodeMenu from './MusicDetailModalMaterial/PlaymodeMenu';
 
 interface Props {
-  play: boolean;
+  // play: boolean;
   totalDuration: number;
   currentDuration: number;
   progressBarWidth: number;
@@ -25,7 +25,7 @@ interface Props {
 }
 
 function MusicDetailModal({
-  play, // 음악 재생 유무
+  // play, // 음악 재생 유무
   totalDuration, // 총 음악 시간
   currentDuration, // 현재 음악 시간
   handleTogglePlay, // 현재 재생 중인 음악을 멈추거나 다시 재생
@@ -41,7 +41,7 @@ function MusicDetailModal({
   const [isMouseMoveActive, setIsMouseMoveActive] = useState(false);
 
   const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
-  const { showMusicDetail, currentMusic } = currentMusicAndTrack;
+  const { isPlaying, showMusicDetail, currentMusic } = currentMusicAndTrack;
   const { imageUri, composer } = currentMusic;
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -116,7 +116,7 @@ function MusicDetailModal({
                   <i className="i-back-music" />
                 </button>
                 <button onClick={() => handleTogglePlay()} className="play-btn">
-                  {play ? (
+                  {isPlaying ? (
                     <MusicPauseSvg width={42} height={44} fill={'#283437'} />
                   ) : (
                     <i className="i-play" />

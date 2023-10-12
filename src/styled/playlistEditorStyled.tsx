@@ -92,13 +92,19 @@ export const StyledLink = styled(Link)`
 `;
 
 // 플레이리스트 이미지
+
 export const PlaylistImageBlock = styled.div`
   padding: 12px 0 24px 0;
-  position: relative;
 
   display: flex;
   justify-content: center;
   align-items: center;
+
+  .image-box {
+    width: 186px;
+    height: 158px;
+    position: relative;
+  }
 
   .image {
     border-radius: 15px;
@@ -112,8 +118,8 @@ export const PlaylistImageBlock = styled.div`
     border-radius: 50%;
     background-color: rgba(16, 29, 33, 0.5);
     position: absolute;
-    right: 90px;
-    top: 126px;
+    right: 10px;
+    top: 114px;
 
     display: flex;
     justify-content: center;
@@ -127,5 +133,65 @@ export const PlaylistImageBlock = styled.div`
 
   input {
     display: none;
+  }
+`;
+
+// 토글 버튼(공개 설정)
+
+interface IsPublic {
+  $isPublic: boolean;
+}
+export const PublicOrPrivate = styled.div`
+  height: 51px;
+  margin-top: 30px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .public-setting {
+    display: flex;
+    align-items: center;
+  }
+
+  .desc-txt {
+    color: var(--gray-200);
+    font-size: 0.8125rem;
+    font-weight: 400;
+  }
+
+  .public-txt {
+    color: var(--dark-blue-800);
+    font-size: 1.09375rem;
+    font-weight: 400;
+  }
+`;
+
+export const ToggleBtn = styled.button<IsPublic>`
+  width: 31px;
+  height: 15px;
+  border-radius: 50px;
+  margin-left: 15px;
+  background-color: ${({ $isPublic }) => ($isPublic ? 'var(--sky-blue-600)' : 'var(--gray-200)')};
+  transition: background-color 0.1s ease;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.07);
+  position: relative;
+
+  .circle {
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    outline: 0 solid rgba(0, 0, 0, 0);
+    background: ${({ $isPublic }) =>
+      $isPublic ? 'linear-gradient(-225deg, #8ecece 10%, #efd9dd 54%, #ff99a7 100%)' : '#E5E5E5'};
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.07);
+    position: absolute;
+    top: -2.9px;
+    left: ${({ $isPublic }) => ($isPublic ? '12.8px' : '-2.8px')};
+    transition: left 0.1s ease, outline 0.1s ease;
+
+    &:hover {
+      outline: 6px solid rgba(0, 0, 0, 0.05);
+    }
   }
 `;

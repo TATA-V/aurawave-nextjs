@@ -84,7 +84,7 @@ const SkeletonNewMusicBlock = styled.div`
 `;
 
 const NewMusicSection = styled.section`
-  padding-bottom: 45px;
+  padding-bottom: 50px;
 
   .section-heading {
     color: var(--dark-blue-900);
@@ -106,7 +106,7 @@ const NewMusicLi = styled.li`
 
   .image {
     width: 95px;
-    height: 95px;
+    height: 96px;
     border: 1px solid var(--gray-100);
     border-radius: 4px;
     object-fit: cover;
@@ -114,7 +114,6 @@ const NewMusicLi = styled.li`
   }
 
   .details {
-    height: 32px;
     padding-top: 9px;
     justify-content: space-between;
     display: flex;
@@ -123,21 +122,28 @@ const NewMusicLi = styled.li`
   }
 
   .title {
+    width: 95px;
     height: 16px;
     color: var(--dark-blue-900);
-    font-size: 0.625rem;
+    font-size: 0.68rem;
     font-weight: 500;
     text-align: center;
     text-overflow: ellipsis;
-    white-space: nowrap;
     overflow: hidden;
+    white-space: nowrap;
     cursor: pointer;
   }
 
   .composer {
+    width: 95px;
+    height: 12px;
     color: var(--gray-400);
-    font-size: 0.4375rem;
+    font-size: 0.6rem;
     font-weight: 400;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     cursor: pointer;
   }
 `;

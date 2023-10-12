@@ -2,20 +2,20 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { usePathname, useRouter } from 'next/navigation';
+import { bubblegum } from '@/fonts/fonts';
 import playlistDataState from '@/atom/playlistDataState';
 import { useRecoilState, useResetRecoilState } from 'recoil';
-import { setUserPlaylistDoc } from '@/firebase/playlist';
+import { setAwPlaylistDoc } from '@/firebase/playlist';
 import uploadImage from '@/firebase/image';
 import formatDateToYYYYMMDD from '@/utils/formatDateToYYYYMMDD';
 import { v4 as uuidv4 } from 'uuid';
 import { serverTimestamp } from 'firebase/firestore';
-import compressImage from '@/utils/compressImage';
 
-function PlaylistGoBackHead() {
+function AwPlaylistGoBackHead() {
   const [rightTxt, setRightTxt] = useState('');
   const [imageUri, setImageUri] = useState('');
   const [playlistData, setPlaylistData] = useRecoilState(playlistDataState); // 리코일
-  const { isPublic, uuid, playlistImageUri, playlistTitle, description, musicList } = playlistData;
+  const { uuid, playlistImageUri, playlistTitle, description, musicList } = playlistData;
   const resetPlaylistDataState = useResetRecoilState(playlistDataState); // 리코일
   const formattedDate = formatDateToYYYYMMDD(); // 현재 날짜
   const router = useRouter();
@@ -23,7 +23,7 @@ function PlaylistGoBackHead() {
 
   // 오른쪽 글자
   useEffect(() => {
-    if (pathname === '/playlist-editor') {
+    if (pathname === '/admin-awplaylist-editor') {
       setRightTxt('저장');
     } else {
       setRightTxt('닫기');
@@ -40,16 +40,15 @@ function PlaylistGoBackHead() {
       musicList.length !== 0;
     // firestore에 저장
     if (isValid) {
-      const playlistData = {
+      const awplaylistData = {
         uuid: uuid,
-        isPublic: isPublic,
         playlistImageUri: imageUri,
         playlistTitle: playlistTitle,
         description: description,
         musicList: musicList,
         timestamp: serverTimestamp(),
       };
-      setUserPlaylistDoc({ uuid, playlistData });
+      setAwPlaylistDoc({ uuid, awplaylistData });
       resetPlaylistDataState();
       const id = uuidv4(); // uuid 생성
       setPlaylistData((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
@@ -57,7 +56,6 @@ function PlaylistGoBackHead() {
   }, [
     router,
     uuid,
-    isPublic,
     description,
     imageUri,
     musicList,
@@ -70,7 +68,7 @@ function PlaylistGoBackHead() {
   // 뒤로가기
   const handleGoBack = () => {
     router.back();
-    if (pathname === '/playlist-editor') {
+    if (pathname === '/admin-awplaylist-editor') {
       resetPlaylistDataState();
       const id = uuidv4(); // uuid 생성
       setPlaylistData((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
@@ -78,15 +76,14 @@ function PlaylistGoBackHead() {
   };
 
   // 오른쪽 버튼 클릭 시
-  const handleRightBtnClick = async () => {
+  const handleRightBtnClick = () => {
     if (rightTxt === '저장') {
       // File 형식의 이미지에서 URI를 추출
       if (playlistImageUri instanceof File) {
-        const compressFile = await compressImage(playlistImageUri); // 이미지 압축
         const props = {
-          file: compressFile,
+          file: playlistImageUri,
           setState: setImageUri,
-          path: 'user_playlist_image',
+          path: 'aw_playlist_image',
           uuid,
         };
         uploadImage(props);
@@ -103,8 +100,9 @@ function PlaylistGoBackHead() {
       <div onClick={handleGoBack} role="button" className="back-btn">
         <i className="i-back" />
       </div>
-
-      <Title>새 플레이리스트 추가</Title>
+      <Title>
+        <span className={`aw-txt ${bubblegum.className}`}>AW</span> 플레이리스트 등록
+      </Title>
 
       <RightBox>
         <button onClick={handleRightBtnClick} className="right-btn">
@@ -115,7 +113,7 @@ function PlaylistGoBackHead() {
   );
 }
 
-export default PlaylistGoBackHead;
+export default AwPlaylistGoBackHead;
 
 const GoBackHeadBlok = styled.header`
   position: fixed;
@@ -152,6 +150,11 @@ const Title = styled.p`
   color: var(--dark-blue-900);
   font-size: 1.09375rem;
   font-weight: 600;
+
+  .aw-txt {
+    font-size: 1.1875rem;
+    font-weight: 400;
+  }
 `;
 
 const RightBox = styled.div`

@@ -8,16 +8,18 @@ import { useRouter } from 'next/navigation';
 
 import GoBackHead from '../GoBackHead/GoBackHead';
 import SoundtrackMusicLi from './SoundtrackMusicLi';
+import SkeletonMusicLi from '../Skeleton/SkeletonMusicLi';
 
 function Soundtrack() {
+  const [loaded, setLoaded] = useState(false);
   const [musicTrack, setMusicTrack] = useState<CurrentMusic[]>([]);
   const [musicTrackTxt, setMusicTrackTxt] = useState('');
   // MusicLi 드래그
   const [dragItemIdx, setDragItemIdx] = useState(0);
   const [dragOverItemIdx, setDragOverItemIdx] = useState(0);
-
-  const resetCurrentMusicAndTrack = useResetRecoilState(currentTrackState); // 리코일
-  const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
+  // 리코일
+  const resetCurrentMusicAndTrack = useResetRecoilState(currentTrackState);
+  const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState);
   const { playMode, currentTrack, suffleTrack } = currentMusicAndTrack;
   const router = useRouter();
 
@@ -27,6 +29,10 @@ function Soundtrack() {
     setMusicTrack(track);
     setMusicTrackTxt(trackTxt);
   }, [playMode, currentTrack, suffleTrack]);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
 
   // 재생목록에 노래가 하나도 없다면
   useEffect(() => {
@@ -70,6 +76,8 @@ function Soundtrack() {
           <CheckSvg />
           <span className="track-count-txt">{musicTrack.length}곡</span>
         </TrackCount>
+        {/* 스켈레톤 => SkeletonMusicLi 컴포넌트 */}
+        {!loaded && [...Array(musicTrack.length)].map((_, i) => <SkeletonMusicLi key={i} />)}
 
         <ul>
           {musicTrack.map((track, idx) => (

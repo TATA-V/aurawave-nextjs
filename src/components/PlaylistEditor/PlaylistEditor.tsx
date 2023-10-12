@@ -1,41 +1,31 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { usePathname, useRouter } from 'next/navigation';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import userState from '@/atom/userState';
-import * as S from '@/styled/CreatePlaylist';
-import createPlaylistState from '@/atom/createPlaylistState';
+import { useRecoilState } from 'recoil';
+import * as S from '@/styled/playlistEditorStyled';
+import playlistDataState from '@/atom/playlistDataState';
 
 import PlaylistGoBackHead from '../GoBackHead/PlaylistGoBackHead';
-import PlaylistImage from './CreatePlaylistMaterial/PlaylistImage';
-import CreatePlaylistMusicLi from './CreatePlaylistMaterial/CreatePlaylistMusicLi';
+import PlaylistImage from './PlaylistEditorMaterial/PlaylistImage';
+import PlaylistEditorMusicLi from './PlaylistEditorMaterial/PlaylistEditorMusicLi';
 
-function CreatePlaylist() {
-  const [createPlaylist, setCreatePlaylist] = useRecoilState(createPlaylistState); // 리코일
-  const { playlistTitle, description, musicList } = createPlaylist;
-  const { isAdmin } = useRecoilValue(userState); // 리코일
-  const router = useRouter();
-  const pathname = usePathname();
-  const adminPlaylist = pathname === '/admin-awplaylist';
-
-  useEffect(() => {
-    if (adminPlaylist) {
-      if (!isAdmin) {
-        router.replace('/');
-      }
-    }
-  }, [adminPlaylist, isAdmin, router]);
+function PlaylistEditor() {
+  const [playlistData, setPlaylistData] = useRecoilState(playlistDataState); // 리코일
+  const { isPublic, playlistTitle, description, musicList } = playlistData;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCreatePlaylist((prev) => ({ ...prev, [name]: value }));
+    setPlaylistData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleToggle = () => {
+    setPlaylistData((prev) => ({ ...prev, isPublic: !isPublic }));
   };
 
   return (
     <>
       <>
-        <PlaylistGoBackHead title={adminPlaylist ? '플레이리스트 등록' : '새 플레이리스트 추가'} />
+        <PlaylistGoBackHead />
 
         <CreatePlaylistBlock>
           {/* 플레이리스트 이미지 => PlaylistImage 컴포넌트 */}
@@ -52,7 +42,7 @@ function CreatePlaylist() {
               autoComplete="off"
               name="playlistTitle"
             />
-            <button onClick={() => setCreatePlaylist((prev) => ({ ...prev, playlistTitle: '' }))}>
+            <button onClick={() => setPlaylistData((prev) => ({ ...prev, playlistTitle: '' }))}>
               <i className="i-delete-thin" />
             </button>
           </S.InputBox>
@@ -66,19 +56,30 @@ function CreatePlaylist() {
               autoComplete="off"
               name="description"
             />
-            <button onClick={() => setCreatePlaylist((prev) => ({ ...prev, description: '' }))}>
+            <button onClick={() => setPlaylistData((prev) => ({ ...prev, description: '' }))}>
               <i className="i-delete-thin margin-top" />
             </button>
           </S.InputBox>
 
+          {/* 공개 설정 */}
+          <S.PublicOrPrivate>
+            <div className="public-setting">
+              <p className="public-txt">공개 설정</p>
+              <S.ToggleBtn $isPublic={isPublic}>
+                <div onClick={handleToggle} className="circle" />
+              </S.ToggleBtn>
+            </div>
+            <p className="desc-txt">플레이리스트를 공유하려면 설정 해주세요.</p>
+          </S.PublicOrPrivate>
+
           {/* 새로운 곡  추가 */}
           <S.AddNewMusic>
-            <S.StyledLink href={`${pathname}/add-music`}>
+            <S.StyledLink href={'/playlist-editor/add-music'}>
               <div className="plus-icon">
                 <i className="i-plus-small" />
               </div>
             </S.StyledLink>
-            <S.StyledLink className="add-music" href={`${pathname}/add-music`}>
+            <S.StyledLink className="add-music" href={'/playlist-editor/add-music'}>
               <p>새로운 곡 추가</p>
             </S.StyledLink>
           </S.AddNewMusic>
@@ -86,7 +87,7 @@ function CreatePlaylist() {
           {/* 플레이리스트에 추가된 곡 */}
           <ul>
             {musicList.map((el) => (
-              <CreatePlaylistMusicLi key={el.uuid} el={el} />
+              <PlaylistEditorMusicLi key={el.uuid} el={el} />
             ))}
           </ul>
         </CreatePlaylistBlock>
@@ -95,7 +96,7 @@ function CreatePlaylist() {
   );
 }
 
-export default CreatePlaylist;
+export default PlaylistEditor;
 
 const CreatePlaylistBlock = styled.div`
   padding: 61px 21px 0 21px;

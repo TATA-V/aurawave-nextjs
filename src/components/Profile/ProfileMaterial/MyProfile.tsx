@@ -10,6 +10,7 @@ import userState from '@/atom/userState';
 import { auth, storage } from '@/firebase/config';
 import defaultProfileJpg from '@/assets/jpg-file/default-profile.jpg';
 import { updateUserName, updateUserPhotoURL } from '@/firebase/user';
+import compressImage from '@/utils/compressImage';
 
 function MyProfile() {
   const [openTextInput, setOpenTextInput] = useState(false);
@@ -59,14 +60,15 @@ function MyProfile() {
   };
 
   /* 프로필 이미지 수정 */
-  const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (user && files && files.length > 0) {
       const file = files[0];
       const metadata = { contentType: file.type };
+      const compressFile = await compressImage(file); // 이미지 압축
       let uploadTask = uploadBytesResumable(
         ref(storage, `user_image/${user.uid}`), // 저장 경로
-        file, // 이미지 파일
+        compressFile, // 이미지 파일
         metadata // 파일 타입
       );
 

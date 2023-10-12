@@ -12,6 +12,7 @@ export interface CurrentMusic {
 
 export interface CurrentTrackState {
   isShow: boolean;
+  isPlaying: boolean;
   isLoop: boolean;
   playMode: string;
   showMusicDetail: boolean;
@@ -22,6 +23,7 @@ export interface CurrentTrackState {
 
 const DefaultValue: CurrentTrackState = {
   isShow: false,
+  isPlaying: false,
   isLoop: false,
   playMode: '',
   showMusicDetail: false,
