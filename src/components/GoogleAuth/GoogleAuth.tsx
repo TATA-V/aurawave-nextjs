@@ -40,7 +40,7 @@ function GoogleAuth() {
             username: displayName,
             photoURL: photoURL,
           };
-          setUserDoc({ userUID: uid, userData });
+          setUserDoc({ uuid: uid, userData });
         }
       }
     } catch (error) {

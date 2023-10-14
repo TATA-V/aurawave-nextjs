@@ -39,15 +39,6 @@ export interface SetUserPlaylistDoc {
   playlistData: UserPlaylistData;
 }
 
-export interface DeleteUserPlaylistDoc {
-  uuid: string;
-}
-
-export interface UpdateUserPlaylist {
-  uuid: string;
-  playlistData: UserPlaylistData;
-}
-
 export interface GetAwPlaylistDocs {
   limitNum: number;
   orderByField: string;

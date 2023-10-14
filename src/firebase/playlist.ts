@@ -6,6 +6,7 @@ import {
   limit,
   orderBy,
   query,
+  serverTimestamp,
   setDoc,
   updateDoc,
 } from 'firebase/firestore';
@@ -13,11 +14,9 @@ import { firestore } from './config';
 import {
   AWPlaylistData,
   DeleteAWPlaylistDoc,
-  DeleteUserPlaylistDoc,
   GetAwPlaylistDocs,
   SetUserPlaylistDoc,
   UpdateAWPlaylist,
-  UpdateUserPlaylist,
   setAwPlaylistDoc,
 } from '@/types/playlistTypes';
 
@@ -78,16 +77,19 @@ export async function getAwPlaylistDocs({
 export async function setUserPlaylistDoc({ uuid, playlistData }: SetUserPlaylistDoc) {
   const musicRef = doc(firestore, 'user_playlist', uuid);
   await setDoc(musicRef, playlistData);
+  await updateDoc(musicRef, {
+    timestamp: serverTimestamp(),
+  });
 }
 
 // user 플레이리스트 삭제
-export async function deleteUserPlaylistDoc({ uuid }: DeleteUserPlaylistDoc) {
+export async function deletePlaylistDoc(uuid: string) {
   const musicRef = doc(firestore, 'user_playlist', uuid);
   await deleteDoc(musicRef);
 }
 
 // user 플레이리스트 수정하기
-export async function updateUserPlaylist({ uuid, playlistData }: UpdateUserPlaylist) {
-  const musicRef = doc(firestore, 'user_playlist', uuid);
-  await updateDoc(musicRef, { data: playlistData });
-}
+// export async function updatePlaylistDoc({ uuid, playlistData }: UpdateUserPlaylist) {
+//   const musicRef = doc(firestore, 'user_playlist', uuid);
+//   await updateDoc(musicRef, { data: playlistData });
+// }

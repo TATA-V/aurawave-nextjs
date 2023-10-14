@@ -286,7 +286,7 @@ export const PlayModeModalBlock = styled.ul<PlayMode & IsLoop>`
   }
 
   .option-txt {
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     font-weight: 500;
     padding-left: 6px;
     cursor: pointer;
@@ -302,7 +302,7 @@ export const PlayModeModalBlock = styled.ul<PlayMode & IsLoop>`
   }
 
   .i-loop {
-    font-size: 7px;
+    font-size: 9.5px;
 
     &::before {
       color: ${({ $isLoop }) => ($isLoop ? 'var(--sky-blue-500)' : 'var(--dark-blue-700)')};
@@ -310,7 +310,7 @@ export const PlayModeModalBlock = styled.ul<PlayMode & IsLoop>`
   }
 
   .i-shuffle {
-    font-size: 7px;
+    font-size: 9.5px;
 
     &::before {
       color: ${({ $playMode }) =>

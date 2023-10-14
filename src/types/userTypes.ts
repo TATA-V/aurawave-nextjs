@@ -1,5 +1,7 @@
+import { UserPlaylistData } from './playlistTypes';
+
 export interface SetUserDoc {
-  userUID: string;
+  uuid: string;
   userData: {
     uid: string;
     email: string;
@@ -9,15 +11,16 @@ export interface SetUserDoc {
 }
 
 export interface UpdateUserDoc {
-  userUID: string;
+  uuid: string;
   photoURL: string;
 }
 
 export interface UpdateUserName {
-  userUID: string;
+  uuid: string;
   username: string;
 }
 
-export interface DeleteUserDoc {
-  userUID: string;
+export interface UpdateUserPlaylists {
+  uuid: string;
+  playlistData: UserPlaylistData;
 }

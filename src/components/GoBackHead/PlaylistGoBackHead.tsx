@@ -10,6 +10,8 @@ import formatDateToYYYYMMDD from '@/utils/formatDateToYYYYMMDD';
 import { v4 as uuidv4 } from 'uuid';
 import { serverTimestamp } from 'firebase/firestore';
 import compressImage from '@/utils/compressImage';
+import { updateUserPlaylists } from '@/firebase/user';
+import { auth } from '@/firebase/config';
 
 function PlaylistGoBackHead() {
   const [rightTxt, setRightTxt] = useState('');
@@ -20,6 +22,7 @@ function PlaylistGoBackHead() {
   const formattedDate = formatDateToYYYYMMDD(); // 현재 날짜
   const router = useRouter();
   const pathname = usePathname();
+  const user = auth.currentUser;
 
   // 오른쪽 글자
   useEffect(() => {
@@ -38,7 +41,7 @@ function PlaylistGoBackHead() {
       playlistTitle.trim() !== '' &&
       description.trim() !== '' &&
       musicList.length !== 0;
-    // firestore에 저장
+
     if (isValid) {
       const playlistData = {
         uuid: uuid,
@@ -47,16 +50,20 @@ function PlaylistGoBackHead() {
         playlistTitle: playlistTitle,
         description: description,
         musicList: musicList,
-        timestamp: serverTimestamp(),
       };
-      setUserPlaylistDoc({ uuid, playlistData });
-      resetPlaylistDataState();
-      const id = uuidv4(); // uuid 생성
-      setPlaylistData((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
+      // firestore에 저장
+      if (user) {
+        setUserPlaylistDoc({ uuid, playlistData }); // user_playlist에 플레이리스트 등록
+        updateUserPlaylists({ uuid: user.uid, playlistData }); // 유저 정보에 등록한 플레이리스트 추가
+        resetPlaylistDataState();
+        const id = uuidv4(); // uuid 생성
+        setPlaylistData((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
+      }
     }
   }, [
     router,
     uuid,
+    user,
     isPublic,
     description,
     imageUri,

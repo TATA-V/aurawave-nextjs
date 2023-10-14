@@ -50,7 +50,7 @@ function MyProfile() {
     try {
       if (user && isValidUsername) {
         await updateProfile(user, { displayName: changeUsername });
-        await updateUserName({ userUID: user.uid, username: changeUsername });
+        await updateUserName({ uuid: user.uid, username: changeUsername });
         setUserInfo((data) => ({ ...data, username: changeUsername }));
         setChangeUsername('');
       }
@@ -112,7 +112,7 @@ function MyProfile() {
             setUserInfo((data) => ({ ...data, photoURL: downloadURL }));
 
             // 파이어스토어 유저 이미지 수정하기
-            updateUserPhotoURL({ userUID: user.uid, photoURL: downloadURL });
+            updateUserPhotoURL({ uuid: user.uid, photoURL: downloadURL });
           });
         }
       );
