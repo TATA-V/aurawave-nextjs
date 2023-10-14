@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import defaultProfileJpg from '@/assets/jpg-file/landscape.jpg';
+import LandscapeJpg from '@/assets/jpg-file/landscape.jpg';
 import Image from 'next/image';
 
 function InactiveLandscape() {
@@ -11,7 +11,7 @@ function InactiveLandscape() {
           className="image"
           width={346.2}
           height={165.2}
-          src={defaultProfileJpg}
+          src={LandscapeJpg}
           placeholder="blur"
           alt="landscape"
         />

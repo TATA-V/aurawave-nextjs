@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import Link from 'next/link';
 
 /**
  * 상위에서 쓰이고 있는 useState
@@ -109,8 +110,10 @@ function AddToPlaylistModal({ el, top, showAddToPlaylistModal, setShowAddToPlayl
           ))}
         </AddToPlaylistUl>
         <AddNewPlaylist>
-          <i className="i-plus-circle" />
-          <p className="add-new-playlist">새 플레이리스트 추가</p>
+          <StyledLink href={'/playlist-editor'}>
+            <i className="i-plus-circle" />
+            <p className="add-new-playlist">새 플레이리스트 추가</p>
+          </StyledLink>
         </AddNewPlaylist>
       </AddToPlaylistModalBlock>
     </Container>
@@ -129,7 +132,7 @@ interface Top {
 
 const Container = styled.div<Top>`
   position: absolute;
-  top: ${({ $top }) => ($top ? `${$top}px` : '23px')};
+  top: ${({ $top }) => ($top ? `${$top}px` : '13px')};
   right: 0;
   width: 130px;
   padding-bottom: 65px;
@@ -204,7 +207,6 @@ const AddToPlaylistLi = styled.li<Num>`
     height: 35px;
     padding: 0 2px 0 2px;
     border-bottom: 1px solid var(--gray-50);
-    cursor: pointer;
 
     display: flex;
     align-items: center;
@@ -217,10 +219,11 @@ const AddToPlaylistLi = styled.li<Num>`
 
   .playlist-title {
     color: var(--dark-blue-700);
-    font-size: 0.3375rem;
+    font-size: 0.6rem;
     font-weight: 400;
     line-height: 0.75rem;
     padding-left: 4px;
+    cursor: pointer;
   }
 `;
 
@@ -228,7 +231,6 @@ const AddNewPlaylist = styled.div`
   width: 100%;
   height: 35px;
   padding-right: 5px;
-  cursor: pointer;
 
   display: flex;
   justify-content: center;
@@ -236,13 +238,19 @@ const AddNewPlaylist = styled.div`
 
   .i-plus-circle {
     color: var(--gray-300);
-    font-size: 5px;
+    font-size: 9.5px;
   }
 
   .add-new-playlist {
     color: var(--gray-300);
-    font-size: 0.375rem;
+    font-size: 0.58rem;
     font-weight: 400;
     padding-left: 4px;
   }
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  display: flex;
+  align-items: center;
 `;

@@ -1,25 +1,29 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
-import MoreSvg from '@/../public/more.svg';
 import { MusicData } from '@/types/musicTypes';
 import useMusicPlay from '@/hook/useMusicPlay';
-
-import AddToPlaylistModal from './AddToPlaylistModal';
+import { useRecoilState } from 'recoil';
+import playlistDataState from '@/atom/playlistDataState';
 
 interface Props {
   el: MusicData;
-  hideRightBtn?: boolean;
 }
-
-function MusicLi({ el, hideRightBtn }: Props) {
-  const [showAddToPlaylistModal, setShowAddToPlaylistModal] = useState(false);
+function CreatePlaylistMusicLi({ el }: Props) {
+  const [playlistData, setPlaylistData] = useRecoilState(playlistDataState); // 리코일
+  const { musicList } = playlistData;
   const { imageUri, title, composer } = el;
   const musicPlay = useMusicPlay(); // hook
 
-  const handleMusicPlay = (el: MusicData) => {
+  const handleMusicPlay = () => {
     musicPlay(el);
+  };
+
+  // 플레이리스트에 음악을 추가
+  const handleRemove = () => {
+    const removeMusic = musicList.filter((music) => music.uuid !== el.uuid);
+    setPlaylistData((prev) => ({ ...prev, musicList: removeMusic }));
   };
 
   return (
@@ -27,7 +31,7 @@ function MusicLi({ el, hideRightBtn }: Props) {
       <div className="music-content">
         <div className="details-box">
           <Image
-            onClick={() => handleMusicPlay(el)}
+            onClick={handleMusicPlay}
             className="image"
             width={49}
             height={49}
@@ -35,38 +39,26 @@ function MusicLi({ el, hideRightBtn }: Props) {
             alt="recommended music"
           />
           <p className="details">
-            <span onClick={() => handleMusicPlay(el)} className="title">
+            <span onClick={handleMusicPlay} className="title">
               {title}
             </span>
             <br />
-            <span onClick={() => handleMusicPlay(el)} className="composer">
+            <span onClick={handleMusicPlay} className="composer">
               {composer}
             </span>
           </p>
         </div>
 
-        {/* 더보기 */}
-        {!hideRightBtn && (
-          <MoreBox>
-            <button onClick={() => setShowAddToPlaylistModal(true)}>
-              <MoreSvg width={19} height={4} fill={'#62686A'} />
-            </button>
-            {/* 플레이리스트에 음악 추가하는 모달 => AddToPlaylistModal 컴포넌트 */}
-            {showAddToPlaylistModal && (
-              <AddToPlaylistModal
-                el={el}
-                showAddToPlaylistModal={showAddToPlaylistModal}
-                setShowAddToPlaylistModal={setShowAddToPlaylistModal}
-              />
-            )}
-          </MoreBox>
-        )}
+        {/* 플레이리스트에서 해당 음악 삭제 */}
+        <DeleteBtn onClick={handleRemove}>
+          <i className="i-trash" />
+        </DeleteBtn>
       </div>
     </MusicLiBlock>
   );
 }
 
-export default MusicLi;
+export default CreatePlaylistMusicLi;
 
 const MusicLiBlock = styled.li`
   margin-bottom: 17px;
@@ -111,13 +103,12 @@ const MusicLiBlock = styled.li`
   }
 `;
 
-const MoreBox = styled.div`
-  position: relative;
+const DeleteBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  button {
-    padding: 5px 0 5px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .i-trash {
+    font-size: 13.89px;
   }
 `;

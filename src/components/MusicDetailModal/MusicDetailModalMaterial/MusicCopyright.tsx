@@ -84,7 +84,7 @@ const MusicCopyrightBlock = styled.div`
 
   .copyright-actual-txt {
     color: var(--dark-blue-700);
-    font-size: 0.5rem;
+    font-size: 0.58rem;
     font-weight: 500;
     max-width: 248px;
   }

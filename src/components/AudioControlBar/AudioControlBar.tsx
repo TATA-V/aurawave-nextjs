@@ -14,7 +14,7 @@ import MusicDetailModal from '../MusicDetailModal/MusicDetailModal';
 
 function AudioControlBar() {
   // 음악 재생 유무
-  const [play, setPlay] = useState(false);
+  // const [play, setPlay] = useState(false);
   // 음악 총 시간, 현재 시간
   const [totalDuration, setTotalDuration] = useState(0); // 총 시간
   const [currentDuration, setCurrentDuration] = useState(0); // 현재 시간
@@ -29,8 +29,16 @@ function AudioControlBar() {
   const [playModeModal, setPlayModeModal] = useState(false);
 
   const [currentMusicAndTrack, setCurrentMusicAndTrack] = useRecoilState(currentTrackState); // 리코일
-  const { isLoop, isShow, playMode, showMusicDetail, currentMusic, currentTrack, suffleTrack } =
-    currentMusicAndTrack;
+  const {
+    isPlaying,
+    isShow,
+    isLoop,
+    playMode,
+    showMusicDetail,
+    currentMusic,
+    currentTrack,
+    suffleTrack,
+  } = currentMusicAndTrack;
   const { uuid, imageUri, musicUri, title, composer } = currentMusic; // 현재 재생 중인 음악
   const pathname = usePathname();
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -76,21 +84,27 @@ function AudioControlBar() {
   useEffect(() => {
     const audio = audioRef.current;
     if (audio && isShow) {
-      setPlay(true);
-      audio.src = musicUri;
-      audio.play();
+      if (isPlaying) {
+        if (audio.src !== musicUri) {
+          audio.src = musicUri;
+        }
+        audio.play();
+      } else {
+        audio.pause();
+      }
     }
-  }, [isShow, musicUri]);
+  }, [isShow, isPlaying, musicUri]);
 
   // 현재 재생 중인 음악을 멈추거나 다시 재생
   const handleTogglePlay = () => {
     const audio = audioRef.current;
-    if (audio && play) {
+    if (audio && isPlaying) {
       audio.pause();
-    } else if (audio && !play) {
+    } else if (audio && !isPlaying) {
       audio.play();
     }
-    setPlay(!play);
+    // setPlay(!play);
+    setCurrentMusicAndTrack((prev) => ({ ...prev, isPlaying: !isPlaying }));
   };
 
   // ProgressBar width
@@ -171,7 +185,7 @@ function AudioControlBar() {
   };
 
   const musicDetailProps = {
-    play, // 음악 재생 유무
+    // play, // 음악 재생 유무
     totalDuration, // 총 음악 시간
     currentDuration, // 현재 음악 시간
     handleTogglePlay, // 현재 재생 중인 음악을 멈추거나 다시 재생
@@ -234,7 +248,7 @@ function AudioControlBar() {
                 <i onClick={() => handlePrevNextMusic('prev')} className="i-back-music" />
               </button>
               <button onClick={handleTogglePlay}>
-                {play ? (
+                {isPlaying ? (
                   <MusicPauseSvg width={26} height={28} fill={'white'} />
                 ) : (
                   <i className="i-play" />
@@ -284,7 +298,7 @@ function AudioControlBar() {
             {/* 음악 컨트롤 */}
             <S.RightBox>
               <button onClick={handleTogglePlay}>
-                {play ? (
+                {isPlaying ? (
                   <MusicPauseSvg width={19} height={21} fill={'white'} />
                 ) : (
                   <i className="i-play" />

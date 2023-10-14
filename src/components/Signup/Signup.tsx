@@ -47,7 +47,7 @@ function Signup() {
               email: email,
               username: displayName,
             };
-            setUserDoc({ userUID: uid, userData });
+            setUserDoc({ uuid: uid, userData });
           }
         }
 

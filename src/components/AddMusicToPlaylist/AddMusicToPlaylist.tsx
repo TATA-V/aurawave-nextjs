@@ -2,17 +2,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import * as S from '@/styled/searchStyled';
-import { End } from '@/styled/frequentlyStyled';
-import useInfiniteScroll from '@/hook/useInfiniteScroll';
+import PlaylistGoBackHead from '../GoBackHead/PlaylistGoBackHead';
+import AddMusicAWMusicLi from './AddMusicMusicLi';
 import { getAllMusicDocs } from '@/firebase/music';
 import { MusicData } from '@/types/musicTypes';
+import useInfiniteScroll from '@/hook/useInfiniteScroll';
 
-import GoBackHead from '../GoBackHead/GoBackHead';
-import MusicLi from '../MusicLi/MusicLi';
 import LoadingLottie from '../Lottie/LoadingLottie';
 import SkeletonMusicLi30 from '../Skeleton/SkeletonMusicLi30';
 
-function MusicCollection() {
+function AddMusicToPlaylist() {
   const [loaded, setLoded] = useState(false);
   // search 음악
   const [searchText, setSearchText] = useState('');
@@ -61,11 +60,10 @@ function MusicCollection() {
 
   return (
     <>
-      {/* 뒤로가기 => GoBackHead 컴포넌트 */}
-      <GoBackHead title="음악 컬렉션" />
+      <PlaylistGoBackHead />
 
-      {/* 검색창 */}
-      <MusicCollectionBlock>
+      <AddMusicPlaylistblock>
+        {/* 검색창 */}
         <S.SearchBox>
           <input
             onChange={handleSearch}
@@ -79,25 +77,24 @@ function MusicCollection() {
         {/* 스켈레톤 => SkeletonMusicCollection 컴포넌트 */}
         {!loaded && <SkeletonMusicLi30 />}
 
-        {/* 모든 음악 */}
+        {/* 모든 음악들 */}
         <MusicUl>
           {(searchText.trim() !== '' ? findSearchData : data).map((el) => (
-            <MusicLi key={el.uuid} el={el} />
+            <AddMusicAWMusicLi key={el.uuid} el={el} />
           ))}
         </MusicUl>
-      </MusicCollectionBlock>
-      {loading && <LoadingLottie />}
-      <End ref={endRef} />
+        {loading && <LoadingLottie />}
+      </AddMusicPlaylistblock>
     </>
   );
 }
 
-export default MusicCollection;
+export default AddMusicToPlaylist;
 
-const MusicCollectionBlock = styled.div`
+const AddMusicPlaylistblock = styled.div`
   padding-top: 61px;
 `;
 
 const MusicUl = styled.ul`
-  padding-left: 21px;
+  padding: 0 21px 0 21px;
 `;

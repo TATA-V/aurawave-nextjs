@@ -1,77 +1,49 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import * as S from '@/styled/authStyled';
-import { auth, storage } from '@/firebase/config';
 import { updateMusicImg } from '@/firebase/music';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import albumDefaultImg from '@/assets/jpg-file/album-defult-Img.jpg';
+import albumDefaultImg from '@/assets/jpg-file/album-default.jpg';
+import uploadImage from '@/firebase/image';
+import { auth } from '@/firebase/config';
 
 function ChangeMusicImg() {
   const [uuid, setUuid] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUri, setImageUri] = useState('');
   const imageRef = useRef<HTMLInputElement>(null);
 
-  const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    if (imageUri !== '') {
+      updateMusicImg({ uuid, imageUri });
+      setUuid('');
+      setImageUri('');
+      setImageFile(null);
+    }
+  }, [imageUri, uuid]);
+
+  const handleSubmit = () => {
+    if (uuid !== '' && imageFile) {
+      const props = {
+        file: imageFile,
+        setState: setImageUri,
+        path: 'music_image',
+        uuid,
+      };
+      uploadImage(props);
+    }
+  };
+
+  const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     const user = auth.currentUser;
     if (user && files && files.length > 0) {
       const file = files[0];
-      const metadata = { contentType: file.type };
-
-      let uploadTask = uploadBytesResumable(
-        ref(storage, `music_image/${uuid}`), // 저장 경로
-        file, // 이미지 파일
-        metadata // 파일 타입
-      );
-
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-            default:
-              break;
-          }
-        },
-        (error) => {
-          switch (error.code) {
-            case 'storage/unauthorized':
-              break;
-            case 'storage/canceled':
-              break;
-            case 'storage/unknown':
-              break;
-
-            default:
-              break;
-          }
-        },
-        () => {
-          // 업로드가 성공적으로 완료
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImageUri(downloadURL);
-          });
-        }
-      );
+      setImageFile(file);
     }
   };
 
-  const handleSubmit = () => {
-    if (uuid !== '' && imageUri !== '') {
-      // firestore 이미지 수정
-      updateMusicImg({ uuid, imageUri });
-      setUuid('');
-      setImageUri('');
-    }
-  };
+  console.log(imageFile);
 
   return (
     <>
@@ -87,12 +59,7 @@ function ChangeMusicImg() {
         />
       </S.InputBox>
 
-      <InputImg
-        onChange={handleUploadImage}
-        ref={imageRef}
-        accept="image/jpeg, image/png"
-        type="file"
-      />
+      <InputImg onChange={handleImage} ref={imageRef} accept="image/jpeg, image/png" type="file" />
       <AlbumFile>
         <div className="album-file-box">
           <FileTxt>앨범 이미지</FileTxt>
@@ -103,7 +70,7 @@ function ChangeMusicImg() {
         <Image
           width={147}
           height={147}
-          src={imageUri !== '' ? imageUri : albumDefaultImg}
+          src={imageFile ? URL.createObjectURL(imageFile) : albumDefaultImg}
           alt="album image"
           className="album-img"
         />

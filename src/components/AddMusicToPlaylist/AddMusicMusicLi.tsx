@@ -1,25 +1,41 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
-import MoreSvg from '@/../public/more.svg';
 import { MusicData } from '@/types/musicTypes';
+import { useRecoilState } from 'recoil';
+import playlistDataState from '@/atom/playlistDataState';
 import useMusicPlay from '@/hook/useMusicPlay';
-
-import AddToPlaylistModal from './AddToPlaylistModal';
 
 interface Props {
   el: MusicData;
-  hideRightBtn?: boolean;
 }
-
-function MusicLi({ el, hideRightBtn }: Props) {
-  const [showAddToPlaylistModal, setShowAddToPlaylistModal] = useState(false);
+function AddMusicMusicLi({ el }: Props) {
+  const [isInPlaylist, setIsInPlaylist] = useState(false);
+  const [playlistData, setPlaylistData] = useRecoilState(playlistDataState); // 리코일
+  const { musicList } = playlistData;
   const { imageUri, title, composer } = el;
   const musicPlay = useMusicPlay(); // hook
 
+  useEffect(() => {
+    const inPlaylist = musicList.some((music) => music.uuid === el.uuid);
+    setIsInPlaylist(inPlaylist);
+  }, [musicList, el.uuid]);
+
   const handleMusicPlay = (el: MusicData) => {
     musicPlay(el);
+  };
+
+  const handleAddMusic = () => {
+    if (isInPlaylist) {
+      // 플레이리스트에서 음악을 삭제
+      const removeMusic = musicList.filter((music) => music.uuid !== el.uuid);
+      setPlaylistData((prev) => ({ ...prev, musicList: removeMusic }));
+    } else {
+      // 플레이리스트에 음악을 추가
+      setPlaylistData((prev) => ({ ...prev, musicList: [...prev.musicList, el] }));
+    }
+    setIsInPlaylist(!isInPlaylist);
   };
 
   return (
@@ -45,28 +61,20 @@ function MusicLi({ el, hideRightBtn }: Props) {
           </p>
         </div>
 
-        {/* 더보기 */}
-        {!hideRightBtn && (
-          <MoreBox>
-            <button onClick={() => setShowAddToPlaylistModal(true)}>
-              <MoreSvg width={19} height={4} fill={'#62686A'} />
-            </button>
-            {/* 플레이리스트에 음악 추가하는 모달 => AddToPlaylistModal 컴포넌트 */}
-            {showAddToPlaylistModal && (
-              <AddToPlaylistModal
-                el={el}
-                showAddToPlaylistModal={showAddToPlaylistModal}
-                setShowAddToPlaylistModal={setShowAddToPlaylistModal}
-              />
-            )}
-          </MoreBox>
-        )}
+        {/* 플레이리스트에서 해당 음악 삭제 */}
+        <DeleteBtn onClick={handleAddMusic} $isInPlaylist={isInPlaylist}>
+          <i className="i-music-plus" />
+        </DeleteBtn>
       </div>
     </MusicLiBlock>
   );
 }
 
-export default MusicLi;
+export default AddMusicMusicLi;
+
+interface IsInPlaylist {
+  $isInPlaylist: boolean;
+}
 
 const MusicLiBlock = styled.li`
   margin-bottom: 17px;
@@ -111,13 +119,17 @@ const MusicLiBlock = styled.li`
   }
 `;
 
-const MoreBox = styled.div`
-  position: relative;
+const DeleteBtn = styled.button<IsInPlaylist>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  button {
-    padding: 5px 0 5px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .i-music-plus {
+    font-size: 20px;
+
+    &::before {
+      color: ${({ $isInPlaylist }) =>
+        $isInPlaylist ? 'var(--fl-blue-500)' : 'var(--sky-blue-300)'};
+    }
   }
 `;

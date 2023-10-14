@@ -51,7 +51,7 @@ export async function getAllMusicDocs() {
   return musicArr;
 }
 
-// 최근에 추가한 음악 n개를 orderBy에 맞게 가져오기
+// 음악 n개를 orderBy에 맞게 가져오기
 export async function getMusicDocs({ limitNum, orderByField, orderByDirection }: GetMusicDocs) {
   const musicArr: MusicData[] = [];
 

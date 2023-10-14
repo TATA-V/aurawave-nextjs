@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import SkeletonMusicLi from './SkeletonMusicLi';
 
-function SkeletonMusicCollection() {
+function SkeletonMusicLi30() {
   return (
     <SkeletonMusicCollectionBlock>
       {[...Array(30)].map((_, i) => (
@@ -13,7 +13,7 @@ function SkeletonMusicCollection() {
   );
 }
 
-export default SkeletonMusicCollection;
+export default SkeletonMusicLi30;
 
 const SkeletonMusicCollectionBlock = styled.div`
   padding-left: 21px;

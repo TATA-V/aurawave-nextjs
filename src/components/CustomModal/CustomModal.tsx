@@ -72,7 +72,7 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
             setToggleModal(false);
           }
           // firestore에서 유저 정보 삭제
-          await deleteUserDoc({ userUID: user.uid });
+          await deleteUserDoc({ uuid: user.uid });
           // storage에서 유저 이미지 삭제
           const storageRef = ref(storage, `user_image/${user.uid}`);
           await deleteObject(storageRef);
