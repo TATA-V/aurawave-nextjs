@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import styled from 'styled-components';
+import * as S from '@/styled/musicLiStyled';
 import Image from 'next/image';
 import { MusicData } from '@/types/musicTypes';
 import useMusicPlay from '@/hook/useMusicPlay';
@@ -27,7 +28,7 @@ function CreatePlaylistMusicLi({ el }: Props) {
   };
 
   return (
-    <MusicLiBlock>
+    <S.MusicLiBlock>
       <div className="music-content">
         <div className="details-box">
           <Image
@@ -54,54 +55,11 @@ function CreatePlaylistMusicLi({ el }: Props) {
           <i className="i-trash" />
         </DeleteBtn>
       </div>
-    </MusicLiBlock>
+    </S.MusicLiBlock>
   );
 }
 
 export default CreatePlaylistMusicLi;
-
-const MusicLiBlock = styled.li`
-  margin-bottom: 17px;
-
-  .music-content {
-    width: 346.12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .details-box {
-    display: flex;
-    align-items: center;
-  }
-
-  .image {
-    border: 1px solid var(--gray-100);
-    border-radius: 2px;
-    object-fit: cover;
-    cursor: pointer;
-  }
-
-  .details {
-    width: 225px;
-    padding-left: 16px;
-    line-height: 1.1rem;
-  }
-
-  .title {
-    color: var(--dark-blue-900);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    cursor: pointer;
-  }
-
-  .composer {
-    color: var(--gray-400);
-    font-size: 0.8125rem;
-    font-weight: 400;
-    cursor: pointer;
-  }
-`;
 
 const DeleteBtn = styled.button`
   display: flex;

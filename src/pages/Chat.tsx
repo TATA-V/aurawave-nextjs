@@ -1,6 +1,6 @@
 import React from 'react';
 
-import BottomTab from '../BottomTab/BottomTab';
+import BottomTab from '../components/BottomTab/BottomTab';
 
 function Chat() {
   return (

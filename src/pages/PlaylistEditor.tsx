@@ -1,37 +1,31 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useRouter } from 'next/navigation';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import userState from '@/atom/userState';
+import { useRecoilState } from 'recoil';
 import * as S from '@/styled/playlistEditorStyled';
 import playlistDataState from '@/atom/playlistDataState';
 
-import PlaylistImage from './PlaylistEditorMaterial/PlaylistImage';
-import PlaylistEditorMusicLi from './PlaylistEditorMaterial/PlaylistEditorMusicLi';
-import AwPlaylistGoBackHead from '../GoBackHead/AwPlaylistGoBackHead';
+import PlaylistGoBackHead from '../components/GoBackHead/PlaylistGoBackHead';
+import PlaylistImage from '../components/PlaylistEditor/PlaylistImage';
+import PlaylistEditorMusicLi from '../components/PlaylistEditor/PlaylistEditorMusicLi';
 
 function PlaylistEditor() {
   const [playlistData, setPlaylistData] = useRecoilState(playlistDataState); // 리코일
-  const { playlistTitle, description, musicList } = playlistData;
-  const { isAdmin } = useRecoilValue(userState); // 리코일
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isAdmin) {
-      router.replace('/');
-    }
-  }, [isAdmin, router]);
+  const { isPublic, playlistTitle, description, musicList } = playlistData;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPlaylistData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleToggle = () => {
+    setPlaylistData((prev) => ({ ...prev, isPublic: !isPublic }));
+  };
+
   return (
     <>
       <>
-        <AwPlaylistGoBackHead />
+        <PlaylistGoBackHead />
 
         <CreatePlaylistBlock>
           {/* 플레이리스트 이미지 => PlaylistImage 컴포넌트 */}
@@ -67,14 +61,25 @@ function PlaylistEditor() {
             </button>
           </S.InputBox>
 
+          {/* 공개 설정 */}
+          <S.PublicOrPrivate>
+            <div className="public-setting">
+              <p className="public-txt">공개 설정</p>
+              <S.ToggleBtn $isPublic={isPublic}>
+                <div onClick={handleToggle} className="circle" />
+              </S.ToggleBtn>
+            </div>
+            <p className="desc-txt">플레이리스트를 공유하려면 설정 해주세요.</p>
+          </S.PublicOrPrivate>
+
           {/* 새로운 곡  추가 */}
           <S.AddNewMusic>
-            <S.StyledLink href={'/admin-awplaylist-editor/add-music'}>
+            <S.StyledLink href={'/playlist-editor/add-music'}>
               <div className="plus-icon">
                 <i className="i-plus-small" />
               </div>
             </S.StyledLink>
-            <S.StyledLink className="add-music" href={'/admin-awplaylist-editor/add-music'}>
+            <S.StyledLink className="add-music" href={'/playlist-editor/add-music'}>
               <p>새로운 곡 추가</p>
             </S.StyledLink>
           </S.AddNewMusic>

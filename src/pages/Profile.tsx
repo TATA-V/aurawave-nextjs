@@ -2,11 +2,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import BottomTab from '../BottomTab/BottomTab';
-import MyProfile from './ProfileMaterial/MyProfile';
-import MyFriendAndMyPlaylist from './ProfileMaterial/MyFriendAndMyPlaylist';
-import InactiveLandscape from '../Landscape/InactiveLandscape';
-import LogoutAndDeleteAccount from './ProfileMaterial/LogoutAndDeleteAccount';
+import BottomTab from '../components/BottomTab/BottomTab';
+import MyProfile from '../components/Profile/MyProfile';
+import MyFriendAndMyPlaylist from '../components/Profile/MyFriendAndMyPlaylist';
+import InactiveLandscape from '../components/Landscape/InactiveLandscape';
+import LogoutAndDeleteAccount from '../components/Profile/LogoutAndDeleteAccount';
 
 function Profile() {
   return (

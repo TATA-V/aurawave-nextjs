@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation';
 import { useRecoilValue } from 'recoil';
 import userState from '@/atom/userState';
 
-import GoBackHead from '../GoBackHead/GoBackHead';
-import AddMusic from './AdminMusicMaterial/AddMusic';
-import DeleteMusic from './AdminMusicMaterial/DeleteMusic';
-import ChangeMusicImg from './AdminMusicMaterial/ChangeMusicImg';
+import GoBackHead from '../components/GoBackHead/GoBackHead';
+import AddMusic from '../components/AdminMusic/AddMusic';
+import DeleteMusic from '../components/AdminMusic/DeleteMusic';
+import ChangeMusicImg from '../components/AdminMusic/ChangeMusicImg';
 
 function AdminMusic() {
   const { isAdmin } = useRecoilValue(userState);

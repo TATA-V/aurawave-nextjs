@@ -1,6 +1,12 @@
 import { doc, setDoc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
 import { firestore } from './config';
-import { SetUserDoc, UpdateUserDoc, UpdateUserName, UpdateUserPlaylists } from '@/types/userTypes';
+import {
+  SetUserDoc,
+  UpdateUserDoc,
+  UpdateUserName,
+  UpdateUserPlaylists,
+  UserData,
+} from '@/types/userTypes';
 
 // 새로운 유저의 유저 정보 저장
 export async function setUserDoc({ uuid, userData }: SetUserDoc) {
@@ -36,7 +42,7 @@ export async function getUserInfo(uuid: string) {
   const userDocRef = doc(firestore, 'user', uuid);
   const userDocSnapshot = await getDoc(userDocRef);
   const userData = userDocSnapshot.data();
-  return userData;
+  return userData as UserData;
 }
 
 // 유저 정보 삭제

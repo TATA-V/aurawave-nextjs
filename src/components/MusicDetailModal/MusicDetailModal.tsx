@@ -13,7 +13,6 @@ import MusicCopyright from './MusicDetailModalMaterial/MusicCopyright';
 import PlaymodeMenu from './MusicDetailModalMaterial/PlaymodeMenu';
 
 interface Props {
-  // play: boolean;
   totalDuration: number;
   currentDuration: number;
   progressBarWidth: number;

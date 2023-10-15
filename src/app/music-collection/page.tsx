@@ -1,4 +1,4 @@
-import MusicCollection from '@/components/MusicCollection/MusicCollection';
+import MusicCollection from '@/pages/MusicCollection';
 import React from 'react';
 
 function MusicCollectionPage() {

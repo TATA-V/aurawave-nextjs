@@ -10,7 +10,7 @@ import currentTrackState from '@/atom/currentTrackState';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 
-import SkeletonPlaylist from '../../Skeleton/SkeletonPlaylist';
+import SkeletonPlaylist from '../Skeleton/SkeletonPlaylist';
 
 function RecommendPlaylist() {
   const [loaded, setLoaded] = useState(false);

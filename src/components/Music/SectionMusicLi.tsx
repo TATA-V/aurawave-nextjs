@@ -1,23 +1,17 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import MoreSvg from '@/../public/more.svg';
 import { MusicData } from '@/types/musicTypes';
 import useMusicPlay from '@/hook/useMusicPlay';
 import { useRecoilValue } from 'recoil';
 import userState from '@/atom/userState';
 import * as S from '@/styled/musicLiStyled';
 
-import AddToPlaylistModal from '../MusicLi/AddToPlaylistModal';
-
 interface Props {
   el: MusicData;
-  idx: number;
-  handleDragStart: (idx: number) => void;
-  handelDragEnter: (idx: number) => void;
-  handleDragEnd: () => void;
 }
-function SoundtrackMusicLi({ el, idx, handleDragStart, handelDragEnter, handleDragEnd }: Props) {
+
+function SectionMusicLi({ el }: Props) {
   const [showAddToPlaylistModal, setShowAddToPlaylistModal] = useState(false);
   const { isLoggedIn } = useRecoilValue(userState); // 리코일
   const { imageUri, title, composer } = el;
@@ -28,13 +22,7 @@ function SoundtrackMusicLi({ el, idx, handleDragStart, handelDragEnter, handleDr
   };
 
   return (
-    <S.MusicLiBlock
-      draggable
-      onDragStart={() => handleDragStart(idx)}
-      onDragEnter={() => handelDragEnter(idx)}
-      onDragEnd={handleDragEnd}
-      onDragOver={(e) => e.preventDefault()}
-    >
+    <S.MusicLiBlock>
       <div className="music-content">
         <div className="details-box">
           <Image
@@ -55,26 +43,9 @@ function SoundtrackMusicLi({ el, idx, handleDragStart, handelDragEnter, handleDr
             </span>
           </p>
         </div>
-
-        {/* 더보기 */}
-        {isLoggedIn && (
-          <S.MoreBox>
-            <button onClick={() => setShowAddToPlaylistModal(true)}>
-              <MoreSvg width={19} height={4} fill={'#62686A'} />
-            </button>
-            {/* 플레이리스트에 음악 추가하는 모달 => AddToPlaylistModal 컴포넌트 */}
-            {showAddToPlaylistModal && (
-              <AddToPlaylistModal
-                el={el}
-                showAddToPlaylistModal={showAddToPlaylistModal}
-                setShowAddToPlaylistModal={setShowAddToPlaylistModal}
-              />
-            )}
-          </S.MoreBox>
-        )}
       </div>
     </S.MusicLiBlock>
   );
 }
 
-export default SoundtrackMusicLi;
+export default SectionMusicLi;

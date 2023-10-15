@@ -8,7 +8,7 @@ import { getMusicDocs } from '@/firebase/music';
 import { MusicData } from '@/types/musicTypes';
 import useMusicPlay from '@/hook/useMusicPlay';
 
-import SkeletonNewMusic from '../../Skeleton/SkeletonNewMusic';
+import SkeletonNewMusic from '../Skeleton/SkeletonNewMusic';
 
 function NewMusic() {
   const [loaded, setLoaded] = useState(false);

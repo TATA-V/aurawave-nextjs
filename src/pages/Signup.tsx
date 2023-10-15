@@ -7,8 +7,8 @@ import * as S from '@/styled/authStyled';
 import { auth } from '@/firebase/config';
 import { setUserDoc } from '@/firebase/user';
 
-import GoBackHead from '../GoBackHead/GoBackHead';
-import GoogleAuth from '../GoogleAuth/GoogleAuth';
+import GoBackHead from '../components/GoBackHead/GoBackHead';
+import GoogleAuth from '../components/GoogleAuth/GoogleAuth';
 
 function Signup() {
   const [loading, setLoading] = useState(false);
@@ -43,7 +43,7 @@ function Signup() {
           const { uid, displayName, email } = user;
           if (uid !== null && displayName !== null && email !== null) {
             const userData = {
-              uid: uid,
+              uuid: uid,
               email: email,
               username: displayName,
             };

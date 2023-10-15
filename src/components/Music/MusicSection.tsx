@@ -8,7 +8,7 @@ import { MusicData } from '@/types/musicTypes';
 import 'swiper/css';
 
 import SkeletonMusicSection from '@/components/Skeleton/SkeletonMusicSection';
-import MusicLi from '@/components/MusicLi/MusicLi';
+import SectionMusicLi from './SectionMusicLi';
 
 function MusicSection() {
   const [data, setData] = useState<MusicData[]>([]);
@@ -43,21 +43,21 @@ function MusicSection() {
           <SwiperSlide>
             <ul>
               {data.slice(0, 5).map((el) => (
-                <MusicLi key={el.uuid} el={el} hideRightBtn={true} />
+                <SectionMusicLi key={el.uuid} el={el} />
               ))}
             </ul>
           </SwiperSlide>
           <SwiperSlide>
             <ul>
               {data.slice(5, 10).map((el) => (
-                <MusicLi key={el.uuid} el={el} hideRightBtn={true} />
+                <SectionMusicLi key={el.uuid} el={el} />
               ))}
             </ul>
           </SwiperSlide>
           <SwiperSlide>
             <ul>
               {data.slice(10, 15).map((el) => (
-                <MusicLi key={el.uuid} el={el} hideRightBtn={true} />
+                <SectionMusicLi key={el.uuid} el={el} />
               ))}
             </ul>
           </SwiperSlide>

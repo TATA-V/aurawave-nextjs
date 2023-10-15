@@ -12,12 +12,13 @@ export interface AWPlaylistData {
 
 export interface UserPlaylistData {
   uuid: string;
+  username: string | null;
+  date: string;
   isPublic: boolean;
   playlistImageUri: string | File;
   playlistTitle: string;
   description: string;
   musicList: MusicData[];
-  timestamp?: FieldValue;
 }
 
 export interface setAwPlaylistDoc {

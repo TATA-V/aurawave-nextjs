@@ -14,8 +14,8 @@ import userState from '@/atom/userState';
 import { auth } from '@/firebase/config';
 import * as S from '@/styled/authStyled';
 
-import GoBackHead from '../GoBackHead/GoBackHead';
-import GoogleAuth from '../GoogleAuth/GoogleAuth';
+import GoBackHead from '../components/GoBackHead/GoBackHead';
+import GoogleAuth from '../components/GoogleAuth/GoogleAuth';
 
 function Login() {
   const pwdRef = useRef<HTMLInputElement>(null);

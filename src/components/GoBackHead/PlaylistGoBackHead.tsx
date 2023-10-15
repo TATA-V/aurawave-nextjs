@@ -3,20 +3,21 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { usePathname, useRouter } from 'next/navigation';
 import playlistDataState from '@/atom/playlistDataState';
-import { useRecoilState, useResetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { setUserPlaylistDoc } from '@/firebase/playlist';
 import uploadImage from '@/firebase/image';
 import formatDateToYYYYMMDD from '@/utils/formatDateToYYYYMMDD';
 import { v4 as uuidv4 } from 'uuid';
-import { serverTimestamp } from 'firebase/firestore';
 import compressImage from '@/utils/compressImage';
 import { updateUserPlaylists } from '@/firebase/user';
 import { auth } from '@/firebase/config';
+import userState from '@/atom/userState';
 
 function PlaylistGoBackHead() {
   const [rightTxt, setRightTxt] = useState('');
   const [imageUri, setImageUri] = useState('');
   const [playlistData, setPlaylistData] = useRecoilState(playlistDataState); // 리코일
+  const { username } = useRecoilValue(userState); // 리코일
   const { isPublic, uuid, playlistImageUri, playlistTitle, description, musicList } = playlistData;
   const resetPlaylistDataState = useResetRecoilState(playlistDataState); // 리코일
   const formattedDate = formatDateToYYYYMMDD(); // 현재 날짜
@@ -45,6 +46,8 @@ function PlaylistGoBackHead() {
     if (isValid) {
       const playlistData = {
         uuid: uuid,
+        username: username,
+        date: formatDateToYYYYMMDD(),
         isPublic: isPublic,
         playlistImageUri: imageUri,
         playlistTitle: playlistTitle,
@@ -52,7 +55,7 @@ function PlaylistGoBackHead() {
         musicList: musicList,
       };
       // firestore에 저장
-      if (user) {
+      if (user && username) {
         setUserPlaylistDoc({ uuid, playlistData }); // user_playlist에 플레이리스트 등록
         updateUserPlaylists({ uuid: user.uid, playlistData }); // 유저 정보에 등록한 플레이리스트 추가
         resetPlaylistDataState();
@@ -61,6 +64,7 @@ function PlaylistGoBackHead() {
       }
     }
   }, [
+    username,
     router,
     uuid,
     user,

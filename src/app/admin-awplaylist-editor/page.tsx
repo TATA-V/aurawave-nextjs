@@ -1,8 +1,8 @@
 import React from 'react';
-import AwPlaylistEditor from '@/components/PlaylistEditor/AwPlaylistEditor';
+import AdminAwplaylistEditor from '@/pages/AdminAwplaylistEditor';
 
-function AdminAwplaylistEditorPage() {
-  return <AwPlaylistEditor />;
+function AdminAdminAwplaylistEditorPage() {
+  return <AdminAwplaylistEditor />;
 }
 
-export default AdminAwplaylistEditorPage;
+export default AdminAdminAwplaylistEditorPage;

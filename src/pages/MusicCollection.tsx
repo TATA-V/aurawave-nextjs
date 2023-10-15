@@ -7,10 +7,10 @@ import useInfiniteScroll from '@/hook/useInfiniteScroll';
 import { getAllMusicDocs } from '@/firebase/music';
 import { MusicData } from '@/types/musicTypes';
 
-import GoBackHead from '../GoBackHead/GoBackHead';
-import MusicLi from '../MusicLi/MusicLi';
-import LoadingLottie from '../Lottie/LoadingLottie';
-import SkeletonMusicLi30 from '../Skeleton/SkeletonMusicLi30';
+import GoBackHead from '../components/GoBackHead/GoBackHead';
+import MusicLi from '../components/MusicLi/MusicLi';
+import LoadingLottie from '../components/Lottie/LoadingLottie';
+import SkeletonMusicLi30 from '../components/Skeleton/SkeletonMusicLi30';
 
 function MusicCollection() {
   const [loaded, setLoded] = useState(false);
