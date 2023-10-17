@@ -1,22 +1,28 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { usePathname, useRouter } from 'next/navigation';
 import playlistDataState from '@/atom/playlistDataState';
-import { useRecoilState, useResetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { setUserPlaylistDoc } from '@/firebase/playlist';
 import uploadImage from '@/firebase/image';
 import formatDateToYYYYMMDD from '@/utils/formatDateToYYYYMMDD';
 import { v4 as uuidv4 } from 'uuid';
-import { serverTimestamp } from 'firebase/firestore';
 import compressImage from '@/utils/compressImage';
 import { updateUserPlaylists } from '@/firebase/user';
 import { auth } from '@/firebase/config';
+import userState from '@/atom/userState';
 
-function PlaylistGoBackHead() {
+interface Props {
+  loading: boolean;
+  setLoading: React.Dispatch<SetStateAction<boolean>>;
+}
+
+function PlaylistGoBackHead({ loading, setLoading }: Props) {
   const [rightTxt, setRightTxt] = useState('');
   const [imageUri, setImageUri] = useState('');
   const [playlistData, setPlaylistData] = useRecoilState(playlistDataState); // 리코일
+  const { username } = useRecoilValue(userState); // 리코일
   const { isPublic, uuid, playlistImageUri, playlistTitle, description, musicList } = playlistData;
   const resetPlaylistDataState = useResetRecoilState(playlistDataState); // 리코일
   const formattedDate = formatDateToYYYYMMDD(); // 현재 날짜
@@ -42,9 +48,12 @@ function PlaylistGoBackHead() {
       description.trim() !== '' &&
       musicList.length !== 0;
 
-    if (isValid) {
+    if (isValid && user) {
       const playlistData = {
         uuid: uuid,
+        userUuid: user?.uid,
+        username: username,
+        date: formatDateToYYYYMMDD(),
         isPublic: isPublic,
         playlistImageUri: imageUri,
         playlistTitle: playlistTitle,
@@ -52,15 +61,16 @@ function PlaylistGoBackHead() {
         musicList: musicList,
       };
       // firestore에 저장
-      if (user) {
-        setUserPlaylistDoc({ uuid, playlistData }); // user_playlist에 플레이리스트 등록
-        updateUserPlaylists({ uuid: user.uid, playlistData }); // 유저 정보에 등록한 플레이리스트 추가
-        resetPlaylistDataState();
-        const id = uuidv4(); // uuid 생성
-        setPlaylistData((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
-      }
+      setUserPlaylistDoc({ uuid, playlistData }); // user_playlist에 플레이리스트 등록
+      updateUserPlaylists({ uuid: user.uid, playlistData }); // 유저 정보에 등록한 플레이리스트 추가
+      resetPlaylistDataState();
+      const id = uuidv4(); // uuid 생성
+      setPlaylistData((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
+
+      setLoading(false);
     }
   }, [
+    username,
     router,
     uuid,
     user,
@@ -70,6 +80,7 @@ function PlaylistGoBackHead() {
     musicList,
     playlistTitle,
     formattedDate,
+    setLoading,
     setPlaylistData,
     resetPlaylistDataState,
   ]);
@@ -89,6 +100,7 @@ function PlaylistGoBackHead() {
     if (rightTxt === '저장') {
       // File 형식의 이미지에서 URI를 추출
       if (playlistImageUri instanceof File) {
+        setLoading(true);
         const compressFile = await compressImage(playlistImageUri); // 이미지 압축
         const props = {
           file: compressFile,
@@ -114,7 +126,7 @@ function PlaylistGoBackHead() {
       <Title>새 플레이리스트 추가</Title>
 
       <RightBox>
-        <button onClick={handleRightBtnClick} className="right-btn">
+        <button disabled={loading} onClick={handleRightBtnClick} className="right-btn">
           {rightTxt}
         </button>
       </RightBox>

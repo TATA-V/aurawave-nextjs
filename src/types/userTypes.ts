@@ -3,11 +3,19 @@ import { UserPlaylistData } from './playlistTypes';
 export interface SetUserDoc {
   uuid: string;
   userData: {
-    uid: string;
+    uuid: string;
     email: string;
     username: string;
     photoURL?: string;
   };
+}
+
+export interface UserData {
+  uuid: string;
+  email: string;
+  username: string;
+  photoURL?: string;
+  playlists?: UserPlaylistData[];
 }
 
 export interface UpdateUserDoc {

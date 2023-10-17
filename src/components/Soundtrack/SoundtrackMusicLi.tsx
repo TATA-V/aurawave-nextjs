@@ -1,10 +1,12 @@
 'use client';
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import Image from 'next/image';
 import MoreSvg from '@/../public/more.svg';
 import { MusicData } from '@/types/musicTypes';
 import useMusicPlay from '@/hook/useMusicPlay';
+import { useRecoilValue } from 'recoil';
+import userState from '@/atom/userState';
+import * as S from '@/styled/musicLiStyled';
 
 import AddToPlaylistModal from '../MusicLi/AddToPlaylistModal';
 
@@ -17,6 +19,7 @@ interface Props {
 }
 function SoundtrackMusicLi({ el, idx, handleDragStart, handelDragEnter, handleDragEnd }: Props) {
   const [showAddToPlaylistModal, setShowAddToPlaylistModal] = useState(false);
+  const { isLoggedIn } = useRecoilValue(userState); // 리코일
   const { imageUri, title, composer } = el;
   const musicPlay = useMusicPlay(); // hook
 
@@ -25,7 +28,7 @@ function SoundtrackMusicLi({ el, idx, handleDragStart, handelDragEnter, handleDr
   };
 
   return (
-    <MusicLiBlock
+    <S.MusicLiBlock
       draggable
       onDragStart={() => handleDragStart(idx)}
       onDragEnter={() => handelDragEnter(idx)}
@@ -54,75 +57,24 @@ function SoundtrackMusicLi({ el, idx, handleDragStart, handelDragEnter, handleDr
         </div>
 
         {/* 더보기 */}
-        <MoreBox>
-          <button onClick={() => setShowAddToPlaylistModal(true)}>
-            <MoreSvg width={19} height={4} fill={'#62686A'} />
-          </button>
-          {/* 플레이리스트에 음악 추가하는 모달 => AddToPlaylistModal 컴포넌트 */}
-          {showAddToPlaylistModal && (
-            <AddToPlaylistModal
-              el={el}
-              showAddToPlaylistModal={showAddToPlaylistModal}
-              setShowAddToPlaylistModal={setShowAddToPlaylistModal}
-            />
-          )}
-        </MoreBox>
+        {isLoggedIn && (
+          <S.MoreBox>
+            <button onClick={() => setShowAddToPlaylistModal(true)}>
+              <MoreSvg width={19} height={4} fill={'#62686A'} />
+            </button>
+            {/* 플레이리스트에 음악 추가하는 모달 => AddToPlaylistModal 컴포넌트 */}
+            {showAddToPlaylistModal && (
+              <AddToPlaylistModal
+                el={el}
+                showAddToPlaylistModal={showAddToPlaylistModal}
+                setShowAddToPlaylistModal={setShowAddToPlaylistModal}
+              />
+            )}
+          </S.MoreBox>
+        )}
       </div>
-    </MusicLiBlock>
+    </S.MusicLiBlock>
   );
 }
 
 export default SoundtrackMusicLi;
-
-const MusicLiBlock = styled.li`
-  margin-bottom: 17px;
-
-  .music-content {
-    width: 346.12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .details-box {
-    display: flex;
-    align-items: center;
-  }
-
-  .image {
-    border: 1px solid var(--gray-100);
-    border-radius: 2px;
-    object-fit: cover;
-    cursor: pointer;
-  }
-
-  .details {
-    width: 225px;
-    padding-left: 16px;
-    line-height: 1.1rem;
-  }
-
-  .title {
-    color: var(--dark-blue-900);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    cursor: pointer;
-  }
-
-  .composer {
-    color: var(--gray-400);
-    font-size: 0.8125rem;
-    font-weight: 400;
-    cursor: pointer;
-  }
-`;
-
-const MoreBox = styled.div`
-  position: relative;
-
-  button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-`;

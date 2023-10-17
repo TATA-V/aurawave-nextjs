@@ -1,12 +1,30 @@
 import currentTrackState from '@/atom/currentTrackState';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled, { keyframes } from 'styled-components';
 
+interface UpdatedLinkData {
+  href: string;
+  text: string;
+}
+
 function MusicCopyright() {
   const [showCopyright, setShowCopyright] = useState(false);
+  const [linkData, setLinkData] = useState<UpdatedLinkData[]>([]);
   const { currentMusic } = useRecoilValue(currentTrackState); // 리코일
   const { copyright } = currentMusic;
+
+  useEffect(() => {
+    const regex = /<a\s+href="([^"]+)"[^>]*>([^<]+)<\/a>/g;
+    const matches = copyright.matchAll(regex);
+    const updatedLinkData = [];
+    for (const match of matches) {
+      const href = match[1];
+      const text = match[2];
+      updatedLinkData.push({ href, text });
+    }
+    setLinkData(updatedLinkData);
+  }, [copyright]);
 
   return (
     <MusicCopyrightBlock>
@@ -16,7 +34,19 @@ function MusicCopyright() {
       </button>
       {showCopyright && (
         <div className="copyright-actual">
-          <p className="copyright-actual-txt">{copyright}</p>
+          {linkData.length === 0 && <p className="copyright-actual-txt">{copyright}</p>}
+          {linkData.length !== 0 && (
+            <p className="copyright-actual-txt">
+              Music by{' '}
+              <a href={linkData[0].href} target="_blank">
+                {linkData[0].text}
+              </a>{' '}
+              from{' '}
+              <a href={linkData[1].href} target="_blank">
+                {linkData[1].text}
+              </a>
+            </p>
+          )}
         </div>
       )}
     </MusicCopyrightBlock>
@@ -76,10 +106,17 @@ const MusicCopyrightBlock = styled.div`
     left: 72px;
     white-space: pre-line;
     word-wrap: break-word;
+    background-color: var(--white-100);
+    z-index: 1;
 
     display: flex;
     justify-content: center;
     align-items: center;
+
+    a {
+      color: var(--blue-500);
+      text-decoration: none;
+    }
   }
 
   .copyright-actual-txt {

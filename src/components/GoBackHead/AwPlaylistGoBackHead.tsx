@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { serverTimestamp } from 'firebase/firestore';
 
 function AwPlaylistGoBackHead() {
+  const [loading, setLoading] = useState(false);
   const [rightTxt, setRightTxt] = useState('');
   const [imageUri, setImageUri] = useState('');
   const [playlistData, setPlaylistData] = useRecoilState(playlistDataState); // 리코일
@@ -52,6 +53,7 @@ function AwPlaylistGoBackHead() {
       resetPlaylistDataState();
       const id = uuidv4(); // uuid 생성
       setPlaylistData((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
+      setLoading(false);
     }
   }, [
     router,
@@ -80,6 +82,7 @@ function AwPlaylistGoBackHead() {
     if (rightTxt === '저장') {
       // File 형식의 이미지에서 URI를 추출
       if (playlistImageUri instanceof File) {
+        setLoading(true);
         const props = {
           file: playlistImageUri,
           setState: setImageUri,
@@ -105,7 +108,7 @@ function AwPlaylistGoBackHead() {
       </Title>
 
       <RightBox>
-        <button onClick={handleRightBtnClick} className="right-btn">
+        <button disabled={loading} onClick={handleRightBtnClick} className="right-btn">
           {rightTxt}
         </button>
       </RightBox>

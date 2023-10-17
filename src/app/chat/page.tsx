@@ -1,4 +1,4 @@
-import Chat from '@/components/Chat/Chat';
+import Chat from '@/pages/Chat';
 import React from 'react';
 
 function ChatPage() {

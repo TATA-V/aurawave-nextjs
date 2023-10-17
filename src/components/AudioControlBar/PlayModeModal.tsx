@@ -2,7 +2,7 @@
 import currentTrackState, { CurrentMusic } from '@/atom/currentTrackState';
 import React, { SetStateAction, useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
-import * as S from '@/styled/audioControl';
+import * as S from '@/styled/audioControlStyled';
 import useCloseModal from '@/hook/useCloseModal';
 import { useMusicLoop, useMusicShuffle } from '@/hook/useMusicControl';
 

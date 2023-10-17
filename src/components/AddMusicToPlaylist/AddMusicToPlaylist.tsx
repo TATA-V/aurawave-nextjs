@@ -9,7 +9,7 @@ import { MusicData } from '@/types/musicTypes';
 import useInfiniteScroll from '@/hook/useInfiniteScroll';
 
 import LoadingLottie from '../Lottie/LoadingLottie';
-import SkeletonMusicLi30 from '../Skeleton/SkeletonMusicLi30';
+import SkelMusicLi30 from '../Skeleton/SkelMusicLi30';
 
 function AddMusicToPlaylist() {
   const [loaded, setLoded] = useState(false);
@@ -75,7 +75,7 @@ function AddMusicToPlaylist() {
           <S.Bar className="bar" />
         </S.SearchBox>
         {/* 스켈레톤 => SkeletonMusicCollection 컴포넌트 */}
-        {!loaded && <SkeletonMusicLi30 />}
+        {!loaded && <SkelMusicLi30 />}
 
         {/* 모든 음악들 */}
         <MusicUl>

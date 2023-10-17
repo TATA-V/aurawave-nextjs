@@ -1,5 +1,5 @@
 import React from 'react';
-import Soundtrack from '@/components/Soundtrack/Soundtrack';
+import Soundtrack from '@/pages/Soundtrack';
 
 function SoundtrackPage() {
   return <Soundtrack />;

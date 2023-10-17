@@ -57,8 +57,8 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
     /* 유저 탈퇴 */
     if (type === '탈퇴') {
       try {
-        setLoading(true);
         if (user && user.email) {
+          setLoading(true);
           // 만약 현재 로그인 된 계정이 구글 계정이라면
           if (isGoogleSignIn) {
             await deleteUser(user);
@@ -72,7 +72,7 @@ function CustomModal({ toggleModal, setToggleModal, type }: Props) {
             setToggleModal(false);
           }
           // firestore에서 유저 정보 삭제
-          await deleteUserDoc({ uuid: user.uid });
+          await deleteUserDoc(user.uid);
           // storage에서 유저 이미지 삭제
           const storageRef = ref(storage, `user_image/${user.uid}`);
           await deleteObject(storageRef);

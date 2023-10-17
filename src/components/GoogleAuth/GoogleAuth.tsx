@@ -35,7 +35,7 @@ function GoogleAuth() {
         // firestore에 유저 정보 저장
         if (uid !== null && displayName !== null && email !== null && photoURL !== null) {
           const userData = {
-            uid: uid,
+            uuid: uid,
             email: email,
             username: displayName,
             photoURL: photoURL,

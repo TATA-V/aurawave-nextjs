@@ -1,5 +1,5 @@
-import Signup from '@/components/Signup/Signup';
 import React from 'react';
+import Signup from '@/pages/Signup';
 
 function SignupPage() {
   return <Signup />;

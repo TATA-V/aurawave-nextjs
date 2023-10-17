@@ -1,20 +1,22 @@
 'use client';
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import Image from 'next/image';
 import MoreSvg from '@/../public/more.svg';
 import { MusicData } from '@/types/musicTypes';
 import useMusicPlay from '@/hook/useMusicPlay';
+import { useRecoilValue } from 'recoil';
+import userState from '@/atom/userState';
+import * as S from '@/styled/musicLiStyled';
 
 import AddToPlaylistModal from './AddToPlaylistModal';
 
 interface Props {
   el: MusicData;
-  hideRightBtn?: boolean;
 }
 
-function MusicLi({ el, hideRightBtn }: Props) {
+function MusicLi({ el }: Props) {
   const [showAddToPlaylistModal, setShowAddToPlaylistModal] = useState(false);
+  const { isLoggedIn } = useRecoilValue(userState); // 리코일
   const { imageUri, title, composer } = el;
   const musicPlay = useMusicPlay(); // hook
 
@@ -23,7 +25,7 @@ function MusicLi({ el, hideRightBtn }: Props) {
   };
 
   return (
-    <MusicLiBlock>
+    <S.MusicLiBlock>
       <div className="music-content">
         <div className="details-box">
           <Image
@@ -46,8 +48,8 @@ function MusicLi({ el, hideRightBtn }: Props) {
         </div>
 
         {/* 더보기 */}
-        {!hideRightBtn && (
-          <MoreBox>
+        {isLoggedIn && (
+          <S.MoreBox>
             <button onClick={() => setShowAddToPlaylistModal(true)}>
               <MoreSvg width={19} height={4} fill={'#62686A'} />
             </button>
@@ -59,65 +61,11 @@ function MusicLi({ el, hideRightBtn }: Props) {
                 setShowAddToPlaylistModal={setShowAddToPlaylistModal}
               />
             )}
-          </MoreBox>
+          </S.MoreBox>
         )}
       </div>
-    </MusicLiBlock>
+    </S.MusicLiBlock>
   );
 }
 
 export default MusicLi;
-
-const MusicLiBlock = styled.li`
-  margin-bottom: 17px;
-
-  .music-content {
-    width: 346.12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .details-box {
-    display: flex;
-    align-items: center;
-  }
-
-  .image {
-    border: 1px solid var(--gray-100);
-    border-radius: 2px;
-    object-fit: cover;
-    cursor: pointer;
-  }
-
-  .details {
-    width: 225px;
-    padding-left: 16px;
-    line-height: 1.1rem;
-  }
-
-  .title {
-    color: var(--dark-blue-900);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    cursor: pointer;
-  }
-
-  .composer {
-    color: var(--gray-400);
-    font-size: 0.8125rem;
-    font-weight: 400;
-    cursor: pointer;
-  }
-`;
-
-const MoreBox = styled.div`
-  position: relative;
-
-  button {
-    padding: 5px 0 5px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-`;

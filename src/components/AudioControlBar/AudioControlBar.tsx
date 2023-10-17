@@ -3,7 +3,7 @@ import currentTrackState, { CurrentMusic } from '@/atom/currentTrackState';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import * as S from '@/styled/audioControl';
+import * as S from '@/styled/audioControlStyled';
 import Image from 'next/image';
 import MusicPauseSvg from '@/../public/musicPauseSvg.svg';
 import formatTime from '@/utils/formatTime';

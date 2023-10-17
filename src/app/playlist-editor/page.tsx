@@ -1,5 +1,5 @@
 import React from 'react';
-import PlaylistEditor from '@/components/PlaylistEditor/PlaylistEditor';
+import PlaylistEditor from '@/pages/PlaylistEditor';
 
 function CreatePlaylistPage() {
   return <PlaylistEditor />;

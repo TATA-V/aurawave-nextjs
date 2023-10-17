@@ -1,11 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import Image from 'next/image';
 import { MusicData } from '@/types/musicTypes';
 import { useRecoilState } from 'recoil';
 import playlistDataState from '@/atom/playlistDataState';
 import useMusicPlay from '@/hook/useMusicPlay';
+import * as S from '@/styled/musicLiStyled';
+import styled from 'styled-components';
 
 interface Props {
   el: MusicData;
@@ -39,7 +40,7 @@ function AddMusicMusicLi({ el }: Props) {
   };
 
   return (
-    <MusicLiBlock>
+    <S.MusicLiBlock>
       <div className="music-content">
         <div className="details-box">
           <Image
@@ -66,7 +67,7 @@ function AddMusicMusicLi({ el }: Props) {
           <i className="i-music-plus" />
         </DeleteBtn>
       </div>
-    </MusicLiBlock>
+    </S.MusicLiBlock>
   );
 }
 
@@ -76,50 +77,7 @@ interface IsInPlaylist {
   $isInPlaylist: boolean;
 }
 
-const MusicLiBlock = styled.li`
-  margin-bottom: 17px;
-
-  .music-content {
-    width: 346.12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .details-box {
-    display: flex;
-    align-items: center;
-  }
-
-  .image {
-    border: 1px solid var(--gray-100);
-    border-radius: 2px;
-    object-fit: cover;
-    cursor: pointer;
-  }
-
-  .details {
-    width: 225px;
-    padding-left: 16px;
-    line-height: 1.1rem;
-  }
-
-  .title {
-    color: var(--dark-blue-900);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    cursor: pointer;
-  }
-
-  .composer {
-    color: var(--gray-400);
-    font-size: 0.8125rem;
-    font-weight: 400;
-    cursor: pointer;
-  }
-`;
-
-const DeleteBtn = styled.button<IsInPlaylist>`
+export const DeleteBtn = styled.button<IsInPlaylist>`
   display: flex;
   justify-content: center;
   align-items: center;
