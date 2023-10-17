@@ -10,7 +10,7 @@ import { MusicData } from '@/types/musicTypes';
 import GoBackHead from '../components/GoBackHead/GoBackHead';
 import MusicLi from '../components/MusicLi/MusicLi';
 import LoadingLottie from '../components/Lottie/LoadingLottie';
-import SkeletonMusicLi30 from '../components/Skeleton/SkeletonMusicLi30';
+import SkelMusicLi30 from '../components/Skeleton/SkelMusicLi30';
 
 function MusicCollection() {
   const [loaded, setLoded] = useState(false);
@@ -77,7 +77,7 @@ function MusicCollection() {
           <S.Bar className="bar" />
         </S.SearchBox>
         {/* 스켈레톤 => SkeletonMusicCollection 컴포넌트 */}
-        {!loaded && <SkeletonMusicLi30 />}
+        {!loaded && <SkelMusicLi30 />}
 
         {/* 모든 음악 */}
         <MusicUl>

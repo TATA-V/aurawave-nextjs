@@ -8,8 +8,10 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import SkelAwPlaylistSection from '../Skeleton/SkelAwPlaylistSection';
 
 function AwPlaylistSection() {
+  const [loaded, setLoaded] = useState(false);
   const [playlistData, setPlaylistData] = useState<AWPlaylistData[]>([]);
 
   useEffect(() => {
@@ -17,9 +19,11 @@ function AwPlaylistSection() {
     getAwPlaylistDocs({ limitNum: 3, orderByField: 'timestamp', orderByDirection: 'desc' })
       .then((data) => {
         setPlaylistData(data);
+        setLoaded(true);
       })
       .catch((error) => {
         console.log(error);
+        setLoaded(false);
       });
   }, []);
 
@@ -33,26 +37,29 @@ function AwPlaylistSection() {
           전체보기
         </Link>
       </TopBox>
+      {!loaded && <SkelAwPlaylistSection />}
 
-      <StyledSwiper spaceBetween={11} slidesPerView={2}>
-        {playlistData.map((el) => (
-          <SwiperSlide key={el.uuid}>
-            <PlaylistItem>
-              <Image
-                className="image"
-                width={168}
-                height={143}
-                src={String(el.playlistImageUri)}
-                alt="aurawave playlist"
-              />
-              <div className="details">
-                <p className="title">{el.playlistTitle}</p>
-                <p className="description">{el.description}</p>
-              </div>
-            </PlaylistItem>
-          </SwiperSlide>
-        ))}
-      </StyledSwiper>
+      {loaded && (
+        <StyledSwiper spaceBetween={11} slidesPerView={2}>
+          {playlistData.map((el) => (
+            <SwiperSlide key={el.uuid}>
+              <PlaylistItem>
+                <Image
+                  className="image"
+                  width={168}
+                  height={143}
+                  src={String(el.playlistImageUri)}
+                  alt="aurawave playlist"
+                />
+                <div className="details">
+                  <span className="title">{el.playlistTitle}</span>
+                  <span className="description">{el.description}</span>
+                </div>
+              </PlaylistItem>
+            </SwiperSlide>
+          ))}
+        </StyledSwiper>
+      )}
     </section>
   );
 }
@@ -101,6 +108,7 @@ const PlaylistItem = styled.div`
 
   .details {
     height: 33px;
+    padding-left: 2px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

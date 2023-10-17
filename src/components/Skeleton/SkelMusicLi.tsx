@@ -1,10 +1,11 @@
 'use client';
+import { sweep } from '@/styled/frequentlyStyled';
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
-function SkeletonMusicLi() {
+function SkelMusicLi() {
   return (
-    <SkeletonMusicLiBlock>
+    <SkelMusicLiBlock>
       <div className="details-box">
         <div className="image" />
         <div className="details">
@@ -12,25 +13,12 @@ function SkeletonMusicLi() {
           <div className="composer" />
         </div>
       </div>
-    </SkeletonMusicLiBlock>
+    </SkelMusicLiBlock>
   );
 }
+export default SkelMusicLi;
 
-export default SkeletonMusicLi;
-
-export const sweep = keyframes`
-  0% {
-      transform: translateX(-100%);
-  }
-  50% {
-      transform: translateX(150%);
-  }
-  100% {
-      transform: translateX(-100%);
-  }
-`;
-
-const SkeletonMusicLiBlock = styled.div`
+const SkelMusicLiBlock = styled.div`
   width: 346.12px;
   padding-bottom: 17px;
   position: relative;

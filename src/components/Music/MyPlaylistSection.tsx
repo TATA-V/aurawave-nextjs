@@ -19,7 +19,6 @@ function MyPlaylistSection() {
       getUserInfo(user.uid)
         .then((data) => {
           setMyPlaylist(data.playlists as UserPlaylistData[]);
-          console.log(data);
         })
         .catch((error) => {
           console.log(error);
@@ -38,9 +37,9 @@ function MyPlaylistSection() {
             </Link>
           </TopBox>
 
-          <ul>
+          <Ul>
             {myPlaylist?.slice(0, 3).map((el) => (
-              <MyPlaylistLi key={el.uuid}>
+              <MyPlaylistLi className="li" key={el.uuid}>
                 <Image
                   className="image"
                   width={68}
@@ -49,13 +48,13 @@ function MyPlaylistSection() {
                   alt="playlist image"
                 />
                 <div className="details">
-                  <p className="title">{el.playlistTitle}</p>
-                  <p className="description">{el.description}</p>
+                  <span className="title">{el.playlistTitle}</span>
+                  <span className="description">{el.description}</span>
                 </div>
                 <i className="i-down" />
               </MyPlaylistLi>
             ))}
-          </ul>
+          </Ul>
         </SectionBlock>
       )}
     </>
@@ -130,5 +129,11 @@ const MyPlaylistLi = styled.li`
     &::before {
       color: var(--blue-gray-650);
     }
+  }
+`;
+
+const Ul = styled.ul`
+  li:last-child {
+    margin-bottom: 0;
   }
 `;

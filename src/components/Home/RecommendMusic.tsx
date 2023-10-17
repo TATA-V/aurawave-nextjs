@@ -8,7 +8,7 @@ import { End } from '@/styled/frequentlyStyled';
 import { MusicData } from '@/types/musicTypes';
 import { getAllMusicDocs } from '@/firebase/music';
 import useInfiniteScroll from '@/hook/useInfiniteScroll';
-import SkeletonMusicLi8 from '@/components/Skeleton/SkeletonMusicLi8';
+import SkelMusicLi8 from '@/components/Skeleton/SkelMusicLi8';
 
 function RecommendMusic() {
   const [loaded, setLoaded] = useState(false);
@@ -57,7 +57,7 @@ function RecommendMusic() {
         </Link>
       </TopBox>
       {/* 스켈레톤 => SkeletonRecommendMusic 컴포넌트 */}
-      {!loaded && <SkeletonMusicLi8 />}
+      {!loaded && <SkelMusicLi8 />}
 
       <ul>
         {/* 음악 => MusicLi 컴포넌트 */}

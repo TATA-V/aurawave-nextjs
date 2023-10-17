@@ -8,7 +8,7 @@ import { getMusicDocs } from '@/firebase/music';
 import { MusicData } from '@/types/musicTypes';
 import useMusicPlay from '@/hook/useMusicPlay';
 
-import SkeletonNewMusic from '../Skeleton/SkeletonNewMusic';
+import SkelNewMusic from '../Skeleton/SkelNewMusic';
 
 function NewMusic() {
   const [loaded, setLoaded] = useState(false);
@@ -35,13 +35,13 @@ function NewMusic() {
   return (
     <NewMusicSection>
       <h2 className="section-heading">최신 음악</h2>
-      {/* 스켈레톤 => SkeletonNewMusic 컴포넌트 */}
+      {/* 스켈레톤 => SkelNewMusic 컴포넌트 */}
       {!loaded && (
-        <SkeletonNewMusicBlock>
+        <SkelNewMusicBlock>
           {[...Array(4)].map((_, i) => (
-            <SkeletonNewMusic key={i} />
+            <SkelNewMusic key={i} />
           ))}
-        </SkeletonNewMusicBlock>
+        </SkelNewMusicBlock>
       )}
 
       {loaded && (
@@ -78,7 +78,7 @@ function NewMusic() {
 
 export default NewMusic;
 
-const SkeletonNewMusicBlock = styled.div`
+const SkelNewMusicBlock = styled.div`
   padding: 14px 21px 0 21px;
   display: flex;
 `;

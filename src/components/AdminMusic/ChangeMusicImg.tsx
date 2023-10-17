@@ -43,8 +43,6 @@ function ChangeMusicImg() {
     }
   };
 
-  console.log(imageFile);
-
   return (
     <>
       <H3>앨범 이미지 수정</H3>

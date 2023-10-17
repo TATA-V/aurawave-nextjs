@@ -1,10 +1,11 @@
 'use client';
+import { sweep } from '@/styled/frequentlyStyled';
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
-function SkeletonPlaylist() {
+function SkelPlaylist() {
   return (
-    <SkeletonPlaylistBlock>
+    <SkelPlaylistBlock>
       <PlaylistItem>
         <PlaylistContent>
           <div className="playlist-content">
@@ -21,25 +22,13 @@ function SkeletonPlaylist() {
           </div>
         </PlaylistContent>
       </PlaylistItem>
-    </SkeletonPlaylistBlock>
+    </SkelPlaylistBlock>
   );
 }
 
-export default SkeletonPlaylist;
+export default SkelPlaylist;
 
-export const sweep = keyframes`
-  0% {
-      transform: translateX(-100%);
-  }
-  50% {
-      transform: translateX(150%);
-  }
-  100% {
-      transform: translateX(-100%);
-  }
-`;
-
-const SkeletonPlaylistBlock = styled.div`
+const SkelPlaylistBlock = styled.div`
   margin-top: 14px;
   height: 259px;
   position: relative;

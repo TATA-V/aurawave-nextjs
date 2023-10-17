@@ -10,8 +10,19 @@ export interface AWPlaylistData {
   timestamp?: FieldValue;
 }
 
+export interface PlaylistData {
+  uuid: string;
+  isPublic: boolean;
+  username: string;
+  playlistImageUri: string | File;
+  playlistTitle: string;
+  description: string;
+  musicList: MusicData[];
+}
+
 export interface UserPlaylistData {
   uuid: string;
+  userUuid: string;
   username: string | null;
   date: string;
   isPublic: boolean;
@@ -30,7 +41,7 @@ export interface DeleteAWPlaylistDoc {
   uuid: string;
 }
 
-export interface UpdateAWPlaylist {
+export interface UpdateAWPlaylistDoc {
   uuid: string;
   awplaylistData: AWPlaylistData;
 }
@@ -44,4 +55,15 @@ export interface GetAwPlaylistDocs {
   limitNum: number;
   orderByField: string;
   orderByDirection: OrderByDirection;
+}
+
+export interface GetPlaylistDocs {
+  limitNum: number;
+  orderByField: string;
+  orderByDirection: OrderByDirection;
+}
+
+export interface UpdatePlaylistDoc {
+  uuid: string;
+  playlistData: PlaylistData;
 }

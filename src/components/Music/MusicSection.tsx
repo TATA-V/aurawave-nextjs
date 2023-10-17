@@ -7,7 +7,7 @@ import { getMusicDocs } from '@/firebase/music';
 import { MusicData } from '@/types/musicTypes';
 import 'swiper/css';
 
-import SkeletonMusicSection from '@/components/Skeleton/SkeletonMusicSection';
+import SkelMusicSection from '@/components/Skeleton/SkelMusicSection';
 import SectionMusicLi from './SectionMusicLi';
 
 function MusicSection() {
@@ -35,8 +35,8 @@ function MusicSection() {
           전체보기
         </Link>
       </TopBox>
-      {/* 스켈레톤 => SkeletonMusicSection 컴포넌트 */}
-      {!loaded && <SkeletonMusicSection />}
+      {/* 스켈레톤 => SkelMusicSection 컴포넌트 */}
+      {!loaded && <SkelMusicSection />}
 
       {loaded && (
         <StyledSwiper slidesPerView={1}>

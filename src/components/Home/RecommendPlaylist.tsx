@@ -10,7 +10,7 @@ import currentTrackState from '@/atom/currentTrackState';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 
-import SkeletonPlaylist from '../Skeleton/SkeletonPlaylist';
+import SkelPlaylist from '../Skeleton/SkelPlaylist';
 
 function RecommendPlaylist() {
   const [loaded, setLoaded] = useState(false);
@@ -49,12 +49,12 @@ function RecommendPlaylist() {
   return (
     <PlaylistSection>
       <h2 className="section-heading">추천 플레이리스트</h2>
-      {/* 스켈레톤 => SkeletonPlaylist 컴포넌트 */}
+      {/* 스켈레톤 => SkelPlaylist 컴포넌트 */}
       {!loaded && (
-        <SkeletonPlaylistBlock>
-          <SkeletonPlaylist />
-          <SkeletonPlaylist />
-        </SkeletonPlaylistBlock>
+        <SkelPlaylistBlock>
+          <SkelPlaylist />
+          <SkelPlaylist />
+        </SkelPlaylistBlock>
       )}
 
       {loaded && (
@@ -91,7 +91,7 @@ function RecommendPlaylist() {
 
 export default RecommendPlaylist;
 
-const SkeletonPlaylistBlock = styled.div`
+const SkelPlaylistBlock = styled.div`
   width: 439px;
   padding-left: 21px;
   display: flex;

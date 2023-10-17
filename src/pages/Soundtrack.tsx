@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 
 import GoBackHead from '../components/GoBackHead/GoBackHead';
 import SoundtrackMusicLi from '../components/Soundtrack/SoundtrackMusicLi';
-import SkeletonMusicLi from '../components/Skeleton/SkeletonMusicLi';
+import SkelMusicLi from '../components/Skeleton/SkelMusicLi';
 
 function Soundtrack() {
   const [loaded, setLoaded] = useState(false);
@@ -76,8 +76,8 @@ function Soundtrack() {
           <CheckSvg />
           <span className="track-count-txt">{musicTrack.length}곡</span>
         </TrackCount>
-        {/* 스켈레톤 => SkeletonMusicLi 컴포넌트 */}
-        {!loaded && [...Array(musicTrack.length)].map((_, i) => <SkeletonMusicLi key={i} />)}
+        {/* 스켈레톤 => SkelMusicLi 컴포넌트 */}
+        {!loaded && [...Array(musicTrack.length)].map((_, i) => <SkelMusicLi key={i} />)}
 
         <ul>
           {musicTrack.map((track, idx) => (

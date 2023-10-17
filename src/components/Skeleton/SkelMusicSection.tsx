@@ -1,28 +1,28 @@
 'use client';
 import React from 'react';
 import styled from 'styled-components';
-import SkeletonMusicLi from './SkeletonMusicLi';
+import SkelMusicLi from './SkelMusicLi';
 
-function SkeletonMusicSection() {
+function SkelMusicSection() {
   return (
-    <SkeletonMusicSectionBlock>
+    <SkelMusicSectionBlock>
       <div className="first">
         {[...Array(5)].map((_, i) => (
-          <SkeletonMusicLi key={i} />
+          <SkelMusicLi key={i} />
         ))}
       </div>
       <div className="second">
         {[...Array(5)].map((_, i) => (
-          <SkeletonMusicLi key={i} />
+          <SkelMusicLi key={i} />
         ))}
       </div>
-    </SkeletonMusicSectionBlock>
+    </SkelMusicSectionBlock>
   );
 }
 
-export default SkeletonMusicSection;
+export default SkelMusicSection;
 
-const SkeletonMusicSectionBlock = styled.div`
+const SkelMusicSectionBlock = styled.div`
   padding-left: 21px;
 
   display: flex;

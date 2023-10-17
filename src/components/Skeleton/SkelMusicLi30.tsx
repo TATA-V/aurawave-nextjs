@@ -1,19 +1,19 @@
 'use client';
 import React from 'react';
 import styled from 'styled-components';
-import SkeletonMusicLi from './SkeletonMusicLi';
+import SkelMusicLi from './SkelMusicLi';
 
-function SkeletonMusicLi30() {
+function SkelMusicLi30() {
   return (
     <SkeletonMusicCollectionBlock>
       {[...Array(30)].map((_, i) => (
-        <SkeletonMusicLi key={i} />
+        <SkelMusicLi key={i} />
       ))}
     </SkeletonMusicCollectionBlock>
   );
 }
 
-export default SkeletonMusicLi30;
+export default SkelMusicLi30;
 
 const SkeletonMusicCollectionBlock = styled.div`
   padding-left: 21px;

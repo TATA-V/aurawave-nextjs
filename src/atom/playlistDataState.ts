@@ -1,14 +1,5 @@
-import { MusicData } from '@/types/musicTypes';
+import { PlaylistData } from '@/types/playlistTypes';
 import { atom } from 'recoil';
-
-interface PlaylistData {
-  uuid: string;
-  isPublic: boolean;
-  playlistImageUri: string | File;
-  playlistTitle: string;
-  description: string;
-  musicList: MusicData[];
-}
 
 const DefaultValue: PlaylistData = {
   uuid: '',
