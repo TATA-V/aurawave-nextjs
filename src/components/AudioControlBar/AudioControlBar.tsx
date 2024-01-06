@@ -13,8 +13,6 @@ import PlayModeModal from './PlayModeModal';
 import MusicDetailModal from '../MusicDetailModal/MusicDetailModal';
 
 function AudioControlBar() {
-  // 음악 재생 유무
-  // const [play, setPlay] = useState(false);
   // 음악 총 시간, 현재 시간
   const [totalDuration, setTotalDuration] = useState(0); // 총 시간
   const [currentDuration, setCurrentDuration] = useState(0); // 현재 시간
@@ -103,7 +101,6 @@ function AudioControlBar() {
     } else if (audio && !isPlaying) {
       audio.play();
     }
-    // setPlay(!play);
     setCurrentMusicAndTrack((prev) => ({ ...prev, isPlaying: !isPlaying }));
   };
 

@@ -14,8 +14,8 @@ import { auth } from '@/firebase/config';
 import userState from '@/atom/userState';
 
 interface Props {
-  loading: boolean;
-  setLoading: React.Dispatch<SetStateAction<boolean>>;
+  loading?: boolean;
+  setLoading?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 function PlaylistGoBackHead({ loading, setLoading }: Props) {
@@ -67,7 +67,9 @@ function PlaylistGoBackHead({ loading, setLoading }: Props) {
       const id = uuidv4(); // uuid 생성
       setPlaylistData((prev) => ({ ...prev, uuid: id, playlistTitle: formattedDate }));
 
-      setLoading(false);
+      if (setLoading) {
+        setLoading(false);
+      }
     }
   }, [
     username,
@@ -99,7 +101,7 @@ function PlaylistGoBackHead({ loading, setLoading }: Props) {
   const handleRightBtnClick = async () => {
     if (rightTxt === '저장') {
       // File 형식의 이미지에서 URI를 추출
-      if (playlistImageUri instanceof File) {
+      if (playlistImageUri instanceof File && setLoading) {
         setLoading(true);
         const compressFile = await compressImage(playlistImageUri); // 이미지 압축
         const props = {

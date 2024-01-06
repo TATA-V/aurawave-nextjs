@@ -8,6 +8,7 @@ const DefaultValue: PlaylistData = {
   playlistTitle: '',
   description: '',
   musicList: [],
+  username: '',
 };
 
 const playlistDataState = atom<PlaylistData>({

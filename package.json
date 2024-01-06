@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "NODE_ENV=development next dev",
+    "build": "NODE_ENV=development next build",
+    "start": "NODE_ENV=production next start",
+    "lint": "NODE_ENV=development next lint"
   },
   "dependencies": {
     "@types/node": "20.6.2",
