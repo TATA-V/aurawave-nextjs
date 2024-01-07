@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import React from 'react';
 import Image from 'next/image';
 import userState from '@/atom/userState';
-import LogoMoonSvg from '../../../public/logoMoonSvg.svg';
+// import LogoMoonSvg from '../../../public/logoMoonSvg.svg';
 import defaultProfileJpg from '@/assets/jpg-file/default-profile.jpg';
 import styled from 'styled-components';
 import Link from 'next/link';
@@ -15,7 +15,7 @@ function HomeHead() {
   return (
     <HomeHeadBlock>
       <LeftBox>
-        <LogoMoonSvg />
+        {/* <LogoMoonSvg /> */}
         <p className={`logo-text ${bubblegum.className}`}>AuraWave</p>
       </LeftBox>
 

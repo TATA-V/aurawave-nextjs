@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import PlayBlue from '../../../public/playBlueSvg.svg';
+// import PlayBlue from '../../../public/playBlueSvg.svg';
 import Image from 'next/image';
 import { AWPlaylistData } from '@/types/playlistTypes';
 import { getAwPlaylistDocs } from '@/firebase/playlist';
@@ -77,7 +77,8 @@ function RecommendPlaylist() {
                       <p className="title">{el.playlistTitle}</p>
                       <p className="description">{el.description}</p>
                     </div>
-                    <PlayBlue onClick={() => handlePlay(idx)} className="paly-blue" />
+                    {/* <PlayBlue onClick={() => handlePlay(idx)} className="paly-blue" /> */}
+                    <div onClick={() => handlePlay(idx)} className="paly-blue" />
                   </div>
                 </div>
               </PlaylistItem>
