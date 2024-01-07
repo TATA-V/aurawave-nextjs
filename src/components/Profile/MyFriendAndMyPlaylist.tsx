@@ -1,5 +1,5 @@
 import React from 'react';
-// import PeopleCircleSvg from '../../../public/peopleCircleSvg.svg';
+import PeopleCircleSvg from '../../../public/peopleCircleSvg.svg';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import userState from '@/atom/userState';
@@ -11,7 +11,7 @@ function MyFriendAndMyPlaylist() {
   return (
     <MyFriendAndMyPlaylistBlock>
       <li className="list-box">
-        {/* <PeopleCircleSvg /> */}
+        <PeopleCircleSvg />
         <p className="list-text">친구 목록</p>
       </li>
       <li className="list-box">
