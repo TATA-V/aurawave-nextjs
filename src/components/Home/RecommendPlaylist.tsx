@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import PlayBlue from '@/../public/playBlueSvg.svg';
+import PlayBlue from '../../../public/playBlueSvg.svg';
 import Image from 'next/image';
 import { AWPlaylistData } from '@/types/playlistTypes';
 import { getAwPlaylistDocs } from '@/firebase/playlist';

@@ -1,5 +1,5 @@
 import React from 'react';
-import PeopleCircleSvg from '@/../public/peopleCircleSvg.svg';
+import PeopleCircleSvg from '../../../public/peopleCircleSvg.svg';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import userState from '@/atom/userState';

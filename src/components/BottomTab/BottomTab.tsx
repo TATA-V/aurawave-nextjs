@@ -7,7 +7,7 @@ import MusicGraySvg from '../../../public/musicGraySvg.svg';
 import ChatBlueSvg from '../../../public/chatBlueSvg.svg';
 import ChatGraySvg from '../../../public/chatGraySvg.svg';
 import PeopleBlueSvg from '../../../public/peopleBlueSvg.svg';
-import PeopleGraySvg from '../../../public/PeopleGraySvg.svg';
+import PeopleGraySvg from '../../../public/peopleGraySvg.svg';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { usePathname } from 'next/navigation';
